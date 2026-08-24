@@ -148,10 +148,10 @@ CMD:buyveh(playerid, params[]) {
     #pragma unused params
     if (!gPlayerData[playerid][p_LoggedIn]) return 1;
 
-    // Cek apakah pemain berada di dekat area Rodeo Showroom (radius 15 meter)
-    if (!IsPlayerInRangeOfPoint(playerid, 15.0, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z)) {
-        SendClientMessage(playerid, COL_RED, "  [Dealer] Anda harus berada di Rodeo Luxury Dealership (Los Santos) untuk membeli kendaraan!");
-        SendClientMessage(playerid, COL_YELLOW, "  » Lokasi: Rodeo Showroom (di peta Los Santos Barat dekat Beverly Hills).");
+    // Cek apakah pemain berada persis di dekat mark/pintu Rodeo Showroom (radius 5 meter)
+    if (!IsPlayerInRangeOfPoint(playerid, 5.0, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z)) {
+        SendClientMessage(playerid, COL_RED, "  [Dealer] Anda harus berdiri di depan mark Rodeo Luxury Dealership untuk membeli kendaraan!");
+        SendClientMessage(playerid, COL_YELLOW, "  » Lokasi: Rodeo Showroom (Los Santos Barat dekat Beverly Hills - Ikon Mobil #55).");
         return 1;
     }
 
