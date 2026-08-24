@@ -32,13 +32,11 @@
 #include "modules/systems/character.inc"
 #include "modules/systems/account.inc"
 #include "modules/systems/buildings.inc"
-#include "modules/systems/vehicle.inc"
 
 // ── Modul Perintah (Commands) ───────────────────────────────
 #include "modules/commands/cmd_general.inc"
 #include "modules/commands/cmd_rp.inc"
 #include "modules/commands/cmd_identity.inc"
-#include "modules/commands/cmd_vehicle.inc"
 
 // ============================================================
 //  ENTRY POINT & CALLBACKS
@@ -167,7 +165,6 @@ public OnPlayerDisconnect(playerid, reason) {
     DestroyPlayerSpawnTextDraws(playerid);
     DestroyPlayerSkinTextDraws(playerid);
     DestroyPlayerKTPTextDraws(playerid);
-    DestroyPlayerSpawnedVehicle(playerid);
     ResetPlayerData(playerid);
     return 1;
 }
@@ -231,7 +228,6 @@ public OnPlayerText(playerid, text[]) {
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
     if (HandleAccountDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleCharacterDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
-    if (HandleVehicleDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     return 1;
 }
 

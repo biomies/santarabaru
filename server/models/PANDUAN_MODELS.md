@@ -1,6 +1,6 @@
-# 🎨 Panduan Menambahkan Skin, Objek & Kendaraan Kustom di SantaraBaru RP
+# 🎨 Panduan Menambahkan Skin & Objek Kustom di SantaraBaru RP
 
-Server **SantaraBaru Roleplay (open.mp)** mendukung fitur **Auto-Download Custom Assets**. Pemain yang masuk ke server akan otomatis mengunduh skin, kendaraan kustom, dan bangunan kustom tanpa perlu menginstal mod secara manual di perangkat mereka!
+Server **SantaraBaru Roleplay (open.mp)** mendukung fitur **Auto-Download Custom Assets**. Pemain yang masuk ke server akan otomatis mengunduh skin dan bangunan/objek kustom tanpa perlu menginstal mod secara manual di perangkat mereka!
 
 ---
 
@@ -9,8 +9,8 @@ Semua file model 3D (`.dff`) dan tekstur (`.txd`) ditaruh di dalam folder:
 ```
 server/models/
  ├── artconfig.txt          <-- File daftar registrasi model
- ├── copcarsf.dff           <-- File model 3D (Mobil Polisi Kustom)
- ├── copcarsf.txd           <-- File tekstur (Mobil Polisi Kustom)
+ ├── polisi_indo.dff        <-- File model 3D
+ ├── polisi_indo.txd        <-- File tekstur
  └── ...
 ```
 
@@ -25,35 +25,38 @@ Buka file `server/models/artconfig.txt`, lalu tambahkan baris model kustom:
 AddCharModel(baseid, newid, "dffname.dff", "txdname.txd");
 ```
 * **`baseid`**: ID skin GTA SA bawaan untuk kerangka animasi (contoh: `265` untuk polisi, `0` untuk CJ/sipil).
-* **`newid`**: ID unik skin baru yang akan dipakai di server (gunakan angka mulai dari `20000` ke atas).
+* **`newid`**: ID unik skin baru yang akan dipakai di server (rentang `20000` s/d `30000`).
 * **Contoh:**
   ```
   AddCharModel(265, 20001, "polisi_indo.dff", "polisi_indo.txd");
   AddCharModel(0, 20002, "ojol_grab.dff", "ojol_grab.txd");
   ```
 
-### B. Untuk Objek, Bangunan & Kendaraan Kustom (`AddSimpleModel`):
+### B. Untuk Objek, Aksesoris & Bangunan Kustom (`AddSimpleModel`):
 ```
 AddSimpleModel(virtualworld, baseid, newid, "dffname.dff", "txdname.txd");
 ```
 * **`virtualworld`**: Gunakan `-1` agar bisa dilihat di semua virtual world.
 * **`baseid`**: ID objek GTA SA asli sebagai referensi collision (contoh: `19377`).
-* **`newid`**: ID objek baru di server (contoh: `20100`).
-* **Contoh (Kendaraan / Objek):**
+* **`newid`**: ID objek baru di server (rentang negatif `-1000` s/d `-30000`).
+* **Contoh:**
   ```
-  AddSimpleModel(-1, 19377, 20100, "copcarsf.dff", "copcarsf.txd");
-  AddSimpleModel(-1, 19377, 20003, "indomaret.dff", "indomaret.txd");
+  AddSimpleModel(-1, 19377, -1000, "indomaret.dff", "indomaret.txd");
+  AddSimpleModel(-1, 19377, -1001, "gapura_bali.dff", "gapura_bali.txd");
   ```
 
 ---
 
-## 🚗 3. Menghadirkan Kendaraan Kustom Tanpa Replace Mobil Asli
-Untuk menghadirkan mobil kustom tanpa mereplace mobil bawaan GTA SA:
-1. Daftarkan model sebagai `AddSimpleModel` di `artconfig.txt` (contoh ID `20100`).
-2. Di dalam server, gunakan command:
-   * **`/copcarsf`** atau **`/veh copcarsf`** : Langsung memunculkan mobil kustom baru ini dengan auto-attach object ID 20100.
-   * **`/vehmenu`** : Membuka katalog lengkap semua kendaraan.
-   * **`/dv`** : Menghapus kendaraan spawn Anda.
+## 🎮 3. Cara Menggunakannya di Gamemode (`santara.pwn`)
+Setelah didaftarkan di `artconfig.txt`:
+* **Memberikan Skin ke Pemain:**
+  ```pawn
+  SetPlayerSkin(playerid, 20001); // Skin Polisi Indo
+  ```
+* **Membuat Objek di Peta:**
+  ```pawn
+  CreateObject(-1000, 1481.0, -1771.0, 18.79, 0.0, 0.0, 0.0); // Gedung Indomaret
+  ```
 
 ---
 

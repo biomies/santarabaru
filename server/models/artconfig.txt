@@ -18,11 +18,6 @@
 #
 # ============================================================
 
-# ── Custom Vehicle Objects (Solusi Tanpa Replace) ──
-# Mendaftarkan model copcarsf sebagai Objek Kustom (ID -1000)
-# Base ID 19377 (objek standar yang aman untuk attach/collision)
-AddSimpleModel(-1, 19377, -1000, "copcarsf.dff", "copcarsf.txd");
-
 # ── Custom Skins Config ──
 # AddCharModel(265, 20001, "polisi_indo.dff", "polisi_indo.txd");
 # AddCharModel(100, 20002, "gojek_driver.dff", "gojek_driver.txd");

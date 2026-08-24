@@ -28,21 +28,6 @@
 #define DLG_CHAR_CONFIRM_DELETE 11
 #define DLG_CHAR_DELETE_LIST    12
 
-// Vehicle Dialog IDs (Menu Spawner)
-#define DLG_VEH_MAIN_MENU       20
-#define DLG_VEH_CAT_EMERGENCY   21
-#define DLG_VEH_CAT_SPORT       22
-#define DLG_VEH_CAT_SEDAN       23
-#define DLG_VEH_CAT_SUV         24
-#define DLG_VEH_CAT_HEAVY       25
-#define DLG_VEH_CAT_BIKES       26
-#define DLG_VEH_CAT_AIRCRAFT    27
-#define DLG_VEH_CAT_BOATS       28
-#define DLG_VEH_CAT_UNIQUE      29
-
-// Custom Models IDs (open.mp Native Artwork)
-#define CUSTOM_MODEL_COPCARSF   -1000
-
 // Batas maksimal karakter per akun
 #define MAX_CHARS_PER_ACCOUNT 3
 

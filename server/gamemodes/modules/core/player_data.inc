@@ -53,8 +53,6 @@ new gCharListNames[MAX_PLAYERS][MAX_CHARS_PER_ACCOUNT][48];
 new DB:gDB;                     // open.mp native DB handle
 new bool:gVoiceEnabled;         // SAMPVOICE terinisialisasi?
 new gPlayTimeTimer;             // Timer untuk hitung waktu bermain
-new gPlayerSpawnedVeh[MAX_PLAYERS] = {INVALID_VEHICLE_ID, ...};
-new gPlayerSpawnedVehObj[MAX_PLAYERS] = {INVALID_OBJECT_ID, ...};
 
 stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_AccountID]      = 0;
@@ -93,6 +91,4 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_HasKTP]         = false;
     gPlayerData[playerid][p_FinishedDownload] = false;
     gPlayerData[playerid][p_AuthLoaded]     = false;
-    gPlayerSpawnedVeh[playerid]             = INVALID_VEHICLE_ID;
-    gPlayerSpawnedVehObj[playerid]          = INVALID_OBJECT_ID;
 }

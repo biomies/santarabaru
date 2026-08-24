@@ -27,13 +27,7 @@ CMD:help(playerid, params[]) {
     SendClientMessage(playerid, COL_WHITE, "  » {E69958}Karakter & Pengaturan:");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/switchchar    {A0AEC0}— Ganti / pilih karakter lain (multi-karakter)");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/skin          {A0AEC0}— Buka Live 3D Pakaian / Penampilan");
-    SendClientMessage(playerid, COL_WHITE, "  » {E69958}Kendaraan & Transportasi:");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/veh {FFFFFF}[id/nama]  {A0AEC0}— Munculkan kendaraan (misal: /veh copcarsf, /veh infernus)");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/copcarsf      {A0AEC0}— Shortcut instan mobil polisi kustom San Fierro");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/vehmenu       {A0AEC0}— Buka katalog GUI semua 212 kendaraan GTA SA");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/dv            {A0AEC0}— Hapus kendaraan spawn milik Anda");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/fixveh & /flip{A0AEC0}— Perbaiki / balikkan kendaraan terbalik");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/engine & /lock{A0AEC0}— Nyalakan mesin / kunci pintu kendaraan");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/voice         {A0AEC0}— Cek status koneksi Voice 3D");
     SendClientMessage(playerid, COL_WHITE, "  » {E69958}Interaksi Gedung & Pintu:");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}[ALT] / [F]    {A0AEC0}— Masuk / keluar gedung di dekat tanda mark");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/enter & /exit {A0AEC0}— Perintah alternatif masuk / keluar pintu");
