@@ -30,11 +30,9 @@ CMD:help(playerid, params[]) {
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/voice         {A0AEC0}— Cek status koneksi Voice 3D");
     SendClientMessage(playerid, COL_WHITE, "  » {E69958}Dealership & Kendaraan Pribadi:");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/buyveh        {A0AEC0}— Beli kendaraan baru di Rodeo Dealership");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/myveh         {A0AEC0}— Informasi & status kendaraan pribadi");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/lock & /kunci {A0AEC0}— Kunci / buka pintu kendaraan pribadi");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/engine & /mesin{A0AEC0}— Nyalakan / matikan mesin kendaraan");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/park & /parkir{A0AEC0}— Simpan lokasi parkir kendaraan");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/towveh        {A0AEC0}— Keluarkan kendaraan di lokasi parkir");
     SendClientMessage(playerid, COL_WHITE, "  » {E69958}Interaksi Gedung & Pintu:");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}[ALT] / [F]    {A0AEC0}— Masuk / keluar gedung di dekat tanda mark");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/enter & /exit {A0AEC0}— Perintah alternatif masuk / keluar pintu");
