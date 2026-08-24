@@ -42,7 +42,10 @@ enum E_PLAYER_DATA {
     p_OriginalSkin,
     bool:p_IsNewCharacter,
     // ── Status Kepemilikan Dokumen ──
-    bool:p_HasKTP
+    bool:p_HasKTP,
+    // ── Status Download Custom Asset ──
+    bool:p_FinishedDownload,
+    bool:p_AuthLoaded
 }
 
 new gPlayerData[MAX_PLAYERS][E_PLAYER_DATA];
@@ -88,6 +91,8 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_OriginalSkin]   = 0;
     gPlayerData[playerid][p_IsNewCharacter] = false;
     gPlayerData[playerid][p_HasKTP]         = false;
+    gPlayerData[playerid][p_FinishedDownload] = false;
+    gPlayerData[playerid][p_AuthLoaded]     = false;
     gPlayerSpawnedVeh[playerid]             = INVALID_VEHICLE_ID;
     gPlayerSpawnedVehObj[playerid]          = INVALID_OBJECT_ID;
 }

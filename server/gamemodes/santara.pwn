@@ -92,10 +92,22 @@ public OnGameModeExit() {
     return 1;
 }
 
-public OnPlayerConnect(playerid) {
-    ResetPlayerData(playerid);
-    GetPlayerName(playerid, gPlayerData[playerid][p_Username], MAX_PLAYER_NAME + 1);
-    TogglePlayerSpectating(playerid, true);
+forward Timer_AuthFallback(playerid);
+public Timer_AuthFallback(playerid) {
+    if (IsPlayerConnected(playerid) && !gPlayerData[playerid][p_AuthLoaded]) {
+        ProceedPlayerAuth(playerid);
+    }
+    return 1;
+}
+
+stock ProceedPlayerAuth(playerid) {
+    if (!IsPlayerConnected(playerid)) return 0;
+    if (gPlayerData[playerid][p_AuthLoaded]) return 1;
+    gPlayerData[playerid][p_AuthLoaded] = true;
+    gPlayerData[playerid][p_FinishedDownload] = true;
+
+    PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+    SendClientMessage(playerid, COL_GREEN, "  [Asset Server] ✓ Seluruh asset & model kustom siap digunakan.");
 
     new query[256];
     format(query, sizeof(query),
@@ -113,6 +125,37 @@ public OnPlayerConnect(playerid) {
         gPlayerData[playerid][p_Registered] = false;
         ShowRegisterDialog(playerid, "");
     }
+    return 1;
+}
+
+public OnPlayerConnect(playerid) {
+    ResetPlayerData(playerid);
+    GetPlayerName(playerid, gPlayerData[playerid][p_Username], MAX_PLAYER_NAME + 1);
+    TogglePlayerSpectating(playerid, true);
+
+    // Set tampilan kamera sinematik San Fierro saat proses download & loading
+    SetPlayerCameraPos(playerid, -1771.5, 960.0, 75.0);
+    SetPlayerCameraLookAt(playerid, -1982.0, 137.0, 27.68);
+
+    GameTextForPlayer(playerid, "~y~Santara Roleplay~n~~w~Memeriksa Asset & Menghubungkan...", 4000, 3);
+    SendClientMessage(playerid, COL_CYAN, "  [Santara RP] Selamat datang! Sedang memeriksa & memuat asset kustom server...");
+
+    // Fallback timer (2.5 detik) jika client lama tidak mentrigger OnPlayerFinishedDownloading
+    SetTimerEx("Timer_AuthFallback", 2500, false, "i", playerid);
+    return 1;
+}
+
+public OnPlayerRequestDownload(playerid, type, crc) {
+    #pragma unused crc
+    if (type == DOWNLOAD_REQUEST_MODEL_FILE || type == DOWNLOAD_REQUEST_TEXTURE_FILE) {
+        return 1;
+    }
+    return 1;
+}
+
+public OnPlayerFinishedDownloading(playerid, virtualworld) {
+    #pragma unused virtualworld
+    ProceedPlayerAuth(playerid);
     return 1;
 }
 
