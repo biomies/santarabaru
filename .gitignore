@@ -1,0 +1,24 @@
+# Environment variables & secrets
+.env
+playit_data/
+playit_data
+playit.toml
+mysql_data/
+mysql_data
+server_data/
+server_data
+
+# Database runtime files & logs
+*.db
+*.db-journal
+server/logs/
+server/scriptfiles/coordinates.txt
+server/scriptfiles/*.log
+server/scriptfiles/*.db
+
+# IDE & system files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.gemini/

@@ -1,0 +1,93 @@
+#if defined _MODULE_PLAYER_DATA_INC
+    #endinput
+#endif
+#define _MODULE_PLAYER_DATA_INC
+
+// ============================================================
+//  SantaraBaru Roleplay — Player Data & Global Variables
+// ============================================================
+
+enum E_PLAYER_DATA {
+    p_AccountID,                // ID akun di tabel accounts
+    p_CharID,                   // ID karakter aktif di tabel characters
+    p_Username[MAX_PLAYER_NAME + 1],
+    p_CharName[48],             // Nama karakter RP aktif
+    p_BirthPlace[32],           // Tempat lahir
+    p_BirthDate[16],            // Tanggal lahir (DD/MM/YYYY)
+    p_Gender,                   // 1 = Pria, 2 = Wanita
+    p_Skin,                     // Skin ID GTA SA
+    Float:p_X,
+    Float:p_Y,
+    Float:p_Z,
+    Float:p_A,                  // Angle / arah hadap
+    p_Score,
+    p_Cash,
+    bool:p_Registered,
+    bool:p_LoggedIn,
+    p_LoginTries,               // Counter gagal login
+    bool:p_Spawned,
+    p_PlayTime,                 // Menit bermain sesi ini (timer)
+    SV_GSTREAM:p_VoiceStream,   // SAMPVOICE local stream
+    // ── Multi-Character Temp Cache ──
+    p_CharListIDs[MAX_CHARS_PER_ACCOUNT],
+    p_CharListCount,
+    p_TempSelectedCharID,
+    p_TempSelectedCharName[48],
+    // ── Live Eagle-Eye Spawn Selector State ──
+    bool:p_SelectingSpawn,
+    p_SpawnIndex,
+    // ── Live 3D Skin Selector State ──
+    bool:p_SelectingSkin,
+    p_SkinIndex,
+    p_OriginalSkin,
+    bool:p_IsNewCharacter,
+    // ── Status Kepemilikan Dokumen ──
+    bool:p_HasKTP
+}
+
+new gPlayerData[MAX_PLAYERS][E_PLAYER_DATA];
+new gCharListNames[MAX_PLAYERS][MAX_CHARS_PER_ACCOUNT][48];
+new DB:gDB;                     // open.mp native DB handle
+new bool:gVoiceEnabled;         // SAMPVOICE terinisialisasi?
+new gPlayTimeTimer;             // Timer untuk hitung waktu bermain
+new gPlayerSpawnedVeh[MAX_PLAYERS] = {INVALID_VEHICLE_ID, ...};
+new gPlayerSpawnedVehObj[MAX_PLAYERS] = {INVALID_OBJECT_ID, ...};
+
+stock ResetPlayerData(playerid) {
+    gPlayerData[playerid][p_AccountID]      = 0;
+    gPlayerData[playerid][p_CharID]         = 0;
+    gPlayerData[playerid][p_Username][0]    = '\0';
+    gPlayerData[playerid][p_CharName][0]    = '\0';
+    format(gPlayerData[playerid][p_BirthPlace], 32, "San Fierro");
+    format(gPlayerData[playerid][p_BirthDate], 16, "01/01/2000");
+    gPlayerData[playerid][p_Gender]         = 1;
+    gPlayerData[playerid][p_Skin]           = 0;
+    gPlayerData[playerid][p_X]              = SPAWN_BUS_X;
+    gPlayerData[playerid][p_Y]              = SPAWN_BUS_Y;
+    gPlayerData[playerid][p_Z]              = SPAWN_BUS_Z;
+    gPlayerData[playerid][p_A]              = SPAWN_BUS_A;
+    gPlayerData[playerid][p_Score]          = 1;
+    gPlayerData[playerid][p_Cash]           = 500;
+    gPlayerData[playerid][p_Registered]     = false;
+    gPlayerData[playerid][p_LoggedIn]       = false;
+    gPlayerData[playerid][p_Spawned]        = false;
+    gPlayerData[playerid][p_LoginTries]     = 0;
+    gPlayerData[playerid][p_PlayTime]       = 0;
+    gPlayerData[playerid][p_VoiceStream]    = SV_NULL;
+    gPlayerData[playerid][p_CharListCount]  = 0;
+    gPlayerData[playerid][p_TempSelectedCharID] = 0;
+    gPlayerData[playerid][p_TempSelectedCharName][0] = '\0';
+    for (new c = 0; c < MAX_CHARS_PER_ACCOUNT; c++) {
+        gPlayerData[playerid][p_CharListIDs][c] = 0;
+        gCharListNames[playerid][c][0] = '\0';
+    }
+    gPlayerData[playerid][p_SelectingSpawn] = false;
+    gPlayerData[playerid][p_SpawnIndex]     = 0;
+    gPlayerData[playerid][p_SelectingSkin]  = false;
+    gPlayerData[playerid][p_SkinIndex]      = 0;
+    gPlayerData[playerid][p_OriginalSkin]   = 0;
+    gPlayerData[playerid][p_IsNewCharacter] = false;
+    gPlayerData[playerid][p_HasKTP]         = false;
+    gPlayerSpawnedVeh[playerid]             = INVALID_VEHICLE_ID;
+    gPlayerSpawnedVehObj[playerid]          = INVALID_OBJECT_ID;
+}

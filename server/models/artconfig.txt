@@ -1,0 +1,31 @@
+# ============================================================
+# SantaraBaru Roleplay — Custom Art & Models Configuration
+# open.mp / SA-MP 0.3.DL Custom Models Definition
+# ============================================================
+#
+# FORMAT DAFTAR SKIN KUSTOM (AddCharModel):
+# AddCharModel(baseid, newid, "dffname.dff", "txdname.txd");
+# - baseid : ID Skin GTA SA asli yang dijadikan dasar animasi (contoh: 265)
+# - newid  : ID Skin kustom baru yang akan dipakai pemain (contoh: 20001)
+# - dff    : Nama file 3D mesh (.dff) di dalam folder ini
+# - txd    : Nama file tekstur (.txd) di dalam folder ini
+#
+# FORMAT DAFTAR OBJEK / BANGUNAN KUSTOM (AddSimpleModel):
+# AddSimpleModel(virtualworld, baseid, newid, "dffname.dff", "txdname.txd");
+# - virtualworld : -1 untuk semua virtual world
+# - baseid       : ID objek asli GTA yang dijadikan dasar collision/material
+# - newid        : ID objek kustom baru (contoh: 20002)
+#
+# ============================================================
+
+# ── Custom Vehicle Objects (Solusi Tanpa Replace) ──
+# Mendaftarkan model copcarsf sebagai Objek Kustom (ID -1000)
+# Base ID 19377 (objek standar yang aman untuk attach/collision)
+AddSimpleModel(-1, 19377, -1000, "copcarsf.dff", "copcarsf.txd");
+
+# ── Custom Skins Config ──
+# AddCharModel(265, 20001, "polisi_indo.dff", "polisi_indo.txd");
+# AddCharModel(100, 20002, "gojek_driver.dff", "gojek_driver.txd");
+
+# ── Custom Buildings / Props Config ──
+# AddSimpleModel(-1, 19377, 20003, "indomaret.dff", "indomaret.txd");
