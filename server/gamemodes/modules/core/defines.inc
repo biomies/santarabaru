@@ -27,6 +27,35 @@
 #define DLG_CHAR_ACTION         10
 #define DLG_CHAR_CONFIRM_DELETE 11
 #define DLG_CHAR_DELETE_LIST    12
+#define DLG_DEALER_CAT          20
+
+// ── Rodeo Luxury Dealership (Los Santos Barat) ─────────────
+#define DEALER_RODEO_X          541.5200
+#define DEALER_RODEO_Y          -1292.8300
+#define DEALER_RODEO_Z          17.2400
+
+#define DEALER_PREVIEW_X        554.2000
+#define DEALER_PREVIEW_Y        -1280.5000
+#define DEALER_PREVIEW_Z        17.2500
+#define DEALER_PREVIEW_A        220.0000
+
+#define DEALER_CAM_X            547.5000
+#define DEALER_CAM_Y            -1287.0000
+#define DEALER_CAM_Z            18.3000
+#define DEALER_LOOK_X           554.2000
+#define DEALER_LOOK_Y           -1280.5000
+#define DEALER_LOOK_Z           17.2500
+
+#define DEALER_DELIVER_X        539.5000
+#define DEALER_DELIVER_Y        -1273.0000
+#define DEALER_DELIVER_Z        17.2400
+#define DEALER_DELIVER_A        180.0000
+
+#define DEALER_CAT_SPORT        0
+#define DEALER_CAT_SEDAN        1
+#define DEALER_CAT_SUV          2
+#define DEALER_CAT_BIKE         3
+#define DEALER_CAT_COUNT        4
 
 // Batas maksimal karakter per akun
 #define MAX_CHARS_PER_ACCOUNT 3

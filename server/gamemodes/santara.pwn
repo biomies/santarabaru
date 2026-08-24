@@ -26,12 +26,14 @@
 #include "modules/ui/ktp_card.inc"
 #include "modules/ui/spawn_selector.inc"
 #include "modules/ui/skin_selector.inc"
+#include "modules/ui/dealership.inc"
 
 // ── Modul Database Pemain & Sistem Roleplay ─────────────────
 #include "modules/database/db_players.inc"
 #include "modules/systems/character.inc"
 #include "modules/systems/account.inc"
 #include "modules/systems/buildings.inc"
+#include "modules/systems/ownership.inc"
 
 // ── Modul Perintah (Commands) ───────────────────────────────
 #include "modules/commands/cmd_general.inc"
@@ -73,6 +75,11 @@ public OnGameModeInit() {
     DB_InitDatabase();
     InitVoiceSystem();
     InitBuildings();
+
+    // ── Rodeo Luxury Dealership (Los Santos Barat) ─────────────
+    Create3DTextLabel("{00EEFF}• RODEO LUXURY DEALERSHIP •\n{FFFFFF}Koleksi Mobil Sport, Sedan, SUV & Motor\n{FFFF00}Tekan [ H ] atau [ ALT ] untuk Beli",
+        0xFFFFFFFF, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z + 0.8, 20.0, 0, 1);
+    CreatePickup(1274, 1, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 0);
 
     gPlayTimeTimer = SetTimer("Timer_PlayTime", 60000, true);
     print("[SantaraBaru] Gamemode siap dimainkan!");
@@ -160,6 +167,8 @@ public OnPlayerFinishedDownloading(playerid, virtualworld) {
 public OnPlayerDisconnect(playerid, reason) {
     #pragma unused reason
     DoSavePlayer(playerid);
+    DestroyPlayerActiveVehicle(playerid);
+    CloseDealership(playerid);
     DestroyVoiceStream(playerid);
     DestroyPlayerMoneyHUD(playerid);
     DestroyPlayerSpawnTextDraws(playerid);
@@ -212,6 +221,9 @@ public OnPlayerSpawn(playerid) {
         // Map Icon Balai Kota Los Santos di radar (Icon 56: Mayor's Office / City Hall)
         SetPlayerMapIcon(playerid, 1, CITYHALL_EXT_X, CITYHALL_EXT_Y, CITYHALL_EXT_Z, 56, 0, MAPICON_GLOBAL);
 
+        // Map Icon Rodeo Dealership di radar (Icon 55: Car Dealership / Otto's Autos)
+        SetPlayerMapIcon(playerid, 2, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 55, 0, MAPICON_GLOBAL);
+
         SendClientMessage(playerid, COL_GREEN, "  Selamat datang! Ketik {00EEFF}/help{00CC66} untuk melihat perintah.");
     }
     return 1;
@@ -228,6 +240,7 @@ public OnPlayerText(playerid, text[]) {
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
     if (HandleAccountDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleCharacterDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
+    if (HandleDealershipDialog(playerid, dialogid, response, listitem)) return 1;
     return 1;
 }
 
@@ -404,6 +417,11 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
         return 1;
     }
 
+    // ── 4. LIVE 3D RODEO DEALERSHIP ──
+    if (gPlayerData[playerid][p_InDealership]) {
+        if (HandleDealershipClick(playerid, playertextid)) return 1;
+    }
+
     return 0;
 }
 
@@ -434,10 +452,20 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
             SendClientMessage(playerid, COL_GREY, "  * Pemilihan skin dibatalkan.");
             return 1;
         }
+        if (gPlayerData[playerid][p_InDealership]) {
+            CloseDealership(playerid);
+            return 1;
+        }
     }
     return 0;
 }
 
 public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
+    if ((newkeys & KEY_CTRL_BACK) || (newkeys & KEY_WALK)) {
+        if (IsPlayerInRangeOfPoint(playerid, 3.5, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z)) {
+            OpenDealership(playerid);
+            return 1;
+        }
+    }
     return HandleBuildingKeys(playerid, newkeys, oldkeys);
 }

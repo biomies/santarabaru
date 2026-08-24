@@ -45,7 +45,15 @@ enum E_PLAYER_DATA {
     bool:p_HasKTP,
     // ── Status Download Custom Asset ──
     bool:p_FinishedDownload,
-    bool:p_AuthLoaded
+    bool:p_AuthLoaded,
+    // ── Status Dealership & Kendaraan Pribadi ──
+    bool:p_InDealership,
+    p_DealerCat,
+    p_DealerIndex,
+    p_DealerColorIdx,
+    p_DealerPreviewVeh,
+    p_ActiveVehID,
+    p_ActiveVehDBID
 }
 
 new gPlayerData[MAX_PLAYERS][E_PLAYER_DATA];
@@ -91,4 +99,11 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_HasKTP]         = false;
     gPlayerData[playerid][p_FinishedDownload] = false;
     gPlayerData[playerid][p_AuthLoaded]     = false;
+    gPlayerData[playerid][p_InDealership]   = false;
+    gPlayerData[playerid][p_DealerCat]      = 0;
+    gPlayerData[playerid][p_DealerIndex]    = 0;
+    gPlayerData[playerid][p_DealerColorIdx] = 0;
+    gPlayerData[playerid][p_DealerPreviewVeh] = INVALID_VEHICLE_ID;
+    gPlayerData[playerid][p_ActiveVehID]    = INVALID_VEHICLE_ID;
+    gPlayerData[playerid][p_ActiveVehDBID]  = 0;
 }
