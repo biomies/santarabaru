@@ -35,14 +35,17 @@ new PlayerText:TD_StatusTxtThirst[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW,
 new PlayerText:TD_StatusTxtHunger[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW, ...};
 
 stock GetPlayerJobName(playerid, jobName[], len = 32) {
-    switch (gPlayerData[playerid][p_Job]) {
-        case 1: format(jobName, len, "Supir Taksi");
-        case 2: format(jobName, len, "Mekanik");
-        case 3: format(jobName, len, "Kurir Paket");
-        case 4: format(jobName, len, "Supir Truk");
-        case 5: format(jobName, len, "Petani");
-        default: format(jobName, len, "Pengangguran");
+    new query[128];
+    format(query, sizeof(query), "SELECT `name` FROM `jobs` WHERE `id` = %d LIMIT 1", gPlayerData[playerid][p_Job]);
+    new DBResult:res = DB_ExecuteQuery(gDB, query);
+    if (res && DB_GetRowCount(res) > 0) {
+        DB_GetFieldStringByName(res, "name", jobName, len);
+        DB_FreeResultSet(res);
+        return 1;
     }
+    if (res) DB_FreeResultSet(res);
+    format(jobName, len, "Pengangguran");
+    return 1;
 }
 
 stock DestroyPlayerMoneyHUD(playerid) {
@@ -136,8 +139,8 @@ stock CreatePlayerMoneyHUD(playerid) {
     PlayerTextDrawAlignment(playerid, TD_HudLogo[playerid], 2);
     PlayerTextDrawSetSelectable(playerid, TD_HudLogo[playerid], false);
 
-    // 4. Line 1: ID : 00 (Right-Aligned)
-    TD_HudID[playerid] = CreatePlayerTextDraw(playerid, 622.0, 24.0, "ID : 00");
+    // 4. Line 1: ID : 0 (Right-Aligned)
+    TD_HudID[playerid] = CreatePlayerTextDraw(playerid, 622.0, 24.0, "ID : 0");
     PlayerTextDrawFont(playerid, TD_HudID[playerid], 2);
     PlayerTextDrawLetterSize(playerid, TD_HudID[playerid], 0.18, 0.95);
     PlayerTextDrawColor(playerid, TD_HudID[playerid], 0xFFFFFFFF);
@@ -266,9 +269,9 @@ stock HidePlayerMoneyHUD(playerid) {
 stock UpdatePlayerMoneyHUD(playerid) {
     if (TD_HudMoney[playerid] == PlayerText:INVALID_TEXT_DRAW) return;
 
-    // 1. Line 1: ID : %02d
+    // 1. Line 1: ID : %d
     new idStr[32];
-    format(idStr, sizeof(idStr), "ID : %02d", playerid);
+    format(idStr, sizeof(idStr), "ID : %d", playerid);
     PlayerTextDrawSetString(playerid, TD_HudID[playerid], idStr);
 
     // 2. Line 2: [Nama Karakter]

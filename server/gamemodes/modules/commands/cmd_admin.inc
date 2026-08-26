@@ -784,3 +784,58 @@ CMD:gotopos(playerid, params[]) {
 CMD:tp(playerid, params[]) {
     return cmd_tpgps(playerid, params);
 }
+
+// ── 13. Manajemen Pekerjaan Pemain (/setjob) ────────────────
+
+CMD:setjob(playerid, params[]) {
+    if (!IsAdmin(playerid, 1)) {
+        SendClientMessage(playerid, COL_RED, "  [Error] Anda tidak memiliki izin untuk menggunakan perintah ini!");
+        return 1;
+    }
+
+    new targetid, jobid;
+    if (sscanf(params, "ud", targetid, jobid)) {
+        SendClientMessage(playerid, COL_YELLOW, "  Gunakan: /setjob [playerid/nama] [job_id]");
+        SendClientMessage(playerid, COL_GREY, "  Daftar Job: 0 = Pengangguran");
+        return 1;
+    }
+
+    if (!IsPlayerConnected(targetid) || !gPlayerData[targetid][p_Spawned]) {
+        SendClientMessage(playerid, COL_RED, "  [Error] Pemain target tidak ditemukan atau belum login!");
+        return 1;
+    }
+
+    // Cek apakah job_id ada di tabel jobs
+    new qCheck[128], jName[32];
+    format(qCheck, sizeof(qCheck), "SELECT `name` FROM `jobs` WHERE `id`=%d LIMIT 1", jobid);
+    new DBResult:res = DB_ExecuteQuery(gDB, qCheck);
+    if (!res || DB_GetRowCount(res) == 0) {
+        if (res) DB_FreeResultSet(res);
+        SendClientMessage(playerid, COL_RED, "  [Error] Job ID tersebut tidak terdaftar di database jobs!");
+        return 1;
+    }
+    DB_GetFieldStringByName(res, "name", jName, sizeof(jName));
+    DB_FreeResultSet(res);
+
+    gPlayerData[targetid][p_Job] = jobid;
+
+    // Simpan ke database
+    new qUpd[128];
+    format(qUpd, sizeof(qUpd), "UPDATE `characters` SET `job_id`=%d WHERE `id`=%d", jobid, gPlayerData[targetid][p_CharID]);
+    DB_FreeResultSet(DB_ExecuteQuery(gDB, qUpd));
+
+    // Update HUD
+    UpdatePlayerMoneyHUD(targetid);
+
+    new targetName[48], adminName[MAX_PLAYER_NAME + 1], msgAdmin[144], msgTarget[144];
+    GetCharName(targetid, targetName);
+    GetPlayerName(playerid, adminName, sizeof(adminName));
+
+    format(msgAdmin, sizeof(msgAdmin), "  [Admin] Anda telah mengubah pekerjaan %s menjadi: %s (ID: %d).", targetName, jName, jobid);
+    SendClientMessage(playerid, COL_GREEN, msgAdmin);
+
+    format(msgTarget, sizeof(msgTarget), "  [Admin] Pekerjaan Anda telah diubah oleh Admin %s menjadi: %s.", adminName, jName);
+    SendClientMessage(targetid, COL_CYAN, msgTarget);
+    return 1;
+}
+

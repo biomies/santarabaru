@@ -14,8 +14,9 @@ stock DoSavePlayer(playerid) {
     GetPlayerFacingAngle(playerid, a);
     new query[512];
     format(query, sizeof(query),
-        "UPDATE `characters` SET `skin_id`=%d, `x`=%.4f, `y`=%.4f, `z`=%.4f, `angle`=%.4f, `score`=%d, `cash`=%d, `hunger`=%.2f, `thirst`=%.2f, `play_minutes`=`play_minutes`+%d WHERE `id`=%d",
+        "UPDATE `characters` SET `skin_id`=%d, `job_id`=%d, `x`=%.4f, `y`=%.4f, `z`=%.4f, `angle`=%.4f, `score`=%d, `cash`=%d, `hunger`=%.2f, `thirst`=%.2f, `play_minutes`=`play_minutes`+%d WHERE `id`=%d",
         gPlayerData[playerid][p_Skin],
+        gPlayerData[playerid][p_Job],
         x, y, z, a,
         GetPlayerScore(playerid), gPlayerData[playerid][p_Cash],
         gPlayerData[playerid][p_Hunger], gPlayerData[playerid][p_Thirst],
@@ -28,7 +29,7 @@ stock DoSavePlayer(playerid) {
 stock LoadCharacter(playerid, charid) {
     new query[256];
     format(query, sizeof(query),
-        "SELECT `id`, `char_name`, `birthplace`, `birthdate`, `gender`, `skin_id`, `x`, `y`, `z`, `angle`, `score`, `cash`, `has_ktp`, `hunger`, `thirst` FROM `characters` WHERE `id` = %d AND `account_id` = %d AND `is_active` = 1 LIMIT 1",
+        "SELECT `id`, `char_name`, `birthplace`, `birthdate`, `gender`, `skin_id`, `job_id`, `x`, `y`, `z`, `angle`, `score`, `cash`, `has_ktp`, `hunger`, `thirst` FROM `characters` WHERE `id` = %d AND `account_id` = %d AND `is_active` = 1 LIMIT 1",
         charid, gPlayerData[playerid][p_AccountID]);
 
     new DBResult:res = DB_ExecuteQuery(gDB, query);
@@ -40,6 +41,7 @@ stock LoadCharacter(playerid, charid) {
 
     gPlayerData[playerid][p_CharID] = DB_GetFieldIntByName(res, "id");
     gPlayerData[playerid][p_Skin]   = DB_GetFieldIntByName(res, "skin_id");
+    gPlayerData[playerid][p_Job]    = DB_GetFieldIntByName(res, "job_id");
     gPlayerData[playerid][p_X]      = DB_GetFieldFloatByName(res, "x");
     gPlayerData[playerid][p_Y]      = DB_GetFieldFloatByName(res, "y");
     gPlayerData[playerid][p_Z]      = DB_GetFieldFloatByName(res, "z");

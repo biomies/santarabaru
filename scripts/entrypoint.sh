@@ -73,8 +73,9 @@ cat > /server/config.json <<EOF
         "port": ${SAMP_PORT}
     },
     "sampvoice": {
-        "voice_port": ${VOICE_PORT},
-        "check_for_streamed_in": true
+        "port": ${VOICE_PORT},
+        "threads": 4,
+        "updaterate": 30
     }
 }
 EOF
