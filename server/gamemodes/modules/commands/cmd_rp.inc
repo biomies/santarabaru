@@ -4,7 +4,7 @@
 #define _MODULE_CMD_RP_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Roleplay Chat Commands (/s, /sh, /w, /me, /do, /ooc)
+//  SantaraBaru Roleplay - Roleplay Chat Commands (/s, /sh, /w, /me, /do, /ooc)
 // ============================================================
 
 CMD:s(playerid, params[]) {

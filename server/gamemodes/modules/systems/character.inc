@@ -4,7 +4,7 @@
 #define _MODULE_CHARACTER_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Multi-Character System & Creation Wizard
+//  SantaraBaru Roleplay - Multi-Character System & Creation Wizard
 // ============================================================
 
 stock StartNewCharacterCreation(playerid) {
@@ -124,7 +124,7 @@ stock ShowCharDeleteList(playerid) {
     new listBody[512];
     for (new i = 0; i < gPlayerData[playerid][p_CharListCount]; i++) {
         new row[128];
-        format(row, sizeof(row), "{FF4040}🗑️ Hapus Karakter: {FFFFFF}%s\n", gCharListNames[playerid][i]);
+        format(row, sizeof(row), "{FF4040}[Hapus] Karakter: {FFFFFF}%s\n", gCharListNames[playerid][i]);
         strcat(listBody, row);
     }
 
@@ -135,7 +135,7 @@ stock ShowCharDeleteList(playerid) {
 
 stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputtext[]) {
     switch (dialogid) {
-        // ── Dialog Pemilihan Karakter (Multi-Character List) ──
+        //    Dialog Pemilihan Karakter (Multi-Character List)   
         case DLG_CHAR_SELECT: {
             if (!response) {
                 // Klik tombol kanan "Hapus Karakter" -> Buka menu list hapus karakter
@@ -157,7 +157,7 @@ stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputt
             return 1;
         }
 
-        // ── Dialog Daftar Karakter yang Ingin Dihapus ─────────
+        //    Dialog Daftar Karakter yang Ingin Dihapus          
         case DLG_CHAR_DELETE_LIST: {
             if (!response) {
                 ShowCharacterSelection(playerid);
@@ -172,9 +172,9 @@ stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputt
                 format(confirmTitle, sizeof(confirmTitle), "Konfirmasi Hapus Karakter");
                 format(confirmMsg, sizeof(confirmMsg),
                     "{FFFFFF}Apakah Anda yakin ingin menghapus karakter {FFFF00}%s{FFFFFF}?\n\n\
-                    {AAAAAA}• Status karakter akan dinonaktifkan (is_active = 0).\n\
-                    • Karakter ini tidak akan muncul lagi di daftar pemilihan.\n\
-                    • Data karakter tetap aman tersimpan di database server.\n\n\
+                    {AAAAAA}* Status karakter akan dinonaktifkan (is_active = 0).\n\
+                    * Karakter ini tidak akan muncul lagi di daftar pemilihan.\n\
+                    * Data karakter tetap aman tersimpan di database server.\n\n\
                     {FF4040}Tekan 'Hapus' untuk mengonfirmasi soft delete.",
                     gPlayerData[playerid][p_TempSelectedCharName]);
                 ShowPlayerDialog(playerid, DLG_CHAR_CONFIRM_DELETE, DIALOG_STYLE_MSGBOX, confirmTitle, confirmMsg, "Hapus", "Batal");
@@ -184,7 +184,7 @@ stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputt
             return 1;
         }
 
-        // ── Dialog Konfirmasi Hapus Karakter (Soft Delete) ─────
+        //    Dialog Konfirmasi Hapus Karakter (Soft Delete)      
         case DLG_CHAR_CONFIRM_DELETE: {
             if (!response) {
                 // Batal -> kembali ke pemilihan karakter
@@ -199,7 +199,7 @@ stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputt
             DB_FreeResultSet(DB_ExecuteQuery(gDB, query));
 
             new msg[128];
-            format(msg, sizeof(msg), "  ✓ Karakter {FFFF00}%s {00CC66}berhasil dihapus / dinonaktifkan.", gPlayerData[playerid][p_TempSelectedCharName]);
+            format(msg, sizeof(msg), "  [OK] Karakter {FFFF00}%s {00CC66}berhasil dihapus / dinonaktifkan.", gPlayerData[playerid][p_TempSelectedCharName]);
             SendClientMessage(playerid, COL_GREEN, msg);
 
             // Buka kembali menu karakter yang sudah ter-update
@@ -207,7 +207,7 @@ stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputt
             return 1;
         }
 
-        // ── Form Dashboard Karakter (1 UI Utama dengan Field Terpisah) ──
+        //    Form Dashboard Karakter (1 UI Utama dengan Field Terpisah)   
         case DLG_CHAR_DASHBOARD: {
             if (!response) {
                 if (gPlayerData[playerid][p_CharListCount] > 0) {
@@ -279,7 +279,7 @@ stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputt
             return 1;
         }
 
-        // ── Input Field 1: Nama Karakter ──────────────────────
+        //    Input Field 1: Nama Karakter                       
         case DLG_FORM_NAME: {
             if (!response) {
                 ShowCharFormDashboard(playerid);
@@ -327,7 +327,7 @@ stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputt
             return 1;
         }
 
-        // ── Input Field 2: Tempat Lahir ───────────────────────
+        //    Input Field 2: Tempat Lahir                        
         case DLG_FORM_BIRTHPLACE: {
             if (!response) {
                 ShowCharFormDashboard(playerid);
@@ -347,7 +347,7 @@ stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputt
             return 1;
         }
 
-        // ── Input Field 3: Tanggal Lahir ──────────────────────
+        //    Input Field 3: Tanggal Lahir                       
         case DLG_FORM_BIRTHDATE: {
             if (!response) {
                 ShowCharFormDashboard(playerid);
@@ -367,7 +367,7 @@ stock HandleCharacterDialog(playerid, dialogid, response, listitem, const inputt
             return 1;
         }
 
-        // ── Input Field 4: Jenis Kelamin ──────────────────────
+        //    Input Field 4: Jenis Kelamin                       
         case DLG_FORM_GENDER: {
             if (!response) {
                 ShowCharFormDashboard(playerid);

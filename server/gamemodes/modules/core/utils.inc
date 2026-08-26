@@ -4,7 +4,7 @@
 #define _MODULE_UTILS_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Core Utilities & Helper Functions
+//  SantaraBaru Roleplay - Core Utilities & Helper Functions
 // ============================================================
 
 forward KickPlayer(playerid);

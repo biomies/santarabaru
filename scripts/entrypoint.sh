@@ -42,6 +42,7 @@ cat > /server/config.json <<EOF
     "password": "",
     "port": ${SAMP_PORT},
     "rcon": {
+        "enable": true,
         "allow_teleport": false,
         "password": "${RCON_PASSWORD}"
     },

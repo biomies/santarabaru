@@ -4,7 +4,7 @@
 #define _MODULE_CHAT_RP_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Roleplay Chat System & Proximity
+//  SantaraBaru Roleplay - Roleplay Chat System & Proximity
 // ============================================================
 
 stock DoProximitySay(playerid, const text[], Float:radius, color, bool:shout) {

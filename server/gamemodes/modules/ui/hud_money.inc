@@ -4,7 +4,7 @@
 #define _MODULE_HUD_MONEY_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Custom Top-Right Luxury HUD (#1D1D1D & #E69958)
+//  SantaraBaru Roleplay - Custom Top-Right Luxury HUD (#1D1D1D & #E69958)
 // ============================================================
 
 new PlayerText:TD_HudBox[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};

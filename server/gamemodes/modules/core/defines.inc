@@ -4,7 +4,7 @@
 #define _MODULE_DEFINES_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Core Defines & Constants
+//  SantaraBaru Roleplay - Core Defines & Constants
 // ============================================================
 
 #define GAMEMODE_VERSION    "1.3.0"
@@ -28,28 +28,49 @@
 #define DLG_CHAR_CONFIRM_DELETE 11
 #define DLG_CHAR_DELETE_LIST    12
 #define DLG_DEALER_CAT          20
+#define DLG_VEH_MAIN            30
+#define DLG_VEH_ACTION          31
+#define DLG_INSURANCE_MAIN      32
+#define DLG_INSURANCE_CONFIRM   33
+#define DLG_GPS_MENU            40
+#define DLG_GPS_GARAGE          41
+#define DLG_GPS_INSURANCE       42
+#define DLG_ADMIN_TELEPORT      50
+#define DLG_ADMIN_TP_INSURANCE  51
+#define DLG_ADMIN_TP_GARAGE     52
 
-// ── Rodeo Luxury Dealership (Los Santos Barat) ─────────────
-#define DEALER_RODEO_X          541.5200
-#define DEALER_RODEO_Y          -1292.8300
-#define DEALER_RODEO_Z          17.2400
+// Status Kendaraan Pribadi
+#define VEH_STATUS_OUTSIDE      0   // Terparkir di Luar (Dunia Game)
+#define VEH_STATUS_GARAGE       1   // Disimpan di Garasi Publik
+#define VEH_STATUS_INSURANCE    2   // Hancur / Dalam Asuransi
 
-#define DEALER_PREVIEW_X        554.2000
-#define DEALER_PREVIEW_Y        -1280.5000
-#define DEALER_PREVIEW_Z        17.2500
-#define DEALER_PREVIEW_A        220.0000
+//    Kantor Asuransi Los Santos (Commerce)                    
+#define INSURANCE_X             1766.4250
+#define INSURANCE_Y             -1700.5420
+#define INSURANCE_Z             13.5469
 
-#define DEALER_CAM_X            547.5000
-#define DEALER_CAM_Y            -1287.0000
-#define DEALER_CAM_Z            18.3000
-#define DEALER_LOOK_X           554.2000
-#define DEALER_LOOK_Y           -1280.5000
-#define DEALER_LOOK_Z           17.2500
 
-#define DEALER_DELIVER_X        539.5000
-#define DEALER_DELIVER_Y        -1273.0000
-#define DEALER_DELIVER_Z        17.2400
-#define DEALER_DELIVER_A        180.0000
+//    Coutt and Schutz Auto Showroom (Los Santos)
+#define DEALER_RODEO_X          2131.7839
+#define DEALER_RODEO_Y          -1148.1304
+#define DEALER_RODEO_Z          24.4051
+
+#define DEALER_PREVIEW_X        2126.1943
+#define DEALER_PREVIEW_Y        -1129.0712
+#define DEALER_PREVIEW_Z        25.5196
+#define DEALER_PREVIEW_A        340.9118
+
+#define DEALER_CAM_X            2129.5000
+#define DEALER_CAM_Y            -1136.0000
+#define DEALER_CAM_Z            27.0000
+#define DEALER_LOOK_X           2126.1943
+#define DEALER_LOOK_Y           -1129.0712
+#define DEALER_LOOK_Z           25.8000
+
+#define DEALER_DELIVER_X        2126.1943
+#define DEALER_DELIVER_Y        -1129.0712
+#define DEALER_DELIVER_Z        25.5196
+#define DEALER_DELIVER_A        340.9118
 
 #define DEALER_CAT_SPORT        0
 #define DEALER_CAT_SEDAN        1
@@ -90,7 +111,7 @@
 #define SPAWN_BUS_Z         15.36
 #define SPAWN_BUS_A         270.0
 
-// ── Lokasi Balai Kota (City Hall Los Santos & Interior Planning Department) ──
+//    Lokasi Balai Kota (City Hall Los Santos & Interior Planning Department)   
 #define CITYHALL_EXT_X      1481.1611
 #define CITYHALL_EXT_Y      -1771.6991
 #define CITYHALL_EXT_Z      18.7958
@@ -102,7 +123,7 @@
 #define CITYHALL_INT_Z      1008.3828
 #define CITYHALL_INT_A      90.0
 
-// ── Lokasi Loket Catatan Sipil & Pembuatan e-KTP (Balai Kota LV Interior) ──
+//    Lokasi Loket Catatan Sipil & Pembuatan e-KTP (Balai Kota LV Interior)   
 #define KTP_DESK_INT_ID     3
 #define KTP_DESK_VW_ID      0
 #define KTP_DESK_X          361.8269

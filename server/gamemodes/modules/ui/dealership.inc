@@ -4,7 +4,7 @@
 #define _MODULE_DEALERSHIP_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Rodeo Luxury Dealership & Live 3D UI
+//  SantaraBaru Roleplay - Rodeo Luxury Dealership & Live 3D UI
 // ============================================================
 
 enum E_DEALER_VEHICLE {
@@ -16,7 +16,7 @@ enum E_DEALER_VEHICLE {
     d_Seats
 };
 
-// ── 1. Mobil Sport, Tuners & Supercar (24 Kendaraan) ────────
+//    1. Mobil Sport, Tuners & Supercar (24 Kendaraan)         
 new const gSportVehicles[][E_DEALER_VEHICLE] = {
     {411, "Infernus",       "Supercar V12 Top",     750000000, 240, 2},
     {451, "Turismo",        "Supercar Italia",      680000000, 235, 2},
@@ -44,7 +44,7 @@ new const gSportVehicles[][E_DEALER_VEHICLE] = {
     {434, "Hotknife",       "Custom Hot Rod",       420000000, 200, 2}
 };
 
-// ── 2. Mobil Sedan, Klasik & Lowrider (46 Kendaraan) ────────
+//    2. Mobil Sedan, Klasik & Lowrider (46 Kendaraan)         
 new const gSedanVehicles[][E_DEALER_VEHICLE] = {
     {426, "Premier",        "Sedan Harian Tangguh",  95000000, 190, 4},
     {405, "Sentinel",       "Sedan Eksekutif Mewah",140000000, 190, 4},
@@ -94,7 +94,7 @@ new const gSedanVehicles[][E_DEALER_VEHICLE] = {
     {418, "Moonbeam",       "Minivan Keluarga Luas", 60000000, 145, 4}
 };
 
-// ── 3. SUV, Pick-up & Off-Road (23 Kendaraan) ───────────────
+//    3. SUV, Pick-up & Off-Road (23 Kendaraan)                
 new const gSuvVehicles[][E_DEALER_VEHICLE] = {
     {579, "Huntley",        "Luxury Premium SUV",   350000000, 180, 4},
     {400, "Landstalker",    "SUV Keluarga Tangguh", 180000000, 170, 4},
@@ -121,7 +121,7 @@ new const gSuvVehicles[][E_DEALER_VEHICLE] = {
     {471, "Quad",           "ATV Roda 4 Petualang",  45000000, 130, 2}
 };
 
-// ── 4. Sepeda Motor, Skuter & Sepeda (12 Kendaraan) ─────────
+//    4. Sepeda Motor, Skuter & Sepeda (12 Kendaraan)          
 new const gBikeVehicles[][E_DEALER_VEHICLE] = {
     {522, "NRG-500",        "Superbike Balap 500cc",250000000, 210, 2},
     {521, "FCR-900",        "Naked Sport 900cc",    175000000, 190, 2},
@@ -137,7 +137,7 @@ new const gBikeVehicles[][E_DEALER_VEHICLE] = {
     {509, "Bike",           "Sepeda Santai Klasik",   4500000,  50, 1}
 };
 
-// ── Warna Display Dealer (18 Warna Populer GTA SA) ──────────
+//    Warna Display Dealer (18 Warna Populer GTA SA)           
 new const gDealerColors[] = {
     1,   // Putih
     0,   // Hitam
@@ -386,7 +386,7 @@ stock OpenDealership(playerid) {
     DestroyPlayerDealerTextDraws(playerid);
     HidePlayerMoneyHUD(playerid);
 
-    // ── Buat UI TextDraw Dealership di KANAN (X: 430 .. 610) ───
+    //    Buat UI TextDraw Dealership di KANAN (X: 430 .. 610)    
 
     // 1. Background Box (#1D1D1D Dark Matte di Kanan)
     TD_DealerBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 95.0, "_");
@@ -405,7 +405,7 @@ stock OpenDealership(playerid) {
     PlayerTextDrawSetSelectable(playerid, TD_DealerHeader[playerid], 0);
 
     // 3. Header Title Text
-    TD_DealerTitle[playerid] = CreatePlayerTextDraw(playerid, 520.0, 100.0, "RODEO DEALERSHIP");
+    TD_DealerTitle[playerid] = CreatePlayerTextDraw(playerid, 520.0, 100.0, "COUTT & SCHUTZ");
     PlayerTextDrawFont(playerid, TD_DealerTitle[playerid], 2);
     PlayerTextDrawLetterSize(playerid, TD_DealerTitle[playerid], 0.25, 1.2);
     PlayerTextDrawColor(playerid, TD_DealerTitle[playerid], 0xFFFFFFFF);
@@ -474,27 +474,27 @@ stock OpenDealership(playerid) {
     PlayerTextDrawSetOutline(playerid, TD_DealerColorBtn[playerid], 1);
     PlayerTextDrawSetSelectable(playerid, TD_DealerColorBtn[playerid], 1);
 
-    // 10. Button: [ 🛒 BELI KENDARAAN ] (Clickable)
-    TD_DealerBuyBtn[playerid] = CreatePlayerTextDraw(playerid, 438.0, 315.0, "  [ 🛒 BELI KENDARAAN ]");
+    // 10. Button: [ BELI KENDARAAN ] (Clickable)
+    TD_DealerBuyBtn[playerid] = CreatePlayerTextDraw(playerid, 438.0, 315.0, "   [ BELI KENDARAAN ]");
     PlayerTextDrawFont(playerid, TD_DealerBuyBtn[playerid], 2);
     PlayerTextDrawLetterSize(playerid, TD_DealerBuyBtn[playerid], 0.20, 1.35);
     PlayerTextDrawColor(playerid, TD_DealerBuyBtn[playerid], 0x2ECC71FF);
-    PlayerTextDrawUseBox(playerid, TD_DealerBuyBtn[playerid], 1);
+    PlayerTextDrawUseBox(playerid, TD_DealerBuyBtn[playerid], true);
     PlayerTextDrawBoxColor(playerid, TD_DealerBuyBtn[playerid], 0x1A3828FF);
     PlayerTextDrawTextSize(playerid, TD_DealerBuyBtn[playerid], 602.0, 16.0);
-    PlayerTextDrawSetOutline(playerid, TD_DealerBuyBtn[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerBuyBtn[playerid], 1);
+    PlayerTextDrawSetOutline(playerid, TD_DealerBuyBtn[playerid], true);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerBuyBtn[playerid], true);
 
-    // 11. Button: [ ✖ BATAL / KELUAR ] (Clickable)
-    TD_DealerCancelBtn[playerid] = CreatePlayerTextDraw(playerid, 438.0, 340.0, "   [ ✖ BATAL / KELUAR ]");
+    // 11. Button: [ BATAL / KELUAR ] (Clickable)
+    TD_DealerCancelBtn[playerid] = CreatePlayerTextDraw(playerid, 438.0, 340.0, "   [ BATAL / KELUAR ]");
     PlayerTextDrawFont(playerid, TD_DealerCancelBtn[playerid], 2);
     PlayerTextDrawLetterSize(playerid, TD_DealerCancelBtn[playerid], 0.20, 1.25);
     PlayerTextDrawColor(playerid, TD_DealerCancelBtn[playerid], 0xE74C3CFF);
-    PlayerTextDrawUseBox(playerid, TD_DealerCancelBtn[playerid], 1);
+    PlayerTextDrawUseBox(playerid, TD_DealerCancelBtn[playerid], true);
     PlayerTextDrawBoxColor(playerid, TD_DealerCancelBtn[playerid], 0x3D1F1DFF);
     PlayerTextDrawTextSize(playerid, TD_DealerCancelBtn[playerid], 602.0, 15.0);
-    PlayerTextDrawSetOutline(playerid, TD_DealerCancelBtn[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerCancelBtn[playerid], 1);
+    PlayerTextDrawSetOutline(playerid, TD_DealerCancelBtn[playerid], true);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerCancelBtn[playerid], true);
 
     // 12. Hint Footer
     TD_DealerHint[playerid] = CreatePlayerTextDraw(playerid, 520.0, 363.0, "Klik menu di atas atau tekan ESC untuk keluar");
@@ -551,10 +551,10 @@ stock CloseDealership(playerid) {
 stock ShowDealerCatDialog(playerid) {
     new dialogText[256];
     format(dialogText, sizeof(dialogText),
-        "🏎️ Mobil Sport & Supercar\t(%d Unit)\n" \
-        "🚗 Mobil Sedan & Klasik\t(%d Unit)\n" \
-        "🚙 SUV, Pick-up & Off-Road\t(%d Unit)\n" \
-        "🏍️ Sepeda Motor & Skuter\t(%d Unit)",
+        "[Mobil] Mobil Sport & Supercar\t(%d Unit)\n" \
+        " Mobil Sedan & Klasik\t(%d Unit)\n" \
+        "  SUV, Pick-up & Off-Road\t(%d Unit)\n" \
+        "   Sepeda Motor & Skuter\t(%d Unit)",
         sizeof(gSportVehicles),
         sizeof(gSedanVehicles),
         sizeof(gSuvVehicles),

@@ -1,5 +1,5 @@
 // ============================================================
-//  SantaraBaru Roleplay — Entry Point Gamemode
+//  SantaraBaru Roleplay - Entry Point Gamemode
 //  Engine: open.mp v1.2.0 (Linux x86_64)
 // ============================================================
 
@@ -9,36 +9,39 @@
 #include <zcmd>
 #include <sscanf2>
 
-// ── Modul Core (Definisi, Player Data & Utilitas) ────────────
+//    Modul Core (Definisi, Player Data & Utilitas)             
 #include "modules/core/defines.inc"
 #include "modules/core/player_data.inc"
 #include "modules/core/utils.inc"
 
-// ── Modul Database ──────────────────────────────────────────
+//    Modul Database                                           
 #include "modules/database/db_init.inc"
 
-// ── Modul Voice & Chat Roleplay ─────────────────────────────
+//    Modul Voice & Chat Roleplay                              
 #include "modules/systems/voice.inc"
 #include "modules/systems/chat_rp.inc"
 
-// ── Modul UI & TextDraws ────────────────────────────────────
+//    Modul UI & TextDraws                                     
 #include "modules/ui/hud_money.inc"
 #include "modules/ui/ktp_card.inc"
 #include "modules/ui/spawn_selector.inc"
 #include "modules/ui/skin_selector.inc"
 #include "modules/ui/dealership.inc"
+#include "modules/ui/garage_ui.inc"
 
-// ── Modul Database Pemain & Sistem Roleplay ─────────────────
+//    Modul Database Pemain & Sistem Roleplay                  
 #include "modules/database/db_players.inc"
 #include "modules/systems/character.inc"
 #include "modules/systems/account.inc"
 #include "modules/systems/buildings.inc"
 #include "modules/systems/ownership.inc"
+#include "modules/ui/speedometer.inc"
 
-// ── Modul Perintah (Commands) ───────────────────────────────
+//    Modul Perintah (Commands)                                
 #include "modules/commands/cmd_general.inc"
 #include "modules/commands/cmd_rp.inc"
 #include "modules/commands/cmd_identity.inc"
+#include "modules/commands/cmd_admin.inc"
 
 // ============================================================
 //  ENTRY POINT & CALLBACKS
@@ -76,10 +79,15 @@ public OnGameModeInit() {
     InitVoiceSystem();
     InitBuildings();
 
-    // ── Rodeo Luxury Dealership (Los Santos Barat) ─────────────
-    Create3DTextLabel("{00EEFF}• RODEO LUXURY DEALERSHIP •\n{FFFFFF}Koleksi Mobil Sport, Sedan, SUV & Motor\n{FFFF00}Tekan [ H ] atau [ ALT ] untuk Beli",
-        0xFFFFFFFF, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z + 0.8, 20.0, 0, 1);
+    //    Coutt and Schutz Auto Showroom (Los Santos)
+    Create3DTextLabel("{00EEFF}[ COUTT AND SCHUTZ SHOWROOM ]\n{FFFFFF}Koleksi Mobil Sport, Sedan, SUV dan Motor\n{FFFF00}Tekan [ H ] atau [ F ] untuk Beli",
+        0xFFFFFFFF, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z + 0.8, 20.0, 0, true);
     CreatePickup(1274, 1, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 0);
+
+    //    Inisialisasi Jaringan Garasi Publik & Kantor Asuransi
+    InitPublicGarages();
+    InitInsuranceCenter();
+    SyncVehiclesOnServerStart();
 
     gPlayTimeTimer = SetTimer("Timer_PlayTime", 60000, true);
     print("[SantaraBaru] Gamemode siap dimainkan!");
@@ -112,16 +120,17 @@ stock ProceedPlayerAuth(playerid) {
     gPlayerData[playerid][p_FinishedDownload] = true;
 
     PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
-    SendClientMessage(playerid, COL_GREEN, "  [Asset Server] ✓ Seluruh asset & model kustom siap digunakan.");
+    SendClientMessage(playerid, COL_GREEN, "  [Asset Server] [OK] Seluruh asset & model kustom siap digunakan.");
 
     new query[256];
     format(query, sizeof(query),
-        "SELECT `id` FROM `accounts` WHERE `username`='%s' LIMIT 1",
+        "SELECT `id`, `admin_level` FROM `accounts` WHERE `username`='%s' LIMIT 1",
         gPlayerData[playerid][p_Username]);
 
     new DBResult:res = DB_ExecuteQuery(gDB, query);
     if (res && DB_GetRowCount(res) > 0) {
         gPlayerData[playerid][p_AccountID]  = DB_GetFieldIntByName(res, "id");
+        gPlayerData[playerid][p_AdminLevel] = DB_GetFieldIntByName(res, "admin_level");
         gPlayerData[playerid][p_Registered] = true;
         DB_FreeResultSet(res);
         ShowLoginDialog(playerid, "");
@@ -169,8 +178,10 @@ public OnPlayerDisconnect(playerid, reason) {
     DoSavePlayer(playerid);
     DestroyPlayerActiveVehicle(playerid);
     CloseDealership(playerid);
+    CloseGarageUI(playerid);
     DestroyVoiceStream(playerid);
     DestroyPlayerMoneyHUD(playerid);
+    HideSpeedometer(playerid);
     DestroyPlayerSpawnTextDraws(playerid);
     DestroyPlayerSkinTextDraws(playerid);
     DestroyPlayerKTPTextDraws(playerid);
@@ -218,13 +229,10 @@ public OnPlayerSpawn(playerid) {
                 "  [Voice] Voice Chat aktif (radius 20m). Bicara lewat mikrofon HP/PC.");
         }
 
-        // Map Icon Balai Kota Los Santos di radar (Icon 56: Mayor's Office / City Hall)
-        SetPlayerMapIcon(playerid, 1, CITYHALL_EXT_X, CITYHALL_EXT_Y, CITYHALL_EXT_Z, 56, 0, MAPICON_GLOBAL);
+        // Pasang Map Icons Legenda Peta (Balai Kota, Rodeo Dealer, Asuransi, & 10 Garasi Kota)
+        SetupPlayerMapIcons(playerid);
 
-        // Map Icon Rodeo Dealership di radar (Icon 55: Car Dealership / Otto's Autos)
-        SetPlayerMapIcon(playerid, 2, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 55, 0, MAPICON_GLOBAL);
-
-        SendClientMessage(playerid, COL_GREEN, "  Selamat datang! Ketik {00EEFF}/help{00CC66} untuk melihat perintah.");
+        SendClientMessage(playerid, COL_GREEN, "  Selamat datang! Ketik {00EEFF}/help{00CC66} untuk melihat perintah atau {00EEFF}/gps{00CC66} untuk peta.");
     }
     return 1;
 }
@@ -241,11 +249,15 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
     if (HandleAccountDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleCharacterDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleDealershipDialog(playerid, dialogid, response, listitem)) return 1;
+    if (HandleVehicleMenuDialog(playerid, dialogid, response, listitem)) return 1;
+    if (HandleInsuranceDialog(playerid, dialogid, response, listitem)) return 1;
+    if (HandleGPSDialog(playerid, dialogid, response, listitem)) return 1;
+    if (HandleAdminTeleportDialog(playerid, dialogid, response, listitem)) return 1;
     return 1;
 }
 
 public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
-    // ── 1. LIVE EAGLE-EYE SPAWN SELECTOR ──
+    //    1. LIVE EAGLE-EYE SPAWN SELECTOR   
     if (gPlayerData[playerid][p_SelectingSpawn]) {
         new total = gPlayerData[playerid][p_IsNewCharacter] ? PUBLIC_SPAWN_COUNT : (PUBLIC_SPAWN_COUNT + 1);
 
@@ -339,7 +351,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
         return 1;
     }
 
-    // ── 2. LIVE 3D SKIN SELECTOR ──
+    //    2. LIVE 3D SKIN SELECTOR   
     if (gPlayerData[playerid][p_SelectingSkin]) {
         // 1. Tombol PREVIOUS (<<)
         if (playertextid == TD_SkinPrev[playerid]) {
@@ -387,7 +399,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
             CloseSkinSelection(playerid, true);
 
             new msg[128];
-            format(msg, sizeof(msg), "  ✓ Penampilan karakter {FFFF00}%s {00CC66}berhasil disimpan! (Skin ID: %d)",
+            format(msg, sizeof(msg), "  [OK] Penampilan karakter {FFFF00}%s {00CC66}berhasil disimpan! (Skin ID: %d)",
                 gSkinNames[gPlayerData[playerid][p_SkinIndex]], gPlayerData[playerid][p_Skin]);
             SendClientMessage(playerid, COL_GREEN, msg);
             return 1;
@@ -396,7 +408,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
         // 5. Tombol BATAL
         if (playertextid == TD_SkinCancel[playerid]) {
             if (gPlayerData[playerid][p_IsNewCharacter]) {
-                SendClientMessage(playerid, COL_RED, "  ✗ Anda harus memilih skin untuk menyelesaikan pembuatan karakter.");
+                SendClientMessage(playerid, COL_RED, "    Anda harus memilih skin untuk menyelesaikan pembuatan karakter.");
                 return 1;
             }
             SetPlayerSkin(playerid, gPlayerData[playerid][p_OriginalSkin]);
@@ -408,7 +420,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
         return 1;
     }
 
-    // ── 3. SISTEM e-KTP CARD UI ──
+    //    3. SISTEM e-KTP CARD UI   
     if (gShowingKTP[playerid]) {
         if (playertextid == TD_KTP_Close[playerid]) {
             HidePlayerKTPCard(playerid);
@@ -417,9 +429,28 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
         return 1;
     }
 
-    // ── 4. LIVE 3D RODEO DEALERSHIP ──
+    //    4. LIVE 3D RODEO DEALERSHIP   
     if (gPlayerData[playerid][p_InDealership]) {
         if (HandleDealershipClick(playerid, playertextid)) return 1;
+    }
+
+    //    5. LIVE 3D GARASI PUBLIK KOTA   
+    if (gPlayerData[playerid][p_InGarageUI]) {
+        if (HandleGarageClick(playerid, playertextid)) return 1;
+    }
+
+    //    6. TOUCHPAD KONTROL KENDARAAN (Clickable TextDraw)
+    if (gPlayerInVehicleHUD[playerid]) {
+        if (playertextid == TD_SpeedBtnEngine[playerid]) {
+            TogglePlayerVehicleEngine(playerid);
+            CancelSelectTextDraw(playerid);
+            return 1;
+        }
+        if (playertextid == TD_SpeedBtnLock[playerid]) {
+            TogglePlayerVehicleLock(playerid);
+            CancelSelectTextDraw(playerid);
+            return 1;
+        }
     }
 
     return 0;
@@ -444,7 +475,7 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
         if (gPlayerData[playerid][p_SelectingSkin]) {
             if (gPlayerData[playerid][p_IsNewCharacter]) {
                 SelectTextDraw(playerid, 0xE69958FF);
-                SendClientMessage(playerid, COL_YELLOW, "  * Tekan [ ✓ SIMPAN ] untuk mengonfirmasi penampilan karakter Anda.");
+                SendClientMessage(playerid, COL_YELLOW, "  * Tekan [ [OK] SIMPAN ] untuk mengonfirmasi penampilan karakter Anda.");
                 return 1;
             }
             SetPlayerSkin(playerid, gPlayerData[playerid][p_OriginalSkin]);
@@ -456,16 +487,112 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
             CloseDealership(playerid);
             return 1;
         }
+        if (gPlayerData[playerid][p_InGarageUI]) {
+            CloseGarageUI(playerid);
+            return 1;
+        }
     }
     return 0;
 }
 
+public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate) {
+    if (newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER) {
+        ShowSpeedometer(playerid);
+    } else if (oldstate == PLAYER_STATE_DRIVER || oldstate == PLAYER_STATE_PASSENGER) {
+        HideSpeedometer(playerid);
+    }
+    return 1;
+}
+
+public OnPlayerDeath(playerid, killerid, reason) {
+    #pragma unused killerid, reason
+    HideSpeedometer(playerid);
+    return 1;
+}
+
 public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
-    if ((newkeys & KEY_CTRL_BACK) || (newkeys & KEY_WALK)) {
+    // 1. Interaksi Garasi Kota (Simpan & Ambil Mobil Murni Tombol H / KEY_CTRL_BACK)
+    if (newkeys & KEY_CTRL_BACK) {
+        for (new g = 0; g < PUBLIC_GARAGE_COUNT; g++) {
+            if (IsPlayerInRangeOfPoint(playerid, 7.5, gPublicGarages[g][g_MarkerX], gPublicGarages[g][g_MarkerY], gPublicGarages[g][g_MarkerZ])) {
+                if (IsPlayerInAnyVehicle(playerid)) {
+                    if (GetPlayerVehicleID(playerid) == gPlayerData[playerid][p_ActiveVehID] && gPlayerData[playerid][p_ActiveVehID] != INVALID_VEHICLE_ID) {
+                        StoreVehicleInGarage(playerid, g);
+                        return 1;
+                    }
+                } else {
+                    OpenGarageUI(playerid, g);
+                    return 1;
+                }
+            }
+        }
+    }
+
+    // 2. Interaksi Showroom & Asuransi (Tombol H atau F / ENTER saat berjalan kaki)
+    if ((newkeys & KEY_CTRL_BACK) || (newkeys & KEY_SECONDARY_ATTACK)) {
+        // Cek Rodeo Luxury Dealership
         if (IsPlayerInRangeOfPoint(playerid, 3.5, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z)) {
             OpenDealership(playerid);
             return 1;
         }
+
+        // Cek Kantor Asuransi Cabang 3 Kota (LS, SF, LV)
+        if (IsPlayerNearInsurance(playerid)) {
+            ShowInsuranceMenu(playerid);
+            return 1;
+        }
     }
+
+    // 2. Tombol Cepat Y (Nyalakan / Matikan Mesin) & N (Kunci / Buka Pintu)
+    if (newkeys & KEY_YES) {
+        if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER) {
+            TogglePlayerVehicleEngine(playerid);
+            return 1;
+        }
+    }
+
+    if (newkeys & KEY_NO) {
+        TogglePlayerVehicleLock(playerid);
+        return 1;
+    }
+
+    // 3. Tombol ALT di Kendaraan (KEY_ACTION / KEY_FIRE / KEY_WALK) - Masuk ke Mode Kursor
+    if ((newkeys & KEY_ACTION) || (newkeys & KEY_FIRE) || (newkeys & KEY_WALK)) {
+        if (gPlayerInVehicleHUD[playerid] || IsPlayerInAnyVehicle(playerid)) {
+            SelectTextDraw(playerid, 0x00EEFFFF);
+            PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
+            return 1;
+        }
+    }
+
+    // 4. Interaksi Gedung Masuk / Keluar & Loket KTP (Murni Tombol F / ENTER)
     return HandleBuildingKeys(playerid, newkeys, oldkeys);
+}
+
+public OnVehicleDeath(vehicleid, killerid) {
+    OnPlayerVehicleDeath(vehicleid, killerid);
+    return 1;
+}
+
+public OnRconCommand(cmd[]) {
+    if (HandleRconAdminCommand(cmd)) return 1;
+    return 0;
+}
+
+public OnPlayerEnterCheckpoint(playerid) {
+    if (gPlayerData[playerid][p_HasActiveCheckpoint]) {
+        ClearGPSWaypoint(playerid);
+        PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
+        SendClientMessage(playerid, COL_GREEN, "  [GPS] Anda telah sampai di lokasi tujuan navigasi.");
+    }
+    return 1;
+}
+
+public OnPlayerEnterRaceCheckpoint(playerid) {
+    if (gPlayerData[playerid][p_HasActiveCheckpoint]) {
+        ClearGPSWaypoint(playerid);
+        PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
+        SendClientMessage(playerid, COL_GREEN, "  [GPS] Anda telah sampai di lokasi tujuan navigasi.");
+    }
+    return 1;
 }

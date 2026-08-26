@@ -4,7 +4,7 @@
 #define _MODULE_KTP_CARD_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Indonesian e-KTP Ultra-Clean Right-Side UI
+//  SantaraBaru Roleplay - Indonesian e-KTP Ultra-Clean Right-Side UI
 //  100% Native TextDraws, Sharp Typography (No Shadow/Blur), Non-Obstructive
 // ============================================================
 
@@ -193,7 +193,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     DestroyPlayerKTPTextDraws(viewerid);
     gShowingKTP[viewerid] = true;
 
-    // ── 1. Outer Dark Navy Border (Kanan Layar: 364.0 s/d 626.0) ──
+    //    1. Outer Dark Navy Border (Kanan Layar: 364.0 s/d 626.0)   
     TD_KTP_Border[viewerid] = CreatePlayerTextDraw(viewerid, 364.0, 124.0, "_");
     PlayerTextDrawUseBox(viewerid, TD_KTP_Border[viewerid], 1);
     PlayerTextDrawBoxColor(viewerid, TD_KTP_Border[viewerid], 0x143452FF);
@@ -201,7 +201,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawLetterSize(viewerid, TD_KTP_Border[viewerid], 0.0, 22.8);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_Border[viewerid], 0);
 
-    // ── 2. Main Cyan Surface Box (Sky Cyan e-KTP) ──
+    //    2. Main Cyan Surface Box (Sky Cyan e-KTP)   
     TD_KTP_CardBg[viewerid] = CreatePlayerTextDraw(viewerid, 365.0, 125.0, "_");
     PlayerTextDrawUseBox(viewerid, TD_KTP_CardBg[viewerid], 1);
     PlayerTextDrawBoxColor(viewerid, TD_KTP_CardBg[viewerid], 0x8CD6EEFF);
@@ -209,7 +209,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawLetterSize(viewerid, TD_KTP_CardBg[viewerid], 0.0, 22.6);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_CardBg[viewerid], 0);
 
-    // ── 3. Header Navy Bar ──
+    //    3. Header Navy Bar   
     TD_KTP_HeaderBar[viewerid] = CreatePlayerTextDraw(viewerid, 365.0, 125.0, "_");
     PlayerTextDrawUseBox(viewerid, TD_KTP_HeaderBar[viewerid], 1);
     PlayerTextDrawBoxColor(viewerid, TD_KTP_HeaderBar[viewerid], 0x143452FF);
@@ -217,7 +217,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawLetterSize(viewerid, TD_KTP_HeaderBar[viewerid], 0.0, 3.5);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_HeaderBar[viewerid], 0);
 
-    // ── 4. Gold Divider Line ──
+    //    4. Gold Divider Line   
     TD_KTP_GoldLine[viewerid] = CreatePlayerTextDraw(viewerid, 365.0, 156.0, "_");
     PlayerTextDrawUseBox(viewerid, TD_KTP_GoldLine[viewerid], 1);
     PlayerTextDrawBoxColor(viewerid, TD_KTP_GoldLine[viewerid], 0xF1C40FFF);
@@ -225,7 +225,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawLetterSize(viewerid, TD_KTP_GoldLine[viewerid], 0.0, 0.20);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_GoldLine[viewerid], 0);
 
-    // ── 5. Header Texts (Tengah Header: X 495.0, Bebas Shadow/Outline) ──
+    //    5. Header Texts (Tengah Header: X 495.0, Bebas Shadow/Outline)   
     TD_KTP_Header1[viewerid] = CreatePlayerTextDraw(viewerid, 495.0, 127.0, "PROVINSI SAN ANDREAS");
     PlayerTextDrawFont(viewerid, TD_KTP_Header1[viewerid], 2);
     PlayerTextDrawLetterSize(viewerid, TD_KTP_Header1[viewerid], 0.16, 0.95);
@@ -256,7 +256,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawSetShadow(viewerid, TD_KTP_Header3[viewerid], 0);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_Header3[viewerid], 0);
 
-    // ── 6. Tombol Tutup [ X ] di Kanan Header ──
+    //    6. Tombol Tutup [ X ] di Kanan Header   
     TD_KTP_Close[viewerid] = CreatePlayerTextDraw(viewerid, 614.0, 127.0, "X");
     PlayerTextDrawFont(viewerid, TD_KTP_Close[viewerid], 2);
     PlayerTextDrawLetterSize(viewerid, TD_KTP_Close[viewerid], 0.18, 0.95);
@@ -269,7 +269,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawSetShadow(viewerid, TD_KTP_Close[viewerid], 0);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_Close[viewerid], 1);
 
-    // ── 7. NIK (Nomor Induk Kependudukan) ──
+    //    7. NIK (Nomor Induk Kependudukan)   
     new nikStr[64];
     format(nikStr, sizeof(nikStr), "NIK  :  317104%02d%02d%02d%04d", 24, 8, 26, gPlayerData[ownerid][p_CharID]);
     TD_KTP_NIK[viewerid] = CreatePlayerTextDraw(viewerid, 372.0, 161.0, nikStr);
@@ -281,7 +281,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawSetShadow(viewerid, TD_KTP_NIK[viewerid], 0);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_NIK[viewerid], 0);
 
-    // ── 8. Form Baris Data (Independen, Tajam & Presisi) ──
+    //    8. Form Baris Data (Independen, Tajam & Presisi)   
     new valBuf[128];
 
     // Baris 1: Nama
@@ -421,7 +421,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawSetShadow(viewerid, TD_KTP_ValBerlaku[viewerid], 0);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_ValBerlaku[viewerid], 0);
 
-    // ── 9. Pas Foto 3D Avatar (Sisi Kanan Kartu: X 554.0 s/d 616.0) ──
+    //    9. Pas Foto 3D Avatar (Sisi Kanan Kartu: X 554.0 s/d 616.0)   
     TD_KTP_PhotoBorder[viewerid] = CreatePlayerTextDraw(viewerid, 553.0, 175.0, "_");
     PlayerTextDrawUseBox(viewerid, TD_KTP_PhotoBorder[viewerid], 1);
     PlayerTextDrawBoxColor(viewerid, TD_KTP_PhotoBorder[viewerid], 0x143452FF);
@@ -443,7 +443,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawSetPreviewRot(viewerid, TD_KTP_Photo[viewerid], -10.0, 0.0, -12.0, 0.85);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_Photo[viewerid], 0);
 
-    // ── 10. Cap Digital & Tanda Tangan ──
+    //    10. Cap Digital & Tanda Tangan   
     TD_KTP_SignCity[viewerid] = CreatePlayerTextDraw(viewerid, 585.0, 244.0, "KOTA SANTARA");
     PlayerTextDrawFont(viewerid, TD_KTP_SignCity[viewerid], 2);
     PlayerTextDrawLetterSize(viewerid, TD_KTP_SignCity[viewerid], 0.13, 0.75);
@@ -474,7 +474,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawSetShadow(viewerid, TD_KTP_SignStamp[viewerid], 0);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_SignStamp[viewerid], 0);
 
-    // ── 11. Bottom Security Bar ──
+    //    11. Bottom Security Bar   
     TD_KTP_FootLine[viewerid] = CreatePlayerTextDraw(viewerid, 365.0, 324.0, "_");
     PlayerTextDrawUseBox(viewerid, TD_KTP_FootLine[viewerid], 1);
     PlayerTextDrawBoxColor(viewerid, TD_KTP_FootLine[viewerid], 0x143452FF);
@@ -482,7 +482,7 @@ stock ShowPlayerKTPCard(viewerid, ownerid) {
     PlayerTextDrawLetterSize(viewerid, TD_KTP_FootLine[viewerid], 0.0, 0.35);
     PlayerTextDrawSetSelectable(viewerid, TD_KTP_FootLine[viewerid], 0);
 
-    // ── 12. Screen Hint di Bawah Kartu (Kanan Layar) ──
+    //    12. Screen Hint di Bawah Kartu (Kanan Layar)   
     TD_KTP_Hint[viewerid] = CreatePlayerTextDraw(viewerid, 495.0, 332.0, "~w~Tekan ~y~ESC ~w~atau klik ~r~[ X ] ~w~untuk menutup");
     PlayerTextDrawFont(viewerid, TD_KTP_Hint[viewerid], 1);
     PlayerTextDrawLetterSize(viewerid, TD_KTP_Hint[viewerid], 0.14, 0.80);

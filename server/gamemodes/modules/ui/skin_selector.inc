@@ -4,7 +4,7 @@
 #define _MODULE_SKIN_SELECTOR_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Live 3D Skin Selector UI & Skin Catalog
+//  SantaraBaru Roleplay - Live 3D Skin Selector UI & Skin Catalog
 // ============================================================
 
 // Daftar semua 310 skin GTA SA / MTA Wiki (Model name sesuai https://wiki.multitheftauto.com/wiki/All_Skins_Page)
@@ -234,7 +234,7 @@ stock OpenSkinSelection(playerid, bool:isNewChar = false) {
     DestroyPlayerSkinTextDraws(playerid);
     HidePlayerMoneyHUD(playerid);
 
-    // ── Buat UI TextDraw di sebelah KANAN (X: 430 .. 610) ──────
+    //    Buat UI TextDraw di sebelah KANAN (X: 430 .. 610)       
 
     // 1. Background Box (#1D1D1D Dark Matte di Kanan)
     TD_SkinBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 105.0, "_");

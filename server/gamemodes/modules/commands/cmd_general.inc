@@ -4,94 +4,54 @@
 #define _MODULE_CMD_GENERAL_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — General Commands & Utilities
+//  SantaraBaru Roleplay - General Commands & Utilities
 // ============================================================
 
 CMD:help(playerid, params[]) {
     #pragma unused params
     if (!gPlayerData[playerid][p_LoggedIn]) return 1;
     SendClientMessage(playerid, COL_WHITE, "  [ {E69958}PANDUAN PERINTAH ROLEPLAY {FFFFFF}]");
-    SendClientMessage(playerid, COL_WHITE, "  » {E69958}Komunikasi Suara & Teks RP:");
-    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/s {FFFFFF}[pesan]   {A0AEC0}— Bicara lokal biasa (Radius 20m)");
-    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/sh {FFFFFF}[pesan]  {A0AEC0}— Berteriak kencang (Radius 40m)");
-    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/w {FFFFFF}[pesan]   {A0AEC0}— Berbisik pelan (Radius 5m)");
-    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/ooc {FFFFFF}[pesan] {A0AEC0}— Chat Out-of-Character global");
-    SendClientMessage(playerid, COL_WHITE, "  » {E69958}Aksi & Situasi Roleplay:");
-    SendClientMessage(playerid, COL_WHITE, "     {C56CF0}/me {FFFFFF}[aksi]   {A0AEC0}— Deskripsi tindakan karakter");
-    SendClientMessage(playerid, COL_WHITE, "     {00D2FF}/do {FFFFFF}[kondisi]{A0AEC0}— Deskripsi situasi sekitar");
-    SendClientMessage(playerid, COL_WHITE, "  » {E69958}Kependudukan & Identitas:");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/getktp        {A0AEC0}— Buat & terbitkan e-KTP (di Loket Balai Kota)");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/ktp           {A0AEC0}— Buka Kartu Tanda Penduduk (e-KTP) Anda");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/showktp {FFFFFF}[id]  {A0AEC0}— Tunjukkan KTP ke pemain terdekat");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/whoami        {A0AEC0}— Ringkasan identitas & status");
-    SendClientMessage(playerid, COL_WHITE, "  » {E69958}Karakter & Pengaturan:");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/switchchar    {A0AEC0}— Ganti / pilih karakter lain (multi-karakter)");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/skin          {A0AEC0}— Buka Live 3D Pakaian / Penampilan");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/voice         {A0AEC0}— Cek status koneksi Voice 3D");
-    SendClientMessage(playerid, COL_WHITE, "  » {E69958}Dealership & Kendaraan Pribadi:");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/buyveh        {A0AEC0}— Beli kendaraan baru di Rodeo Dealership");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/lock & /kunci {A0AEC0}— Kunci / buka pintu kendaraan pribadi");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/engine & /mesin{A0AEC0}— Nyalakan / matikan mesin kendaraan");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/park & /parkir{A0AEC0}— Simpan lokasi parkir kendaraan");
-    SendClientMessage(playerid, COL_WHITE, "  » {E69958}Interaksi Gedung & Pintu:");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}[ALT] / [F]    {A0AEC0}— Masuk / keluar gedung di dekat tanda mark");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/enter & /exit {A0AEC0}— Perintah alternatif masuk / keluar pintu");
-    SendClientMessage(playerid, COL_WHITE, "  » {E69958}Alat Developer / Utilitas:");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/getcor        {A0AEC0}— Ambil koordinat X, Y, Z, Angle, Interior, VW");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Komunikasi Suara & Teks RP:");
+    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/s {FFFFFF}[pesan]   {A0AEC0}- Bicara lokal biasa (Radius 20m)");
+    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/sh {FFFFFF}[pesan]  {A0AEC0}- Berteriak kencang (Radius 40m)");
+    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/w {FFFFFF}[pesan]   {A0AEC0}- Berbisik pelan (Radius 5m)");
+    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/ooc {FFFFFF}[pesan] {A0AEC0}- Chat Out-of-Character global");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Aksi & Situasi Roleplay:");
+    SendClientMessage(playerid, COL_WHITE, "     {C56CF0}/me {FFFFFF}[aksi]   {A0AEC0}- Deskripsi tindakan karakter");
+    SendClientMessage(playerid, COL_WHITE, "     {00D2FF}/do {FFFFFF}[kondisi]{A0AEC0}- Deskripsi situasi sekitar");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Kependudukan & Identitas:");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/ktp           {A0AEC0}- Buka KTP sendiri / buat di Balai Kota");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/ktp {FFFFFF}[id]      {A0AEC0}- Perlihatkan KTP ke pemain terdekat");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/whoami        {A0AEC0}- Ringkasan identitas & status karakter");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Kendaraan & Garasi Kota:");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/v             {A0AEC0}- Menu manajemen kendaraan & GPS tracker");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/garasi        {A0AEC0}- Buka Live 3D Garasi Kota (simpan / ambil mobil)");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/asuransi      {A0AEC0}- Klaim kendaraan hancur di Kantor Asuransi");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/dealer        {A0AEC0}- Buka Coutt & Schutz Auto Showroom");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/engine        {A0AEC0}- Nyalakan / matikan mesin kendaraan");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/lock          {A0AEC0}- Kunci / buka pintu kendaraan");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Karakter & Gedung:");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}[ F / ENTER ]  {A0AEC0}- Masuk / keluar gedung & interaksi loket");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/char          {A0AEC0}- Pilih / ganti karakter aktif");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/skin          {A0AEC0}- Buka Live 3D ganti pakaian");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/gps           {A0AEC0}- Buka Legenda Peta & Navigasi Rute Fasilitas");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/cp            {A0AEC0}- Matikan tanda checkpoint GPS aktif");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/getpos        {A0AEC0}- Ambil data koordinat posisi");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/voice         {A0AEC0}- Cek status Voice Chat 3D");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/q             {A0AEC0}- Keluar dari server");
     return 1;
 }
 
-CMD:bantuan(playerid, params[]) {
-    return cmd_help(playerid, params);
-}
-
-CMD:perintah(playerid, params[]) {
-    return cmd_help(playerid, params);
-}
-
-CMD:enter(playerid, params[]) {
+CMD:cp(playerid, params[]) {
     #pragma unused params
-    if (!gPlayerData[playerid][p_LoggedIn] || !gPlayerData[playerid][p_Spawned]) return 1;
-    if (IsPlayerInAnyVehicle(playerid)) {
-        SendClientMessage(playerid, COL_RED, "  [!] Anda harus turun dari kendaraan terlebih dahulu.");
-        return 1;
-    }
-
-    if (IsPlayerInRangeOfPoint(playerid, 2.5, CITYHALL_EXT_X, CITYHALL_EXT_Y, CITYHALL_EXT_Z) && GetPlayerInterior(playerid) == 0) {
-        SetPlayerInterior(playerid, CITYHALL_INT_ID);
-        SetPlayerPos(playerid, CITYHALL_INT_X, CITYHALL_INT_Y, CITYHALL_INT_Z);
-        SetPlayerFacingAngle(playerid, CITYHALL_INT_A);
-        SetCameraBehindPlayer(playerid);
-        GameTextForPlayer(playerid, "~w~Selamat Datang di ~g~Balai Kota", 3000, 3);
-        PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
-        return 1;
-    }
-    SendClientMessage(playerid, COL_RED, "  [!] Anda tidak berada di dekat pintu masuk gedung manapun.");
+    if (!CheckSpawned(playerid)) return 1;
+    ClearGPSWaypoint(playerid);
+    PlayerPlaySound(playerid, 1084, 0.0, 0.0, 0.0);
+    SendClientMessage(playerid, COL_GREEN, "  [GPS] Tanda penunjuk arah waypoint GPS telah dimatikan.");
     return 1;
 }
 
-CMD:exit(playerid, params[]) {
-    #pragma unused params
-    if (!gPlayerData[playerid][p_LoggedIn] || !gPlayerData[playerid][p_Spawned]) return 1;
-    if (IsPlayerInAnyVehicle(playerid)) {
-        SendClientMessage(playerid, COL_RED, "  [!] Anda harus turun dari kendaraan terlebih dahulu.");
-        return 1;
-    }
-
-    if (IsPlayerInRangeOfPoint(playerid, 2.5, CITYHALL_INT_X, CITYHALL_INT_Y, CITYHALL_INT_Z) && GetPlayerInterior(playerid) == CITYHALL_INT_ID) {
-        SetPlayerInterior(playerid, 0);
-        SetPlayerPos(playerid, CITYHALL_EXT_X, CITYHALL_EXT_Y, CITYHALL_EXT_Z);
-        SetPlayerFacingAngle(playerid, CITYHALL_EXT_A);
-        SetCameraBehindPlayer(playerid);
-        GameTextForPlayer(playerid, "~w~Keluar dari ~g~Balai Kota", 3000, 3);
-        PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
-        return 1;
-    }
-    SendClientMessage(playerid, COL_RED, "  [!] Anda tidak berada di dekat pintu keluar gedung manapun.");
-    return 1;
-}
-
-CMD:getcor(playerid, params[]) {
+CMD:getpos(playerid, params[]) {
     if (!CheckSpawned(playerid)) return 1;
 
     new Float:x, Float:y, Float:z, Float:a;
@@ -102,25 +62,25 @@ CMD:getcor(playerid, params[]) {
 
     new msg[144];
     SendClientMessage(playerid, COL_YELLOW, "================= [ INFORMASI KOORDINAT ] =================");
-    format(msg, sizeof(msg), "  {FFFFFF}• Posisi (X, Y, Z)   : {33CCFF}%.4f, %.4f, %.4f", x, y, z);
+    format(msg, sizeof(msg), "  {FFFFFF}* Posisi (X, Y, Z)   : {33CCFF}%.4f, %.4f, %.4f", x, y, z);
     SendClientMessage(playerid, COL_WHITE, msg);
 
-    format(msg, sizeof(msg), "  {FFFFFF}• Facing Angle (A)   : {33CCFF}%.4f", a);
+    format(msg, sizeof(msg), "  {FFFFFF}* Facing Angle (A)   : {33CCFF}%.4f", a);
     SendClientMessage(playerid, COL_WHITE, msg);
 
-    format(msg, sizeof(msg), "  {FFFFFF}• Interior / VW      : {33CCFF}Interior ID: %d {FFFFFF}| {33CCFF}Virtual World: %d", intID, vwID);
+    format(msg, sizeof(msg), "  {FFFFFF}* Interior / VW      : {33CCFF}Interior ID: %d {FFFFFF}| {33CCFF}Virtual World: %d", intID, vwID);
     SendClientMessage(playerid, COL_WHITE, msg);
 
-    format(msg, sizeof(msg), "  {FFFFFF}• Format Siap Copy   : {00FF00}%.4f, %.4f, %.4f, %.4f", x, y, z, a);
+    format(msg, sizeof(msg), "  {FFFFFF}* Format Siap Copy   : {00FF00}%.4f, %.4f, %.4f, %.4f", x, y, z, a);
     SendClientMessage(playerid, COL_WHITE, msg);
 
     if (strlen(params) > 0) {
-        format(msg, sizeof(msg), "  {FFFFFF}• Keterangan Catatan : {FFFF00}%s", params);
+        format(msg, sizeof(msg), "  {FFFFFF}* Keterangan Catatan : {FFFF00}%s", params);
         SendClientMessage(playerid, COL_WHITE, msg);
-        printf("[GETCOR] [%s] X: %.4f, Y: %.4f, Z: %.4f, Angle: %.4f | Int: %d, VW: %d (Player: %s)",
+        printf("[GETPOS] [%s] X: %.4f, Y: %.4f, Z: %.4f, Angle: %.4f | Int: %d, VW: %d (Player: %s)",
             params, x, y, z, a, intID, vwID, gPlayerData[playerid][p_CharName]);
     } else {
-        printf("[GETCOR] X: %.4f, Y: %.4f, Z: %.4f, Angle: %.4f | Int: %d, VW: %d (Player: %s)",
+        printf("[GETPOS] X: %.4f, Y: %.4f, Z: %.4f, Angle: %.4f | Int: %d, VW: %d (Player: %s)",
             x, y, z, a, intID, vwID, gPlayerData[playerid][p_CharName]);
     }
 
@@ -143,15 +103,7 @@ CMD:getcor(playerid, params[]) {
     return 1;
 }
 
-CMD:getpos(playerid, params[]) {
-    return cmd_getcor(playerid, params);
-}
-
-CMD:mypos(playerid, params[]) {
-    return cmd_getcor(playerid, params);
-}
-
-CMD:switchchar(playerid, params[]) {
+CMD:char(playerid, params[]) {
     #pragma unused params
     if (!CheckSpawned(playerid)) return 1;
     if (gPlayerData[playerid][p_SelectingSkin]) return 1;
@@ -169,18 +121,6 @@ CMD:switchchar(playerid, params[]) {
 
     ShowCharacterSelection(playerid);
     return 1;
-}
-
-CMD:char(playerid, params[]) {
-    return cmd_switchchar(playerid, params);
-}
-
-CMD:gantikarakter(playerid, params[]) {
-    return cmd_switchchar(playerid, params);
-}
-
-CMD:pilihkarakter(playerid, params[]) {
-    return cmd_switchchar(playerid, params);
 }
 
 CMD:voice(playerid, params[]) {
@@ -213,19 +153,19 @@ CMD:whoami(playerid, params[]) {
     format(genderStr, sizeof(genderStr), (gPlayerData[playerid][p_Gender] == 2) ? ("Perempuan") : ("Laki-Laki"));
 
     SendClientMessage(playerid, COL_WHITE, "  [ {E69958}PROFIL IDENTITAS KARAKTER {FFFFFF}]");
-    format(msg, sizeof(msg), "  » {A0AEC0}Nama Karakter  : {FFFFFF}%s {708090}(ID: %d)", charname, playerid);
+    format(msg, sizeof(msg), "  > {A0AEC0}Nama Karakter  : {FFFFFF}%s {708090}(ID: %d)", charname, playerid);
     SendClientMessage(playerid, COL_WHITE, msg);
-    format(msg, sizeof(msg), "  » {A0AEC0}Nama Akun      : {E69958}%s", gPlayerData[playerid][p_Username]);
+    format(msg, sizeof(msg), "  > {A0AEC0}Nama Akun      : {E69958}%s", gPlayerData[playerid][p_Username]);
     SendClientMessage(playerid, COL_WHITE, msg);
-    format(msg, sizeof(msg), "  » {A0AEC0}Tempat/Tgl Lahir: {FFFFFF}%s, %s", gPlayerData[playerid][p_BirthPlace], gPlayerData[playerid][p_BirthDate]);
+    format(msg, sizeof(msg), "  > {A0AEC0}Tempat/Tgl Lahir: {FFFFFF}%s, %s", gPlayerData[playerid][p_BirthPlace], gPlayerData[playerid][p_BirthDate]);
     SendClientMessage(playerid, COL_WHITE, msg);
-    format(msg, sizeof(msg), "  » {A0AEC0}Jenis Kelamin  : {FFFFFF}%s", genderStr);
+    format(msg, sizeof(msg), "  > {A0AEC0}Jenis Kelamin  : {FFFFFF}%s", genderStr);
     SendClientMessage(playerid, COL_WHITE, msg);
-    format(msg, sizeof(msg), "  » {A0AEC0}Skin Model ID  : {FFFFFF}%d", gPlayerData[playerid][p_Skin]);
+    format(msg, sizeof(msg), "  > {A0AEC0}Skin Model ID  : {FFFFFF}%d", gPlayerData[playerid][p_Skin]);
     SendClientMessage(playerid, COL_WHITE, msg);
-    format(msg, sizeof(msg), "  » {A0AEC0}Tingkat Level  : {F1C40F}%d Score", GetPlayerScore(playerid));
+    format(msg, sizeof(msg), "  > {A0AEC0}Tingkat Level  : {F1C40F}%d Score", GetPlayerScore(playerid));
     SendClientMessage(playerid, COL_WHITE, msg);
-    format(msg, sizeof(msg), "  » {A0AEC0}Uang Tunai     : {2ECC71}%s", rup);
+    format(msg, sizeof(msg), "  > {A0AEC0}Uang Tunai     : {2ECC71}%s", rup);
     SendClientMessage(playerid, COL_WHITE, msg);
     return 1;
 }
@@ -234,12 +174,4 @@ CMD:q(playerid, params[]) {
     #pragma unused params
     Kick(playerid);
     return 1;
-}
-
-CMD:quit(playerid, params[]) {
-    return cmd_q(playerid, params);
-}
-
-CMD:exitgame(playerid, params[]) {
-    return cmd_q(playerid, params);
 }

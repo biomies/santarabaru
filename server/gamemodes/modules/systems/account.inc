@@ -4,7 +4,7 @@
 #define _MODULE_ACCOUNT_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Account Authentication & Security
+//  SantaraBaru Roleplay - Account Authentication & Security
 // ============================================================
 
 stock ShowLoginDialog(playerid, const errMsg[]) {
@@ -30,7 +30,7 @@ stock ShowRegisterDialog(playerid, const errMsg[]) {
 stock HandleAccountDialog(playerid, dialogid, response, listitem, const inputtext[]) {
     #pragma unused listitem
     switch (dialogid) {
-        // ── Dialog Login ──────────────────────────────────────
+        //    Dialog Login                                       
         case DLG_LOGIN: {
             if (!response) { Kick(playerid); return 1; }
             if (!strlen(inputtext)) {
@@ -43,7 +43,7 @@ stock HandleAccountDialog(playerid, dialogid, response, listitem, const inputtex
 
             new query[256];
             format(query, sizeof(query),
-                "SELECT `id` FROM `accounts` WHERE `username`='%s' AND `password`='%s' LIMIT 1",
+                "SELECT `id`, `admin_level` FROM `accounts` WHERE `username`='%s' AND `password`='%s' LIMIT 1",
                 gPlayerData[playerid][p_Username], hash);
 
             new DBResult:res = DB_ExecuteQuery(gDB, query);
@@ -62,6 +62,7 @@ stock HandleAccountDialog(playerid, dialogid, response, listitem, const inputtex
                 ShowLoginDialog(playerid, err);
                 return 1;
             }
+            gPlayerData[playerid][p_AdminLevel] = DB_GetFieldIntByName(res, "admin_level");
             DB_FreeResultSet(res);
 
             gPlayerData[playerid][p_LoggedIn] = true;
@@ -69,11 +70,16 @@ stock HandleAccountDialog(playerid, dialogid, response, listitem, const inputtex
             DB_FreeResultSet(DB_ExecuteQuery(gDB, query));
 
             SendClientMessage(playerid, COL_GREEN, "  Login berhasil! Membuka daftar karakter...");
+            if (gPlayerData[playerid][p_AdminLevel] >= 2) {
+                SendClientMessage(playerid, COL_CYAN, "  [Staff] Selamat datang, {E69958}Owner / SuperAdmin{00EEFF}! Ketik {FFFF00}/ahelp{00EEFF} untuk perintah.");
+            } else if (gPlayerData[playerid][p_AdminLevel] == 1) {
+                SendClientMessage(playerid, COL_CYAN, "  [Staff] Selamat datang, {2ECC71}Administrator Server{00EEFF}! Ketik {FFFF00}/ahelp{00EEFF} untuk perintah.");
+            }
             ShowCharacterSelection(playerid);
             return 1;
         }
 
-        // ── Dialog Register ───────────────────────────────────
+        //    Dialog Register                                    
         case DLG_REGISTER: {
             if (!response) { Kick(playerid); return 1; }
             if (strlen(inputtext) < 6) {

@@ -4,7 +4,7 @@
 #define _MODULE_SPAWN_SELECTOR_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Eagle-Eye Spawn Selector UI (Right Card)
+//  SantaraBaru Roleplay - Eagle-Eye Spawn Selector UI (Right Card)
 // ============================================================
 
 enum E_SPAWN_PRESET {
@@ -25,9 +25,9 @@ enum E_SPAWN_PRESET {
 };
 
 new const gPublicSpawns[][E_SPAWN_PRESET] = {
-    // ══════════════════════════════════════════════════════════
+    //                                                           
     //  KOTA 1: LOS SANTOS (LS)
-    // ══════════════════════════════════════════════════════════
+    //                                                           
     // 0: Stasiun Unity (Los Santos)
     {
         "Kota 1: Los Santos", "Stasiun Unity", "Unity Station, Los Santos", "Taksi ~w~| ~g~ATM ~w~| ~g~Kereta Api",
@@ -64,9 +64,9 @@ new const gPublicSpawns[][E_SPAWN_PRESET] = {
         825.5, -1346.0, 13.53
     },
 
-    // ══════════════════════════════════════════════════════════
+    //                                                           
     //  KOTA 2: SAN FIERRO (SF)
-    // ══════════════════════════════════════════════════════════
+    //                                                           
     // 5: Stasiun Cranberry (San Fierro)
     {
         "Kota 2: San Fierro", "Stasiun Cranberry", "Cranberry Station, SF", "Taksi ~w~| ~g~ATM ~w~| ~g~Kereta Api",
@@ -103,9 +103,9 @@ new const gPublicSpawns[][E_SPAWN_PRESET] = {
         -1988.5, -215.0, 15.36
     },
 
-    // ══════════════════════════════════════════════════════════
+    //                                                           
     //  KOTA 3: LAS VENTURAS (LV)
-    // ══════════════════════════════════════════════════════════
+    //                                                           
     // 10: The Strip / Casino District (Las Venturas)
     {
         "Kota 3: Las Venturas", "The Strip Kasino", "The Strip District, LV", "Kasino ~w~| ~g~Hotel ~w~| ~g~ATM ~w~| ~g~Taksi",
@@ -272,7 +272,7 @@ stock OpenSpawnSelection(playerid, bool:isNewChar = false) {
     HidePlayerMoneyHUD(playerid);
     DestroyPlayerSpawnTextDraws(playerid);
 
-    // ── Buat UI TextDraw di sebelah KANAN (X: 430 .. 610) ──────
+    //    Buat UI TextDraw di sebelah KANAN (X: 430 .. 610)       
 
     // 1. Background Box (#1D1D1D Dark Matte di Kanan)
     TD_SpawnBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 105.0, "_");

@@ -4,7 +4,7 @@
 #define _MODULE_PLAYER_DATA_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Player Data & Global Variables
+//  SantaraBaru Roleplay - Player Data & Global Variables
 // ============================================================
 
 enum E_PLAYER_DATA {
@@ -28,32 +28,46 @@ enum E_PLAYER_DATA {
     bool:p_Spawned,
     p_PlayTime,                 // Menit bermain sesi ini (timer)
     SV_GSTREAM:p_VoiceStream,   // SAMPVOICE local stream
-    // ── Multi-Character Temp Cache ──
+    //    Multi-Character Temp Cache   
     p_CharListIDs[MAX_CHARS_PER_ACCOUNT],
     p_CharListCount,
     p_TempSelectedCharID,
     p_TempSelectedCharName[48],
-    // ── Live Eagle-Eye Spawn Selector State ──
+    //    Live Eagle-Eye Spawn Selector State   
     bool:p_SelectingSpawn,
     p_SpawnIndex,
-    // ── Live 3D Skin Selector State ──
+    //    Live 3D Skin Selector State   
     bool:p_SelectingSkin,
     p_SkinIndex,
     p_OriginalSkin,
     bool:p_IsNewCharacter,
-    // ── Status Kepemilikan Dokumen ──
+    //    Status Kepemilikan Dokumen   
     bool:p_HasKTP,
-    // ── Status Download Custom Asset ──
+    //    Status Download Custom Asset   
     bool:p_FinishedDownload,
     bool:p_AuthLoaded,
-    // ── Status Dealership & Kendaraan Pribadi ──
+    //    Status Dealership & Kendaraan Pribadi   
     bool:p_InDealership,
     p_DealerCat,
     p_DealerIndex,
     p_DealerColorIdx,
     p_DealerPreviewVeh,
     p_ActiveVehID,
-    p_ActiveVehDBID
+    p_ActiveVehDBID,
+    //    Status Live 3D Garasi Kota & Manajemen Kendaraan   
+    bool:p_InGarageUI,
+    p_GarageCurrentID,
+    p_GarageVehIndex,
+    p_GarageVehCount,
+    p_GarageVehDBIDs[32],
+    p_GaragePreviewVeh,
+    p_SelectedVehDBID,
+    p_VehListDBIDs[32],
+    p_VehListCount,
+    bool:p_HasActiveCheckpoint,
+    //    Status Administrator Akun   
+    p_AdminLevel,               // 0 = Player, 1 = Admin, 2 = Owner
+    bool:p_AdminDuty            // Status On-Duty Admin
 }
 
 new gPlayerData[MAX_PLAYERS][E_PLAYER_DATA];
@@ -106,4 +120,18 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_DealerPreviewVeh] = INVALID_VEHICLE_ID;
     gPlayerData[playerid][p_ActiveVehID]    = INVALID_VEHICLE_ID;
     gPlayerData[playerid][p_ActiveVehDBID]  = 0;
+    gPlayerData[playerid][p_InGarageUI]     = false;
+    gPlayerData[playerid][p_GarageCurrentID] = 0;
+    gPlayerData[playerid][p_GarageVehIndex] = 0;
+    gPlayerData[playerid][p_GarageVehCount] = 0;
+    for (new v = 0; v < 32; v++) {
+        gPlayerData[playerid][p_GarageVehDBIDs][v] = 0;
+        gPlayerData[playerid][p_VehListDBIDs][v] = 0;
+    }
+    gPlayerData[playerid][p_GaragePreviewVeh] = INVALID_VEHICLE_ID;
+    gPlayerData[playerid][p_SelectedVehDBID] = 0;
+    gPlayerData[playerid][p_VehListCount]   = 0;
+    gPlayerData[playerid][p_HasActiveCheckpoint] = false;
+    gPlayerData[playerid][p_AdminLevel]     = 0;
+    gPlayerData[playerid][p_AdminDuty]      = false;
 }

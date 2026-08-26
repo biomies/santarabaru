@@ -4,7 +4,7 @@
 #define _MODULE_VOICE_INC
 
 // ============================================================
-//  SantaraBaru Roleplay — Voice Chat System (SAMPVOICE 3D)
+//  SantaraBaru Roleplay - Voice Chat System (SAMPVOICE 3D)
 // ============================================================
 
 stock InitVoiceSystem() {
