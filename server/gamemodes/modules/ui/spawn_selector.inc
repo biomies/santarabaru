@@ -4,7 +4,8 @@
 #define _MODULE_SPAWN_SELECTOR_INC
 
 // ============================================================
-//  SantaraBaru Roleplay - Eagle-Eye Spawn Selector UI (Right Card)
+//  SantaraBaru Roleplay - Eagle-Eye Spawn Selector UI (Lokasi Awal Spawn)
+//  Dark Indigo (#1E1E2E) & Electric Purple (#5814EE) Theme
 // ============================================================
 
 enum E_SPAWN_PRESET {
@@ -98,72 +99,116 @@ new const gPublicSpawns[][E_SPAWN_PRESET] = {
     // 9: Terminal Bus SF (San Fierro)
     {
         "Kota 2: San Fierro", "Terminal Bus SF", "Central Bus Terminal, SF", "Bus Kota ~w~| ~g~Taksi ~w~| ~g~Rest Area",
-        -1988.5, -215.0, 15.36, 180.0,
-        -1930.0, -270.0, 52.0,
-        -1988.5, -215.0, 15.36
+        -1985.0, 280.0, 35.17, 180.0,
+        -1910.0, 220.0, 68.0,
+        -1985.0, 280.0, 35.17
     },
 
     //                                                           
     //  KOTA 3: LAS VENTURAS (LV)
     //                                                           
-    // 10: The Strip / Casino District (Las Venturas)
+    // 10: Stasiun Yellow Bell (Las Venturas)
     {
-        "Kota 3: Las Venturas", "The Strip Kasino", "The Strip District, LV", "Kasino ~w~| ~g~Hotel ~w~| ~g~ATM ~w~| ~g~Taksi",
-        2028.5, 1007.5, 10.82, 270.0,
-        2090.0, 940.0, 56.0,
-        2028.5, 1007.5, 10.82
+        "Kota 3: Las Venturas", "Stasiun Yellow Bell", "Yellow Bell Station, LV", "Taksi ~w~| ~g~ATM ~w~| ~g~Kereta Api",
+        1463.0, 2635.0, 10.82, 0.0,
+        1520.0, 2570.0, 45.0,
+        1463.0, 2635.0, 10.82
     },
-    // 11: Bandara Las Venturas (LVA)
+    // 11: Bandara Las Venturas (LVX)
     {
-        "Kota 3: Las Venturas", "Bandara Las Venturas", "Las Venturas Airport", "Penerbangan ~w~| ~g~Taksi ~w~| ~g~ATM",
-        1682.0, 1450.0, 10.76, 270.0,
-        1750.0, 1390.0, 55.0,
-        1682.0, 1450.0, 10.76
+        "Kota 3: Las Venturas", "Bandara Las Venturas", "LV International Airport", "Penerbangan ~w~| ~g~Taksi ~w~| ~g~ATM",
+        1602.0, 1618.0, 10.82, 270.0,
+        1670.0, 1550.0, 55.0,
+        1602.0, 1618.0, 10.82
     },
-    // 12: Stasiun Kereta Sobell (Las Venturas)
+    // 12: Las Venturas Strip / The Emerald
     {
-        "Kota 3: Las Venturas", "Stasiun Sobell", "Sobell Rail Station, LV", "Kereta Api ~w~| ~g~ATM ~w~| ~g~Taksi",
-        2862.0, 1250.0, 10.82, 90.0,
-        2800.0, 1190.0, 52.0,
-        2862.0, 1250.0, 10.82
+        "Kota 3: Las Venturas", "The Strip Casino", "Las Venturas Boulevard", "Pusat Hiburan ~w~| ~g~Kasino ~w~| ~g~ATM",
+        2024.0, 1008.0, 10.82, 90.0,
+        2090.0, 940.0, 52.0,
+        2024.0, 1008.0, 10.82
     },
-    // 13: Old Venturas Strip / The Visage (Las Venturas)
+    // 13: Terminal Bus Las Venturas
     {
-        "Kota 3: Las Venturas", "Old Venturas Strip", "The Visage & Pirates, LV", "Kasino Klasik ~w~| ~g~ATM ~w~| ~g~Resto",
-        2420.0, 1125.0, 10.82, 0.0,
-        2480.0, 1060.0, 55.0,
-        2420.0, 1125.0, 10.82
+        "Kota 3: Las Venturas", "Terminal Bus LV", "Redsands East Terminal, LV", "Bus Antarkota ~w~| ~g~Taksi ~w~| ~g~ATM",
+        2185.0, 2045.0, 10.82, 180.0,
+        2250.0, 1980.0, 48.0,
+        2185.0, 2045.0, 10.82
     },
-    // 14: Redsands Plaza (Las Venturas)
+
+    //                                                           
+    //  PEDESAAN & WILAYAH KHUSUS
+    //                                                           
+    // 14: Fort Carson (Tierra Robada)
     {
-        "Kota 3: Las Venturas", "Redsands Plaza", "Redsands East, LV", "Mall ~w~| ~g~Resto ~w~| ~g~ATM ~w~| ~g~Taksi",
-        2000.0, 2300.0, 10.82, 90.0,
-        1940.0, 2240.0, 54.0,
-        2000.0, 2300.0, 10.82
+        "Pedesaan: Tierra Robada", "Fort Carson", "Fort Carson Town Square", "Klinik ~w~| ~g~ATM ~w~| ~g~Rest Area",
+        -216.5, 979.0, 19.55, 90.0,
+        -150.0, 920.0, 55.0,
+        -216.5, 979.0, 19.55
+    },
+    // 15: Angel Pine (Whetstone / Mt Chiliad)
+    {
+        "Pedesaan: Whetstone", "Angel Pine", "Angel Pine Town Center", "Wisata Gunung ~w~| ~g~Klinik ~w~| ~g~Motel",
+        -2160.0, -2390.0, 30.62, 225.0,
+        -2090.0, -2450.0, 65.0,
+        -2160.0, -2390.0, 30.62
+    },
+    // 16: Blueberry (Red County)
+    {
+        "Pedesaan: Red County", "Blueberry", "Blueberry Commercial Area", "Pusat Logistik ~w~| ~g~ATM ~w~| ~g~Resto",
+        230.0, -58.0, 1.57, 180.0,
+        290.0, -120.0, 42.0,
+        230.0, -58.0, 1.57
+    },
+    // 17: Montgomery (Red County)
+    {
+        "Pedesaan: Red County", "Montgomery", "Montgomery Hospital Square", "Rumah Sakit ~w~| ~g~Apotek ~w~| ~g~ATM",
+        1380.0, 260.0, 19.56, 90.0,
+        1440.0, 200.0, 50.0,
+        1380.0, 260.0, 19.56
+    },
+    // 18: Dillimore (Red County)
+    {
+        "Pedesaan: Red County", "Dillimore", "Dillimore Sheriff Station", "Kantor Polisi ~w~| ~g~ATM ~w~| ~g~Bengkel",
+        655.0, -565.0, 16.33, 90.0,
+        715.0, -620.0, 48.0,
+        655.0, -565.0, 16.33
+    },
+    // 19: Palomino Creek (Red County)
+    {
+        "Pedesaan: Red County", "Palomino Creek", "Palomino Creek Center", "Bank Cabang ~w~| ~g~ATM ~w~| ~g~Resto",
+        2255.0, -85.0, 26.50, 180.0,
+        2315.0, -145.0, 55.0,
+        2255.0, -85.0, 26.50
     }
 };
+
 #define PUBLIC_SPAWN_COUNT (sizeof(gPublicSpawns))
 
-// TextDraw Handles
-new PlayerText:TD_SpawnBox[MAX_PLAYERS]      = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SpawnHeader[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SpawnTitle[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SpawnInfo[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SpawnPrev[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SpawnNext[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SpawnCount[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SpawnConfirm[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SpawnCancel[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SpawnHint[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
+// Colors from Reference Design
+#define COLOR_SPAWN_BG       0x1E1E2EFF  // Dark Indigo Background
+#define COLOR_SPAWN_PURPLE   0x5814EEFF  // Electric Purple Accent & Action
+#define COLOR_SPAWN_RED      0xFA1E38FF  // Vibrant Red Cancel Button
+#define COLOR_SPAWN_SLATE    0x3E3E44EE  // Dark Slate Button
+
+// TextDraw Handles Spawn Selector (Sisi Kanan X: 430.0 .. 620.0)
+new PlayerText:TD_SpawnBox[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpawnTopBar[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpawnTitle[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpawnInfo[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpawnPrev[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpawnNext[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpawnConfirm[MAX_PLAYERS] = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpawnCancel[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW, ...};
 
 stock DestroyPlayerSpawnTextDraws(playerid) {
     if (TD_SpawnBox[playerid] != PlayerText:INVALID_TEXT_DRAW) {
         PlayerTextDrawDestroy(playerid, TD_SpawnBox[playerid]);
         TD_SpawnBox[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SpawnHeader[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SpawnHeader[playerid]);
-        TD_SpawnHeader[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_SpawnTopBar[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_SpawnTopBar[playerid]);
+        TD_SpawnTopBar[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
     if (TD_SpawnTitle[playerid] != PlayerText:INVALID_TEXT_DRAW) {
         PlayerTextDrawDestroy(playerid, TD_SpawnTitle[playerid]);
@@ -181,10 +226,6 @@ stock DestroyPlayerSpawnTextDraws(playerid) {
         PlayerTextDrawDestroy(playerid, TD_SpawnNext[playerid]);
         TD_SpawnNext[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SpawnCount[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SpawnCount[playerid]);
-        TD_SpawnCount[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
     if (TD_SpawnConfirm[playerid] != PlayerText:INVALID_TEXT_DRAW) {
         PlayerTextDrawDestroy(playerid, TD_SpawnConfirm[playerid]);
         TD_SpawnConfirm[playerid] = PlayerText:INVALID_TEXT_DRAW;
@@ -193,73 +234,65 @@ stock DestroyPlayerSpawnTextDraws(playerid) {
         PlayerTextDrawDestroy(playerid, TD_SpawnCancel[playerid]);
         TD_SpawnCancel[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SpawnHint[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SpawnHint[playerid]);
-        TD_SpawnHint[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
 }
 
 stock UpdateSpawnSelectorCamera(playerid) {
     if (!gPlayerData[playerid][p_SelectingSpawn]) return;
 
-    new Float:targetCamX, Float:targetCamY, Float:targetCamZ;
-    new Float:targetLookX, Float:targetLookY, Float:targetLookZ;
+    new idx = gPlayerData[playerid][p_SpawnIndex];
 
-    if (!gPlayerData[playerid][p_IsNewCharacter] && gPlayerData[playerid][p_SpawnIndex] == 0) {
-        // Lokasi Terakhir
-        targetLookX = gPlayerData[playerid][p_X];
-        targetLookY = gPlayerData[playerid][p_Y];
-        targetLookZ = gPlayerData[playerid][p_Z];
-        targetCamX  = targetLookX + 45.0;
-        targetCamY  = targetLookY - 45.0;
-        targetCamZ  = targetLookZ + 40.0;
+    if (gPlayerData[playerid][p_IsNewCharacter]) {
+        // Karakter baru: langsung pilih dari preset
+        SetPlayerCameraPos(playerid,
+            gPublicSpawns[idx][s_CamX],
+            gPublicSpawns[idx][s_CamY],
+            gPublicSpawns[idx][s_CamZ]);
+        SetPlayerCameraLookAt(playerid,
+            gPublicSpawns[idx][s_LookX],
+            gPublicSpawns[idx][s_LookY],
+            gPublicSpawns[idx][s_LookZ], CAMERA_CUT);
     } else {
-        new idx = gPlayerData[playerid][p_SpawnIndex];
-        if (!gPlayerData[playerid][p_IsNewCharacter]) idx--; // Offset by 1
+        if (idx == 0) {
+            // Posisi Terakhir Karakter
+            new Float:px = gPlayerData[playerid][p_X];
+            new Float:py = gPlayerData[playerid][p_Y];
+            new Float:pz = gPlayerData[playerid][p_Z];
 
-        targetCamX  = gPublicSpawns[idx][s_CamX];
-        targetCamY  = gPublicSpawns[idx][s_CamY];
-        targetCamZ  = gPublicSpawns[idx][s_CamZ];
-        targetLookX = gPublicSpawns[idx][s_LookX];
-        targetLookY = gPublicSpawns[idx][s_LookY];
-        targetLookZ = gPublicSpawns[idx][s_LookZ];
+            SetPlayerCameraPos(playerid, px + 55.0, py - 55.0, pz + 45.0);
+            SetPlayerCameraLookAt(playerid, px, py, pz + 1.0, CAMERA_CUT);
+        } else {
+            new pIdx = idx - 1;
+            SetPlayerCameraPos(playerid,
+                gPublicSpawns[pIdx][s_CamX],
+                gPublicSpawns[pIdx][s_CamY],
+                gPublicSpawns[pIdx][s_CamZ]);
+            SetPlayerCameraLookAt(playerid,
+                gPublicSpawns[pIdx][s_LookX],
+                gPublicSpawns[pIdx][s_LookY],
+                gPublicSpawns[pIdx][s_LookZ], CAMERA_CUT);
+        }
     }
-
-    SetPlayerCameraPos(playerid, targetCamX, targetCamY, targetCamZ);
-    SetPlayerCameraLookAt(playerid, targetLookX, targetLookY, targetLookZ, CAMERA_CUT);
 }
 
 stock UpdateSpawnSelectorUI(playerid) {
     if (!gPlayerData[playerid][p_SelectingSpawn]) return;
 
-    new total = gPlayerData[playerid][p_IsNewCharacter] ? PUBLIC_SPAWN_COUNT : (PUBLIC_SPAWN_COUNT + 1);
     new idx = gPlayerData[playerid][p_SpawnIndex];
+    new info[128];
 
-    new title[64], info[256], countStr[32];
-
-    if (!gPlayerData[playerid][p_IsNewCharacter] && idx == 0) {
-        format(title, sizeof(title), "~g~* Lokasi Terakhir");
-        format(info, sizeof(info),
-            "~y~[ SESI TERAKHIR ]~n~\
-            ~w~Wilayah: ~g~Posisi Saat Logout~n~\
-            ~w~Status: ~w~Karakter Siap Bermain");
+    if (gPlayerData[playerid][p_IsNewCharacter]) {
+        format(info, sizeof(info), "~w~Wilayah : ~w~%s", gPublicSpawns[idx][s_Name]);
     } else {
-        new pIdx = gPlayerData[playerid][p_IsNewCharacter] ? idx : (idx - 1);
-        format(title, sizeof(title), "~y~%s", gPublicSpawns[pIdx][s_Name]);
-        format(info, sizeof(info),
-            "~y~[ %s ]~n~\
-            ~w~Wilayah: ~w~%s~n~\
-            ~w~Fasilitas: ~g~%s",
-            gPublicSpawns[pIdx][s_City],
-            gPublicSpawns[pIdx][s_Region],
-            gPublicSpawns[pIdx][s_Facilities]);
+        if (idx == 0) {
+            format(info, sizeof(info), "~w~Wilayah : ~w~Sesi terakhir");
+        } else {
+            new pIdx = idx - 1;
+            format(info, sizeof(info), "~w~Wilayah : ~w~%s", gPublicSpawns[pIdx][s_Name]);
+        }
     }
 
-    format(countStr, sizeof(countStr), "%d / %d", idx + 1, total);
-
-    PlayerTextDrawSetString(playerid, TD_SpawnTitle[playerid], title);
     PlayerTextDrawSetString(playerid, TD_SpawnInfo[playerid], info);
-    PlayerTextDrawSetString(playerid, TD_SpawnCount[playerid], countStr);
+    PlayerTextDrawShow(playerid, TD_SpawnInfo[playerid]);
 }
 
 stock OpenSpawnSelection(playerid, bool:isNewChar = false) {
@@ -272,123 +305,106 @@ stock OpenSpawnSelection(playerid, bool:isNewChar = false) {
     HidePlayerMoneyHUD(playerid);
     DestroyPlayerSpawnTextDraws(playerid);
 
-    //    Buat UI TextDraw di sebelah KANAN (X: 430 .. 610)       
+    //    Buat UI TextDraw di sebelah KANAN (X: 430.0 .. 620.0, Y: 100.0 .. 255.0)
 
-    // 1. Background Box (#1D1D1D Dark Matte di Kanan)
-    TD_SpawnBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 105.0, "_");
-    PlayerTextDrawUseBox(playerid, TD_SpawnBox[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SpawnBox[playerid], 0x1D1D1DF2);
-    PlayerTextDrawTextSize(playerid, TD_SpawnBox[playerid], 610.0, 0.0);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnBox[playerid], 0.0, 24.5);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnBox[playerid], 0);
+    // 1. Background Box (Dark Indigo #1E1E2EFF di Kanan)
+    TD_SpawnBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 100.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_SpawnBox[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpawnBox[playerid], COLOR_SPAWN_BG);
+    PlayerTextDrawTextSize(playerid, TD_SpawnBox[playerid], 620.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_SpawnBox[playerid], 0.0, 17.0);
+    PlayerTextDrawSetSelectable(playerid, TD_SpawnBox[playerid], false);
 
-    // 2. Header Bar Box (#E69958 Warm Amber Header)
-    TD_SpawnHeader[playerid] = CreatePlayerTextDraw(playerid, 430.0, 105.0, "   LOKASI AWAL SPAWN");
-    PlayerTextDrawFont(playerid, TD_SpawnHeader[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnHeader[playerid], 0.22, 1.4);
-    PlayerTextDrawColor(playerid, TD_SpawnHeader[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SpawnHeader[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SpawnHeader[playerid], 0xE69958FF);
-    PlayerTextDrawTextSize(playerid, TD_SpawnHeader[playerid], 610.0, 14.0);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnHeader[playerid], 0);
+    // 2. Top Accent Line (Electric Purple #5814EEFF, X: 430.0 .. 620.0, Y: 100.0)
+    TD_SpawnTopBar[playerid] = CreatePlayerTextDraw(playerid, 430.0, 100.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_SpawnTopBar[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpawnTopBar[playerid], COLOR_SPAWN_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_SpawnTopBar[playerid], 620.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_SpawnTopBar[playerid], 0.0, 0.75);
+    PlayerTextDrawSetSelectable(playerid, TD_SpawnTopBar[playerid], false);
 
-    // 3. Location Title
-    TD_SpawnTitle[playerid] = CreatePlayerTextDraw(playerid, 520.0, 126.0, "Stasiun Cranberry");
+    // 3. Header Title Tile [ Lokasi Awal Spawn ] (Center X: 525.0, Y: 112.0)
+    TD_SpawnTitle[playerid] = CreatePlayerTextDraw(playerid, 525.0, 112.0, "Lokasi Awal Spawn");
     PlayerTextDrawFont(playerid, TD_SpawnTitle[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnTitle[playerid], 0.23, 1.3);
-    PlayerTextDrawColor(playerid, TD_SpawnTitle[playerid], 0xFFFF00FF);
+    PlayerTextDrawLetterSize(playerid, TD_SpawnTitle[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_SpawnTitle[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_SpawnTitle[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpawnTitle[playerid], COLOR_SPAWN_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_SpawnTitle[playerid], 14.0, 170.0);
     PlayerTextDrawAlignment(playerid, TD_SpawnTitle[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SpawnTitle[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnTitle[playerid], 0);
+    PlayerTextDrawSetSelectable(playerid, TD_SpawnTitle[playerid], false);
 
-    // 4. Location Subtitle & Facilities Info
-    TD_SpawnInfo[playerid] = CreatePlayerTextDraw(playerid, 440.0, 148.0, "Wilayah: Cranberry Station~n~Fasilitas: Taksi | ATM | Kereta");
+    // 4. Spawn Info Text Box (Wilayah) (X: 442.0, Y: 138.0)
+    TD_SpawnInfo[playerid] = CreatePlayerTextDraw(playerid, 442.0, 138.0, "Memuat info wilayah...");
     PlayerTextDrawFont(playerid, TD_SpawnInfo[playerid], 1);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnInfo[playerid], 0.17, 1.05);
+    PlayerTextDrawLetterSize(playerid, TD_SpawnInfo[playerid], 0.18, 1.00);
     PlayerTextDrawColor(playerid, TD_SpawnInfo[playerid], 0xFFFFFFFF);
     PlayerTextDrawSetOutline(playerid, TD_SpawnInfo[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnInfo[playerid], 0);
+    PlayerTextDrawSetSelectable(playerid, TD_SpawnInfo[playerid], false);
 
-    // 5. Tombol PREVIOUS (<<)
-    TD_SpawnPrev[playerid] = CreatePlayerTextDraw(playerid, 440.0, 218.0, "<<");
+    // 5. Navigation Button: < Sebelum (Center X: 481.0, Y: 172.0)
+    TD_SpawnPrev[playerid] = CreatePlayerTextDraw(playerid, 481.0, 172.0, "< Sebelum");
     PlayerTextDrawFont(playerid, TD_SpawnPrev[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnPrev[playerid], 0.32, 1.5);
-    PlayerTextDrawColor(playerid, TD_SpawnPrev[playerid], 0xE69958FF);
+    PlayerTextDrawLetterSize(playerid, TD_SpawnPrev[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_SpawnPrev[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_SpawnPrev[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpawnPrev[playerid], COLOR_SPAWN_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_SpawnPrev[playerid], 14.0, 82.0);
     PlayerTextDrawAlignment(playerid, TD_SpawnPrev[playerid], 2);
-    PlayerTextDrawUseBox(playerid, TD_SpawnPrev[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SpawnPrev[playerid], 0x2D2D2DFF);
-    PlayerTextDrawTextSize(playerid, TD_SpawnPrev[playerid], 20.0, 36.0);
     PlayerTextDrawSetOutline(playerid, TD_SpawnPrev[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnPrev[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SpawnPrev[playerid], true);
 
-    // 6. Indicator (Lokasi 1 / 4)
-    TD_SpawnCount[playerid] = CreatePlayerTextDraw(playerid, 520.0, 222.0, "1 / 4");
-    PlayerTextDrawFont(playerid, TD_SpawnCount[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnCount[playerid], 0.22, 1.2);
-    PlayerTextDrawColor(playerid, TD_SpawnCount[playerid], 0xFFFFFFFF);
-    PlayerTextDrawAlignment(playerid, TD_SpawnCount[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SpawnCount[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnCount[playerid], 0);
-
-    // 7. Tombol NEXT (>>)
-    TD_SpawnNext[playerid] = CreatePlayerTextDraw(playerid, 600.0, 218.0, ">>");
+    // 6. Navigation Button: Selanjutnya > (Center X: 569.0, Y: 172.0)
+    TD_SpawnNext[playerid] = CreatePlayerTextDraw(playerid, 569.0, 172.0, "Selanjutnya >");
     PlayerTextDrawFont(playerid, TD_SpawnNext[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnNext[playerid], 0.32, 1.5);
-    PlayerTextDrawColor(playerid, TD_SpawnNext[playerid], 0xE69958FF);
+    PlayerTextDrawLetterSize(playerid, TD_SpawnNext[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_SpawnNext[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_SpawnNext[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpawnNext[playerid], COLOR_SPAWN_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_SpawnNext[playerid], 14.0, 82.0);
     PlayerTextDrawAlignment(playerid, TD_SpawnNext[playerid], 2);
-    PlayerTextDrawUseBox(playerid, TD_SpawnNext[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SpawnNext[playerid], 0x2D2D2DFF);
-    PlayerTextDrawTextSize(playerid, TD_SpawnNext[playerid], 20.0, 36.0);
     PlayerTextDrawSetOutline(playerid, TD_SpawnNext[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnNext[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SpawnNext[playerid], true);
 
-    // 8. Tombol SPAWN DI SINI (Hijau)
-    TD_SpawnConfirm[playerid] = CreatePlayerTextDraw(playerid, 438.0, 252.0, "   [ ~w~SPAWN DI SINI ~y~~h~]~n~ ");
+    // 7. Primary Action Button: [ Gunakan ] (Center X: 525.0, Y: 196.0)
+    TD_SpawnConfirm[playerid] = CreatePlayerTextDraw(playerid, 525.0, 196.0, "Gunakan");
     PlayerTextDrawFont(playerid, TD_SpawnConfirm[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnConfirm[playerid], 0.21, 1.3);
+    PlayerTextDrawLetterSize(playerid, TD_SpawnConfirm[playerid], 0.17, 1.05);
     PlayerTextDrawColor(playerid, TD_SpawnConfirm[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SpawnConfirm[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SpawnConfirm[playerid], 0x1D6F42FF);
-    PlayerTextDrawTextSize(playerid, TD_SpawnConfirm[playerid], 602.0, 16.0);
+    PlayerTextDrawUseBox(playerid, TD_SpawnConfirm[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpawnConfirm[playerid], COLOR_SPAWN_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_SpawnConfirm[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_SpawnConfirm[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SpawnConfirm[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnConfirm[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SpawnConfirm[playerid], true);
 
-    // 9. Tombol KEMBALI (Merah)
-    TD_SpawnCancel[playerid] = CreatePlayerTextDraw(playerid, 438.0, 278.0, "   [ ~w~KEMBALI ~y~~h~]~n~ ");
+    // 8. Secondary Button: [ Batal ] (Center X: 525.0, Y: 218.0)
+    TD_SpawnCancel[playerid] = CreatePlayerTextDraw(playerid, 525.0, 218.0, "Batal");
     PlayerTextDrawFont(playerid, TD_SpawnCancel[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnCancel[playerid], 0.21, 1.3);
+    PlayerTextDrawLetterSize(playerid, TD_SpawnCancel[playerid], 0.17, 1.05);
     PlayerTextDrawColor(playerid, TD_SpawnCancel[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SpawnCancel[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SpawnCancel[playerid], 0x481E1EFF);
-    PlayerTextDrawTextSize(playerid, TD_SpawnCancel[playerid], 602.0, 16.0);
+    PlayerTextDrawUseBox(playerid, TD_SpawnCancel[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpawnCancel[playerid], COLOR_SPAWN_RED);
+    PlayerTextDrawTextSize(playerid, TD_SpawnCancel[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_SpawnCancel[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SpawnCancel[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnCancel[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SpawnCancel[playerid], true);
 
-    // 10. Hint text
-    TD_SpawnHint[playerid] = CreatePlayerTextDraw(playerid, 520.0, 305.0, "~w~Klik ~y~<< >> ~w~untuk memilih lokasi");
-    PlayerTextDrawFont(playerid, TD_SpawnHint[playerid], 1);
-    PlayerTextDrawLetterSize(playerid, TD_SpawnHint[playerid], 0.16, 0.9);
-    PlayerTextDrawColor(playerid, TD_SpawnHint[playerid], 0xCCCCCCFF);
-    PlayerTextDrawAlignment(playerid, TD_SpawnHint[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SpawnHint[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpawnHint[playerid], 0);
-
-    // Tampilkan semua TextDraw
+    // Tampilkan semua TextDraw ke pemain
     PlayerTextDrawShow(playerid, TD_SpawnBox[playerid]);
-    PlayerTextDrawShow(playerid, TD_SpawnHeader[playerid]);
+    PlayerTextDrawShow(playerid, TD_SpawnTopBar[playerid]);
     PlayerTextDrawShow(playerid, TD_SpawnTitle[playerid]);
     PlayerTextDrawShow(playerid, TD_SpawnInfo[playerid]);
     PlayerTextDrawShow(playerid, TD_SpawnPrev[playerid]);
     PlayerTextDrawShow(playerid, TD_SpawnNext[playerid]);
-    PlayerTextDrawShow(playerid, TD_SpawnCount[playerid]);
     PlayerTextDrawShow(playerid, TD_SpawnConfirm[playerid]);
     PlayerTextDrawShow(playerid, TD_SpawnCancel[playerid]);
-    PlayerTextDrawShow(playerid, TD_SpawnHint[playerid]);
 
     UpdateSpawnSelectorUI(playerid);
     UpdateSpawnSelectorCamera(playerid);
 
-    SelectTextDraw(playerid, 0xE69958FF);
+    SelectTextDraw(playerid, COLOR_SPAWN_PURPLE);
 }
 
 stock CloseSpawnSelection(playerid) {

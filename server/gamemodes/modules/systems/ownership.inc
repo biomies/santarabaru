@@ -161,39 +161,84 @@ stock SyncVehiclesOnServerStart() {
     return 1;
 }
 
-//    3. Manajemen Kendaraan Aktif Pemain                       
+//    3. Manajemen Kendaraan Aktif Pemain (Maksimal 5 Kendaraan Aktif per Pemain)
+
+stock GetPlayerActiveVehCount(playerid) {
+    new count = 0;
+    for (new v = 0; v < MAX_PLAYER_SPAWNED_VEHICLES; v++) {
+        if (gPlayerData[playerid][p_ActiveVehID][v] != INVALID_VEHICLE_ID) count++;
+    }
+    return count;
+}
+
+stock bool:IsPlayerActiveVeh(playerid, vehicleid) {
+    if (vehicleid == INVALID_VEHICLE_ID || vehicleid <= 0) return false;
+    for (new v = 0; v < MAX_PLAYER_SPAWNED_VEHICLES; v++) {
+        if (gPlayerData[playerid][p_ActiveVehID][v] == vehicleid) return true;
+    }
+    return false;
+}
+
+stock GetPlayerActiveVehSlot(playerid, vehicleid) {
+    if (vehicleid == INVALID_VEHICLE_ID || vehicleid <= 0) return -1;
+    for (new v = 0; v < MAX_PLAYER_SPAWNED_VEHICLES; v++) {
+        if (gPlayerData[playerid][p_ActiveVehID][v] == vehicleid) return v;
+    }
+    return -1;
+}
+
+stock GetPlayerActiveVehSlotByDBID(playerid, dbId) {
+    if (dbId <= 0) return -1;
+    for (new v = 0; v < MAX_PLAYER_SPAWNED_VEHICLES; v++) {
+        if (gPlayerData[playerid][p_ActiveVehDBID][v] == dbId) return v;
+    }
+    return -1;
+}
+
+stock GetPlayerEmptyVehSlot(playerid) {
+    for (new v = 0; v < MAX_PLAYER_SPAWNED_VEHICLES; v++) {
+        if (gPlayerData[playerid][p_ActiveVehID][v] == INVALID_VEHICLE_ID) return v;
+    }
+    return -1;
+}
 
 stock DestroyPlayerActiveVehicle(playerid) {
-    if (gPlayerData[playerid][p_ActiveVehID] != INVALID_VEHICLE_ID) {
-        if (gPlayerData[playerid][p_ActiveVehDBID] > 0) {
-            new Float:vx, Float:vy, Float:vz, Float:va, Float:vhp;
-            GetVehiclePos(gPlayerData[playerid][p_ActiveVehID], vx, vy, vz);
-            GetVehicleZAngle(gPlayerData[playerid][p_ActiveVehID], va);
-            GetVehicleHealth(gPlayerData[playerid][p_ActiveVehID], vhp);
+    for (new v = 0; v < MAX_PLAYER_SPAWNED_VEHICLES; v++) {
+        new vehId = gPlayerData[playerid][p_ActiveVehID][v];
+        if (vehId != INVALID_VEHICLE_ID) {
+            new dbId = gPlayerData[playerid][p_ActiveVehDBID][v];
+            if (dbId > 0) {
+                new Float:vx, Float:vy, Float:vz, Float:va, Float:vhp;
+                GetVehiclePos(vehId, vx, vy, vz);
+                GetVehicleZAngle(vehId, va);
+                GetVehicleHealth(vehId, vhp);
 
-            new q[256];
-            format(q, sizeof(q),
-                "UPDATE `player_vehicles` SET `x`=%f, `y`=%f, `z`=%f, `angle`=%f, `health`=%f WHERE `id`=%d",
-                vx, vy, vz, va, vhp, gPlayerData[playerid][p_ActiveVehDBID]);
-            DB_FreeResultSet(DB_ExecuteQuery(gDB, q));
+                new q[256];
+                format(q, sizeof(q),
+                    "UPDATE `player_vehicles` SET `x`=%f, `y`=%f, `z`=%f, `angle`=%f, `health`=%f WHERE `id`=%d",
+                    vx, vy, vz, va, vhp, dbId);
+                DB_FreeResultSet(DB_ExecuteQuery(gDB, q));
+            }
+            DestroyVehicle(vehId);
+            gPlayerData[playerid][p_ActiveVehID][v] = INVALID_VEHICLE_ID;
+            gPlayerData[playerid][p_ActiveVehDBID][v] = 0;
         }
-        DestroyVehicle(gPlayerData[playerid][p_ActiveVehID]);
-        gPlayerData[playerid][p_ActiveVehID] = INVALID_VEHICLE_ID;
-        gPlayerData[playerid][p_ActiveVehDBID] = 0;
     }
 }
 
 stock StoreVehicleInGarage(playerid, garageId) {
-    if (gPlayerData[playerid][p_ActiveVehID] == INVALID_VEHICLE_ID) {
-        SendClientMessage(playerid, COL_RED, "  [Garasi] Anda belum menaiki atau mengeluarkan kendaraan pribadi!");
+    new curVeh = GetPlayerVehicleID(playerid);
+    new slot = GetPlayerActiveVehSlot(playerid, curVeh);
+    if (slot == -1) {
+        SendClientMessage(playerid, COL_RED, "  [Garasi] Anda harus menaiki kendaraan pribadi milik Anda sendiri!");
         return 0;
     }
 
-    new dbId = gPlayerData[playerid][p_ActiveVehDBID];
+    new dbId = gPlayerData[playerid][p_ActiveVehDBID][slot];
     if (dbId <= 0) return 0;
 
     new Float:vhp;
-    GetVehicleHealth(gPlayerData[playerid][p_ActiveVehID], vhp);
+    GetVehicleHealth(curVeh, vhp);
 
     // Simpan ke DB dengan status tersimpan di garasi
     new q[256];
@@ -202,9 +247,9 @@ stock StoreVehicleInGarage(playerid, garageId) {
         VEH_STATUS_GARAGE, garageId, vhp, dbId);
     DB_FreeResultSet(DB_ExecuteQuery(gDB, q));
 
-    DestroyVehicle(gPlayerData[playerid][p_ActiveVehID]);
-    gPlayerData[playerid][p_ActiveVehID] = INVALID_VEHICLE_ID;
-    gPlayerData[playerid][p_ActiveVehDBID] = 0;
+    DestroyVehicle(curVeh);
+    gPlayerData[playerid][p_ActiveVehID][slot] = INVALID_VEHICLE_ID;
+    gPlayerData[playerid][p_ActiveVehDBID][slot] = 0;
 
     // Keluarkan pemain dan posisikan di marker garasi
     SetPlayerPos(playerid, gPublicGarages[garageId][g_MarkerX], gPublicGarages[garageId][g_MarkerY], gPublicGarages[garageId][g_MarkerZ]);
@@ -213,7 +258,8 @@ stock StoreVehicleInGarage(playerid, garageId) {
     SendClientMessage(playerid, COL_GREEN, "====================================================================");
     SendClientMessage(playerid, COL_CYAN,  "  [Garasi Publik] Kendaraan pribadi Anda berhasil disimpan!");
     new msg[144];
-    format(msg, sizeof(msg), "  > Disimpan di: {FFFFFF}%s (%s)", gPublicGarages[garageId][g_Name], gPublicGarages[garageId][g_City]);
+    format(msg, sizeof(msg), "  > Disimpan di: {FFFFFF}%s (%s) {A0AEC0}| Sisa kendaraan aktif: {2ECC71}%d/5",
+        gPublicGarages[garageId][g_Name], gPublicGarages[garageId][g_City], GetPlayerActiveVehCount(playerid));
     SendClientMessage(playerid, COL_WHITE, msg);
     SendClientMessage(playerid, COL_YELLOW, "  > Anda dapat mengambilnya kembali di SEMUA titik Garasi Kota (/garasi).");
     SendClientMessage(playerid, COL_GREEN, "====================================================================");
@@ -223,8 +269,24 @@ stock StoreVehicleInGarage(playerid, garageId) {
 public SpawnPlayerVehicleFromGarage(playerid, dbVehId, garageId) {
     if (garageId < 0 || garageId >= PUBLIC_GARAGE_COUNT) garageId = 0;
 
-    // Hapus kendaraan aktif yang sedang dipakai sebelumnya jika ada
-    DestroyPlayerActiveVehicle(playerid);
+    // Cek jika mobil ini sudah aktif di luar
+    if (GetPlayerActiveVehSlotByDBID(playerid, dbVehId) != -1) {
+        SendClientMessage(playerid, COL_YELLOW, "  [Garasi] Kendaraan ini sudah aktif di luar garasi! Gunakan /v untuk melacak GPS.");
+        return 0;
+    }
+
+    // Cek kuota batas maksimal 5 kendaraan aktif
+    if (GetPlayerActiveVehCount(playerid) >= MAX_PLAYER_SPAWNED_VEHICLES) {
+        SendClientMessage(playerid, COL_RED, "  [Garasi] Anda telah mencapai batas maksimal 5 kendaraan aktif di luar garasi!");
+        SendClientMessage(playerid, COL_YELLOW, "  > Simpan salah satu kendaraan Anda terlebih dahulu ke garasi (/garasi)!");
+        return 0;
+    }
+
+    new slot = GetPlayerEmptyVehSlot(playerid);
+    if (slot == -1) {
+        SendClientMessage(playerid, COL_RED, "  [Garasi] Slot kendaraan aktif penuh (maksimal 5 kendaraan).");
+        return 0;
+    }
 
     new query[128];
     format(query, sizeof(query), "SELECT * FROM `player_vehicles` WHERE `id`=%d LIMIT 1", dbVehId);
@@ -257,8 +319,8 @@ public SpawnPlayerVehicleFromGarage(playerid, dbVehId, garageId) {
         SetVehicleHealth(vehId, vhp);
         SetVehicleParamsEx(vehId, 1, 0, 0, 0, 0, 0, 0); // Mesin langsung menyala
 
-        gPlayerData[playerid][p_ActiveVehID] = vehId;
-        gPlayerData[playerid][p_ActiveVehDBID] = dbVehId;
+        gPlayerData[playerid][p_ActiveVehID][slot] = vehId;
+        gPlayerData[playerid][p_ActiveVehDBID][slot] = dbVehId;
 
         // Update database: status = VEH_STATUS_OUTSIDE
         new qUp[256];
@@ -277,10 +339,10 @@ public SpawnPlayerVehicleFromGarage(playerid, dbVehId, garageId) {
     SendClientMessage(playerid, COL_GREEN, "====================================================================");
     SendClientMessage(playerid, COL_CYAN,  "  [Garasi Publik] Kendaraan Anda telah dikeluarkan ke slot garasi!");
     new infoMsg[144];
-    format(infoMsg, sizeof(infoMsg), "  > Unit: {FFFFFF}%s {A0AEC0}| Plat: {00EEFF}%s {A0AEC0}| Lokasi: {FFFFFF}%s",
-        vehName, plate, gPublicGarages[garageId][g_Name]);
+    format(infoMsg, sizeof(infoMsg), "  > Unit: {FFFFFF}%s {A0AEC0}| Plat: {00EEFF}%s {A0AEC0}| Aktif: {2ECC71}%d/5",
+        vehName, plate, GetPlayerActiveVehCount(playerid));
     SendClientMessage(playerid, COL_WHITE, infoMsg);
-    SendClientMessage(playerid, COL_YELLOW, "  > Gunakan {FFFFFF}/lock {FFFF00}untuk kunci dan {FFFFFF}/engine {FFFF00}untuk kontrol mesin.");
+    SendClientMessage(playerid, COL_YELLOW, "  > Gunakan {FFFFFF}/lock {FFFF00}untuk kunci, {FFFFFF}/engine {FFFF00}untuk mesin, dan {FFFFFF}/v {FFFF00}untuk manajemen.");
     SendClientMessage(playerid, COL_GREEN, "====================================================================");
     return 1;
 }
@@ -319,12 +381,15 @@ public BuyCurrentDealerVehicle(playerid) {
     format(plate, sizeof(plate), "SAN-%03d", random(900) + 100);
     new chosenColor = gDealerColors[colorIdx];
 
+    new bool:canSpawn = (GetPlayerActiveVehCount(playerid) < MAX_PLAYER_SPAWNED_VEHICLES);
+    new vehStatus = canSpawn ? VEH_STATUS_OUTSIDE : VEH_STATUS_GARAGE;
+
     new qInsert[384];
     format(qInsert, sizeof(qInsert),
         "INSERT INTO `player_vehicles` (`char_id`, `model_id`, `plate`, `color1`, `color2`, `price`, `x`, `y`, `z`, `angle`, `health`, `locked`, `status`, `garage_id`, `insurance_cost`) " \
         "VALUES (%d, %d, '%s', %d, %d, %d, %f, %f, %f, %f, 1000.0, 0, %d, 1, 1500000)",
         gPlayerData[playerid][p_CharID], modelid, plate, chosenColor, chosenColor, price,
-        DEALER_DELIVER_X, DEALER_DELIVER_Y, DEALER_DELIVER_Z, DEALER_DELIVER_A, VEH_STATUS_OUTSIDE);
+        DEALER_DELIVER_X, DEALER_DELIVER_Y, DEALER_DELIVER_Z, DEALER_DELIVER_A, vehStatus);
 
     new DBResult:res = DB_ExecuteQuery(gDB, qInsert);
     if (res) DB_FreeResultSet(res);
@@ -341,22 +406,26 @@ public BuyCurrentDealerVehicle(playerid) {
         if (resId) DB_FreeResultSet(resId);
     }
 
-    DestroyPlayerActiveVehicle(playerid);
     CloseDealership(playerid);
 
-    new vehId = CreateVehicle(modelid, DEALER_DELIVER_X, DEALER_DELIVER_Y, DEALER_DELIVER_Z, DEALER_DELIVER_A, chosenColor, chosenColor, -1);
-    if (vehId != INVALID_VEHICLE_ID) {
-        SetVehicleNumberPlate(vehId, plate);
-        SetVehicleToRespawn(vehId);
-        SetVehiclePos(vehId, DEALER_DELIVER_X, DEALER_DELIVER_Y, DEALER_DELIVER_Z);
-        SetVehicleZAngle(vehId, DEALER_DELIVER_A);
-        SetVehicleParamsEx(vehId, 1, 0, 0, 0, 0, 0, 0); // Mesin langsung menyala
+    if (canSpawn) {
+        new slot = GetPlayerEmptyVehSlot(playerid);
+        if (slot != -1) {
+            new vehId = CreateVehicle(modelid, DEALER_DELIVER_X, DEALER_DELIVER_Y, DEALER_DELIVER_Z, DEALER_DELIVER_A, chosenColor, chosenColor, -1);
+            if (vehId != INVALID_VEHICLE_ID) {
+                SetVehicleNumberPlate(vehId, plate);
+                SetVehicleToRespawn(vehId);
+                SetVehiclePos(vehId, DEALER_DELIVER_X, DEALER_DELIVER_Y, DEALER_DELIVER_Z);
+                SetVehicleZAngle(vehId, DEALER_DELIVER_A);
+                SetVehicleParamsEx(vehId, 1, 0, 0, 0, 0, 0, 0); // Mesin langsung menyala
 
-        gPlayerData[playerid][p_ActiveVehID] = vehId;
-        gPlayerData[playerid][p_ActiveVehDBID] = vehDbId;
+                gPlayerData[playerid][p_ActiveVehID][slot] = vehId;
+                gPlayerData[playerid][p_ActiveVehDBID][slot] = vehDbId;
 
-        // Langsung masukkan pemain ke kursi pengemudi
-        PutPlayerInVehicle(playerid, vehId, 0);
+                // Langsung masukkan pemain ke kursi pengemudi
+                PutPlayerInVehicle(playerid, vehId, 0);
+            }
+        }
     }
 
     PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
@@ -375,6 +444,13 @@ public BuyCurrentDealerVehicle(playerid) {
     format(infoMsg, sizeof(infoMsg), "  > Plat Nomor: {00EEFF}%s {A0AEC0}| Kunci: {2ECC71}Tersedia di saku Anda", plate);
     SendClientMessage(playerid, COL_WHITE, infoMsg);
 
+    if (canSpawn) {
+        format(infoMsg, sizeof(infoMsg), "  > Status: {2ECC71}Dikeluarkan di depan dealer {A0AEC0}(Kendaraan aktif: %d/5)", GetPlayerActiveVehCount(playerid));
+        SendClientMessage(playerid, COL_WHITE, infoMsg);
+    } else {
+        SendClientMessage(playerid, COL_YELLOW, "  > Status: {F1C40F}Disimpan langsung di Garasi Rodeo (karena kuota 5 mobil aktif penuh).");
+    }
+
     SendClientMessage(playerid, COL_YELLOW, "  > Gunakan {FFFFFF}/lock {FFFF00}untuk kunci, {FFFFFF}/engine {FFFF00}untuk mesin, {FFFFFF}/garasi {FFFF00}untuk simpan.");
     SendClientMessage(playerid, COL_GREEN, "====================================================================");
     return 1;
@@ -386,8 +462,9 @@ stock OnPlayerVehicleDeath(vehicleid, killerid) {
     #pragma unused killerid
     for (new i = 0; i < MAX_PLAYERS; i++) {
         if (!IsPlayerConnected(i)) continue;
-        if (gPlayerData[i][p_ActiveVehID] == vehicleid) {
-            new dbId = gPlayerData[i][p_ActiveVehDBID];
+        new slot = GetPlayerActiveVehSlot(i, vehicleid);
+        if (slot != -1) {
+            new dbId = gPlayerData[i][p_ActiveVehDBID][slot];
             if (dbId > 0) {
                 // Update database ke status asuransi
                 new q[256];
@@ -397,8 +474,8 @@ stock OnPlayerVehicleDeath(vehicleid, killerid) {
                 DB_FreeResultSet(DB_ExecuteQuery(gDB, q));
             }
 
-            gPlayerData[i][p_ActiveVehID] = INVALID_VEHICLE_ID;
-            gPlayerData[i][p_ActiveVehDBID] = 0;
+            gPlayerData[i][p_ActiveVehID][slot] = INVALID_VEHICLE_ID;
+            gPlayerData[i][p_ActiveVehDBID][slot] = 0;
 
             PlayerPlaySound(i, 1084, 0.0, 0.0, 0.0);
             SendClientMessage(i, COL_RED, "====================================================================");
@@ -598,7 +675,7 @@ stock ShowVehicleMenu(playerid) {
                         format(statusTxt, sizeof(statusTxt), "{2ECC71}Garasi Publik");
                     }
                 } else if (vStatus == VEH_STATUS_OUTSIDE) {
-                    if (gPlayerData[playerid][p_ActiveVehDBID] == dbId) {
+                    if (GetPlayerActiveVehSlotByDBID(playerid, dbId) != -1) {
                         format(statusTxt, sizeof(statusTxt), "{00EEFF}Aktif Digunakan");
                     } else {
                         format(statusTxt, sizeof(statusTxt), "{F1C40F}Terparkir di Luar");
@@ -716,8 +793,9 @@ stock HandleVehicleMenuDialog(playerid, dialogid, response, listitem) {
                     SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
                 } else {
                     // Terparkir di luar
-                    if (gPlayerData[playerid][p_ActiveVehDBID] == dbId && gPlayerData[playerid][p_ActiveVehID] != INVALID_VEHICLE_ID) {
-                        GetVehiclePos(gPlayerData[playerid][p_ActiveVehID], vx, vy, vz);
+                    new actSlot = GetPlayerActiveVehSlotByDBID(playerid, dbId);
+                    if (actSlot != -1 && gPlayerData[playerid][p_ActiveVehID][actSlot] != INVALID_VEHICLE_ID) {
+                        GetVehiclePos(gPlayerData[playerid][p_ActiveVehID][actSlot], vx, vy, vz);
                     }
                     SetGPSWaypoint(playerid, vx, vy, vz, 4.0);
                     PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
@@ -729,11 +807,12 @@ stock HandleVehicleMenuDialog(playerid, dialogid, response, listitem) {
                 }
             }
             case 1: { // 2. Kunci / Buka Pintu
-                if (gPlayerData[playerid][p_ActiveVehDBID] != dbId || gPlayerData[playerid][p_ActiveVehID] == INVALID_VEHICLE_ID) {
+                new actSlot = GetPlayerActiveVehSlotByDBID(playerid, dbId);
+                if (actSlot == -1 || gPlayerData[playerid][p_ActiveVehID][actSlot] == INVALID_VEHICLE_ID) {
                     SendClientMessage(playerid, COL_RED, "  [Kendaraan] Kendaraan ini sedang tidak aktif / tersimpan di garasi.");
                     return 1;
                 }
-                new vehId = gPlayerData[playerid][p_ActiveVehID];
+                new vehId = gPlayerData[playerid][p_ActiveVehID][actSlot];
                 new engine, lights, alarm, doors, bonnet, boot, objective;
                 GetVehicleParamsEx(vehId, engine, lights, alarm, doors, bonnet, boot, objective);
 
@@ -817,7 +896,8 @@ CMD:garasi(playerid, params[]) {
 
     // Jika sedang di dalam kendaraan pribadi miliknya -> Simpan ke garasi
     if (IsPlayerInAnyVehicle(playerid)) {
-        if (GetPlayerVehicleID(playerid) == gPlayerData[playerid][p_ActiveVehID] && gPlayerData[playerid][p_ActiveVehID] != INVALID_VEHICLE_ID) {
+        new curVeh = GetPlayerVehicleID(playerid);
+        if (IsPlayerActiveVeh(playerid, curVeh)) {
             StoreVehicleInGarage(playerid, nearestGarage);
             return 1;
         } else {
@@ -1003,4 +1083,273 @@ CMD:lokasi(playerid, params[]) {
 CMD:map(playerid, params[]) {
     return cmd_gps(playerid, params);
 }
+
+// ============================================================
+//  9. Sistem Bagasi Kendaraan (Vehicle Trunk & Storage)
+// ============================================================
+
+forward ShowTrunkUI(playerid, vehicleid);
+
+stock GetVehicleDBID(vehicleid) {
+    if (vehicleid == INVALID_VEHICLE_ID || vehicleid <= 0) return 0;
+    for (new i = 0; i < MAX_PLAYERS; i++) {
+        if (!IsPlayerConnected(i)) continue;
+        new slot = GetPlayerActiveVehSlot(i, vehicleid);
+        if (slot != -1) {
+            return gPlayerData[i][p_ActiveVehDBID][slot];
+        }
+    }
+    return 0;
+}
+
+stock GetVehiclePlate(vehicleid, plate[], maxlen) {
+    new dbId = GetVehicleDBID(vehicleid);
+    if (dbId > 0) {
+        new query[96];
+        format(query, sizeof(query), "SELECT `plate` FROM `player_vehicles` WHERE `id`=%d LIMIT 1", dbId);
+        new DBResult:res = DB_ExecuteQuery(gDB, query);
+        if (res && DB_GetRowCount(res) > 0) {
+            DB_GetFieldStringByName(res, "plate", plate, maxlen);
+            DB_FreeResultSet(res);
+            return 1;
+        }
+        if (res) DB_FreeResultSet(res);
+    }
+    format(plate, maxlen, "SAN-001");
+    return 0;
+}
+
+stock bool:HasVehicleBoot(modelid) {
+    switch (modelid) {
+        // Sedans / Coupes / Luxury
+        case 405, 410, 412, 419, 420, 421, 426, 436, 438, 439, 445, 458, 466, 467,
+             474, 475, 479, 491, 492, 496, 507, 516, 517, 518, 526, 527, 529, 540,
+             542, 545, 546, 547, 549, 550, 551, 555, 560, 561, 562, 565, 566, 567,
+             575, 576, 580, 585, 602, 603: return true;
+
+        // Sports / Supercars
+        case 402, 411, 415, 429, 451, 477, 494, 502, 503, 506, 541, 558, 559: return true;
+
+        // SUVs, Vans, Wagons, Pickups, Hatchbacks
+        case 400, 404, 418, 422, 440, 459, 478, 482, 499, 500, 505, 508, 543, 554,
+             579, 582, 589, 600, 604, 605: return true;
+
+        // Police & Public Service Cars
+        case 427, 490, 528, 596, 597, 598, 599: return true;
+    }
+    return false;
+}
+
+stock bool:IsPlayerAtVehicleBoot(playerid, vehicleid) {
+    if (!IsPlayerConnected(playerid) || vehicleid == INVALID_VEHICLE_ID) return false;
+    new Float:px, Float:py, Float:pz;
+    GetPlayerPos(playerid, px, py, pz);
+
+    new Float:vx, Float:vy, Float:vz, Float:va;
+    GetVehiclePos(vehicleid, vx, vy, vz);
+    GetVehicleZAngle(vehicleid, va);
+
+    new modelid = GetVehicleModel(vehicleid);
+    new Float:sizeX, Float:sizeY, Float:sizeZ;
+    GetVehicleModelInfo(modelid, VEHICLE_MODEL_INFO_SIZE, sizeX, sizeY, sizeZ);
+
+    // Titik koordinat bagasi belakang mobil
+    new Float:distRear = (sizeY / 2.0) + 0.3;
+    new Float:rearX = vx - (distRear * floatsin(-va, degrees));
+    new Float:rearY = vy - (distRear * floatcos(-va, degrees));
+
+    // Cek jarak pemain ke titik bagasi belakang (radius 2.8 meter)
+    new Float:dx = px - rearX;
+    new Float:dy = py - rearY;
+    new Float:dz = pz - vz;
+    new Float:dist = floatsqroot((dx * dx) + (dy * dy) + (dz * dz));
+
+    return (dist <= 2.8);
+}
+
+stock SetVehicleBootOpen(vehicleid, bool:open) {
+    if (vehicleid == INVALID_VEHICLE_ID || vehicleid <= 0) return 0;
+    new engine, lights, alarm, doors, bonnet, boot, objective;
+    GetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
+    boot = (open) ? (1) : (0);
+    SetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
+    return 1;
+}
+
+stock bool:IsVehicleLocked(vehicleid) {
+    if (vehicleid == INVALID_VEHICLE_ID || vehicleid <= 0) return false;
+    new engine, lights, alarm, doors, bonnet, boot, objective;
+    GetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
+    return (doors == 1);
+}
+
+// 1. Load isi bagasi mobil ke player cache
+stock Trunk_LoadItems(veh_dbid, playerid) {
+    gPlayerData[playerid][p_TrunkItemCount] = 0;
+    for (new s = 0; s < 64; s++) {
+        gPlayerData[playerid][p_TrunkSlotItemID][s] = 0;
+        gPlayerData[playerid][p_TrunkSlotAmount][s] = 0;
+    }
+
+    if (veh_dbid <= 0) return 0;
+
+    new query[160];
+    format(query, sizeof(query), "SELECT `item_id`, `amount` FROM `vehicle_trunk` WHERE `veh_dbid`=%d ORDER BY `id` ASC LIMIT 64", veh_dbid);
+    new DBResult:res = DB_ExecuteQuery(gDB, query);
+    if (!res) return 0;
+
+    new count = 0;
+    new rows = DB_GetRowCount(res);
+    for (new r = 0; r < rows; r++) {
+        new itId = DB_GetFieldIntByName(res, "item_id");
+        new itAmt = DB_GetFieldIntByName(res, "amount");
+        if (itId > 0 && itAmt > 0) {
+            gPlayerData[playerid][p_TrunkSlotItemID][count] = itId;
+            gPlayerData[playerid][p_TrunkSlotAmount][count] = itAmt;
+            count++;
+        }
+        DB_SelectNextRow(res);
+    }
+    DB_FreeResultSet(res);
+    gPlayerData[playerid][p_TrunkItemCount] = count;
+    return count;
+}
+
+// 2. Tambah barang ke bagasi mobil
+stock Trunk_AddItem(veh_dbid, item_id, amount) {
+    if (veh_dbid <= 0 || item_id <= 0 || amount <= 0) return 0;
+
+    new query[160];
+    format(query, sizeof(query), "SELECT `id`, `amount` FROM `vehicle_trunk` WHERE `veh_dbid`=%d AND `item_id`=%d LIMIT 1", veh_dbid, item_id);
+    new DBResult:res = DB_ExecuteQuery(gDB, query);
+
+    if (res && DB_GetRowCount(res) > 0) {
+        new rowId = DB_GetFieldIntByName(res, "id");
+        new curAmt = DB_GetFieldIntByName(res, "amount");
+        DB_FreeResultSet(res);
+
+        new newAmt = curAmt + amount;
+        format(query, sizeof(query), "UPDATE `vehicle_trunk` SET `amount`=%d WHERE `id`=%d", newAmt, rowId);
+        DB_FreeResultSet(DB_ExecuteQuery(gDB, query));
+    } else {
+        if (res) DB_FreeResultSet(res);
+        format(query, sizeof(query), "INSERT INTO `vehicle_trunk` (`veh_dbid`, `item_id`, `amount`) VALUES (%d, %d, %d)", veh_dbid, item_id, amount);
+        DB_FreeResultSet(DB_ExecuteQuery(gDB, query));
+    }
+    return 1;
+}
+
+// 3. Ambil / Hapus barang dari bagasi mobil
+stock Trunk_RemoveItem(veh_dbid, item_id, amount) {
+    if (veh_dbid <= 0 || item_id <= 0 || amount <= 0) return 0;
+
+    new query[160];
+    format(query, sizeof(query), "SELECT `id`, `amount` FROM `vehicle_trunk` WHERE `veh_dbid`=%d AND `item_id`=%d LIMIT 1", veh_dbid, item_id);
+    new DBResult:res = DB_ExecuteQuery(gDB, query);
+
+    if (res && DB_GetRowCount(res) > 0) {
+        new rowId = DB_GetFieldIntByName(res, "id");
+        new curAmt = DB_GetFieldIntByName(res, "amount");
+        DB_FreeResultSet(res);
+
+        if (amount >= curAmt) {
+            format(query, sizeof(query), "DELETE FROM `vehicle_trunk` WHERE `id`=%d", rowId);
+            DB_FreeResultSet(DB_ExecuteQuery(gDB, query));
+        } else {
+            new newAmt = curAmt - amount;
+            format(query, sizeof(query), "UPDATE `vehicle_trunk` SET `amount`=%d WHERE `id`=%d", newAmt, rowId);
+            DB_FreeResultSet(DB_ExecuteQuery(gDB, query));
+        }
+        return 1;
+    }
+    if (res) DB_FreeResultSet(res);
+    return 0;
+}
+
+// 4. Hitung jumlah barang di bagasi mobil
+stock Trunk_GetItemCount(veh_dbid, item_id) {
+    if (veh_dbid <= 0 || item_id <= 0) return 0;
+
+    new query[160];
+    format(query, sizeof(query), "SELECT `amount` FROM `vehicle_trunk` WHERE `veh_dbid`=%d AND `item_id`=%d LIMIT 1", veh_dbid, item_id);
+    new DBResult:res = DB_ExecuteQuery(gDB, query);
+    if (!res || DB_GetRowCount(res) == 0) {
+        if (res) DB_FreeResultSet(res);
+        return 0;
+    }
+    new amt = DB_GetFieldIntByName(res, "amount");
+    DB_FreeResultSet(res);
+    return amt;
+}
+
+CMD:trunk(playerid, params[]) {
+    #pragma unused params
+    if (!CheckSpawned(playerid)) return 1;
+
+    if (IsPlayerInAnyVehicle(playerid)) {
+        SendClientMessage(playerid, COL_RED, "  [Bagasi] Anda harus keluar dari kendaraan dan berdiri di belakang bagasi mobil!");
+        return 1;
+    }
+
+    // Cari kendaraan terdekat dalam radius 5 meter
+    new nearestVeh = INVALID_VEHICLE_ID;
+    new Float:nearestDist = 999.0;
+    new Float:px, Float:py, Float:pz;
+    GetPlayerPos(playerid, px, py, pz);
+
+    for (new v = 1; v < MAX_VEHICLES; v++) {
+        if (!IsValidVehicle(v)) continue;
+        new Float:vx, Float:vy, Float:vz;
+        GetVehiclePos(v, vx, vy, vz);
+        new Float:dx = px - vx;
+        new Float:dy = py - vy;
+        new Float:dz = pz - vz;
+        new Float:d = floatsqroot((dx * dx) + (dy * dy) + (dz * dz));
+        if (d <= 5.0 && d < nearestDist) {
+            nearestDist = d;
+            nearestVeh = v;
+        }
+    }
+
+    if (nearestVeh == INVALID_VEHICLE_ID) {
+        SendClientMessage(playerid, COL_RED, "  [Bagasi] Tidak ada kendaraan di dekat Anda!");
+        return 1;
+    }
+
+    new modelid = GetVehicleModel(nearestVeh);
+    if (!HasVehicleBoot(modelid)) {
+        SendClientMessage(playerid, COL_RED, "  [Bagasi] Kendaraan jenis ini tidak memiliki ruang bagasi belakang!");
+        return 1;
+    }
+
+    if (!IsPlayerAtVehicleBoot(playerid, nearestVeh)) {
+        SendClientMessage(playerid, COL_YELLOW, "  [Bagasi] Anda harus berdiri di bagian BELAKANG bagasi mobil untuk membukanya!");
+        return 1;
+    }
+
+    if (IsVehicleLocked(nearestVeh)) {
+        SendClientMessage(playerid, COL_RED, "  [Bagasi] Pintu bagasi terkunci! Buka kunci mobil terlebih dahulu (/lock).");
+        return 1;
+    }
+
+    new vehDbId = GetVehicleDBID(nearestVeh);
+    if (vehDbId <= 0) {
+        SendClientMessage(playerid, COL_RED, "  [Bagasi] Kendaraan ini bukan kendaraan pribadi yang terdaftar.");
+        return 1;
+    }
+
+    new charname[48], modelName[32], rpMsg[160];
+    GetCharName(playerid, charname);
+    GetModelFullName(modelid, modelName, sizeof(modelName));
+    format(rpMsg, sizeof(rpMsg), "%s membuka kap bagasi mobil %s.", charname, modelName);
+    DoProximityRaw(playerid, rpMsg, DIST_RP, COL_PURPLE);
+
+    ShowTrunkUI(playerid, nearestVeh);
+    return 1;
+}
+
+CMD:bagasi(playerid, params[]) {
+    return cmd_trunk(playerid, params);
+}
+
 

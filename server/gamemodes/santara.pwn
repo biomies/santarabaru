@@ -36,6 +36,9 @@
 #include "modules/systems/buildings.inc"
 #include "modules/systems/ownership.inc"
 #include "modules/ui/speedometer.inc"
+#include "modules/systems/inventory.inc"
+#include "modules/ui/inventory_ui.inc"
+#include "modules/ui/trunk_ui.inc"
 
 //    Modul Perintah (Commands)                                
 #include "modules/commands/cmd_general.inc"
@@ -60,6 +63,35 @@ public Timer_PlayTime() {
         if (!IsPlayerConnected(i)) continue;
         if (!gPlayerData[i][p_LoggedIn] || !gPlayerData[i][p_Spawned]) continue;
         gPlayerData[i][p_PlayTime]++;
+
+        // 1. Penurunan Kebutuhan Hidup (Lapar: ~0.8%/mnt, Haus: ~1.2%/mnt)
+        if (gPlayerData[i][p_Hunger] > 0.0) {
+            gPlayerData[i][p_Hunger] -= 0.8;
+            if (gPlayerData[i][p_Hunger] < 0.0) gPlayerData[i][p_Hunger] = 0.0;
+        }
+        if (gPlayerData[i][p_Thirst] > 0.0) {
+            gPlayerData[i][p_Thirst] -= 1.2;
+            if (gPlayerData[i][p_Thirst] < 0.0) gPlayerData[i][p_Thirst] = 0.0;
+        }
+
+        // 2. Efek Kelaparan & Dehidrasi Akut (Drain Darah / HP)
+        new Float:curHp;
+        GetPlayerHealth(i, curHp);
+
+        if (gPlayerData[i][p_Hunger] <= 0.0) {
+            curHp -= 3.0;
+            SendClientMessage(i, COL_RED, "  * [!] Perut Anda terasa sangat lapar dan perih! Anda mulai kehilangan darah.");
+        }
+        if (gPlayerData[i][p_Thirst] <= 0.0) {
+            curHp -= 4.0;
+            SendClientMessage(i, COL_RED, "  * [!] Anda dehidrasi parah dan tenggorokan sangat kering! Anda mulai kehilangan darah.");
+        }
+
+        if (curHp < 0.0) curHp = 0.0;
+        SetPlayerHealth(i, curHp);
+
+        // 3. Update HUD Status
+        UpdatePlayerMoneyHUD(i);
     }
     return 1;
 }
@@ -179,6 +211,9 @@ public OnPlayerDisconnect(playerid, reason) {
     DestroyPlayerActiveVehicle(playerid);
     CloseDealership(playerid);
     CloseGarageUI(playerid);
+    HideInventoryUI(playerid);
+    HideTrunkUI(playerid);
+    DestroyPlayerTrunkTextDraws(playerid);
     DestroyVoiceStream(playerid);
     DestroyPlayerMoneyHUD(playerid);
     HideSpeedometer(playerid);
@@ -219,6 +254,7 @@ public OnPlayerSpawn(playerid) {
     } else {
         TogglePlayerControllable(playerid, true);
         SetCameraBehindPlayer(playerid);
+        Inventory_LoadPlayerItems(playerid);
         CreatePlayerMoneyHUD(playerid);
         UpdatePlayerMoneyHUD(playerid);
         ShowPlayerMoneyHUD(playerid);
@@ -248,6 +284,8 @@ public OnPlayerText(playerid, text[]) {
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
     if (HandleAccountDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleCharacterDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
+    if (HandleInventoryDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
+    if (HandleTrunkDialog(playerid, dialogid, response, inputtext)) return 1;
     if (HandleDealershipDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleVehicleMenuDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleInsuranceDialog(playerid, dialogid, response, listitem)) return 1;
@@ -353,7 +391,20 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
 
     //    2. LIVE 3D SKIN SELECTOR   
     if (gPlayerData[playerid][p_SelectingSkin]) {
-        // 1. Tombol PREVIOUS (<<)
+        // 1. Tombol [X] Merah atau BATAL
+        if (playertextid == TD_SkinCloseBtn[playerid] || playertextid == TD_SkinCancel[playerid]) {
+            if (gPlayerData[playerid][p_IsNewCharacter]) {
+                SendClientMessage(playerid, COL_RED, "    Anda harus memilih skin untuk menyelesaikan pembuatan karakter.");
+                return 1;
+            }
+            SetPlayerSkin(playerid, gPlayerData[playerid][p_OriginalSkin]);
+            PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+            CloseSkinSelection(playerid, false);
+            SendClientMessage(playerid, COL_GREY, "  * Pemilihan skin dibatalkan.");
+            return 1;
+        }
+
+        // 2. Tombol < SEBELUM
         if (playertextid == TD_SkinPrev[playerid]) {
             gPlayerData[playerid][p_SkinIndex]--;
             if (gPlayerData[playerid][p_SkinIndex] < 0) {
@@ -365,7 +416,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
             return 1;
         }
 
-        // 2. Tombol NEXT (>>)
+        // 3. Tombol SELANJUTNYA >
         if (playertextid == TD_SkinNext[playerid]) {
             gPlayerData[playerid][p_SkinIndex]++;
             if (gPlayerData[playerid][p_SkinIndex] >= SKIN_COUNT) {
@@ -377,16 +428,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
             return 1;
         }
 
-        // 3. Tombol ACAK / RANDOM
-        if (playertextid == TD_SkinRand[playerid]) {
-            gPlayerData[playerid][p_SkinIndex] = random(SKIN_COUNT);
-            SetPlayerSkin(playerid, gSkins[gPlayerData[playerid][p_SkinIndex]]);
-            UpdateSkinSelectorUI(playerid);
-            PlayerPlaySound(playerid, 1084, 0.0, 0.0, 0.0);
-            return 1;
-        }
-
-        // 4. Tombol KONFIRMASI / SIMPAN
+        // 4. Tombol [ GUNAKAN ]
         if (playertextid == TD_SkinSave[playerid]) {
             gPlayerData[playerid][p_Skin] = gSkins[gPlayerData[playerid][p_SkinIndex]];
             
@@ -405,18 +447,6 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
             return 1;
         }
 
-        // 5. Tombol BATAL
-        if (playertextid == TD_SkinCancel[playerid]) {
-            if (gPlayerData[playerid][p_IsNewCharacter]) {
-                SendClientMessage(playerid, COL_RED, "    Anda harus memilih skin untuk menyelesaikan pembuatan karakter.");
-                return 1;
-            }
-            SetPlayerSkin(playerid, gPlayerData[playerid][p_OriginalSkin]);
-            PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
-            CloseSkinSelection(playerid, false);
-            SendClientMessage(playerid, COL_GREY, "  * Pemilihan skin dibatalkan.");
-            return 1;
-        }
         return 1;
     }
 
@@ -439,7 +469,17 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
         if (HandleGarageClick(playerid, playertextid)) return 1;
     }
 
-    //    6. TOUCHPAD KONTROL KENDARAAN (Clickable TextDraw)
+    //    6. INTERACTIVE TEXTDRAW INVENTORY UI
+    if (gPlayerData[playerid][p_InInventoryUI]) {
+        if (HandleInventoryClick(playerid, playertextid)) return 1;
+    }
+
+    //    7. 2-TAB INTERACTIVE VEHICLE TRUNK UI
+    if (gPlayerData[playerid][p_InTrunkUI]) {
+        if (HandleTrunkClick(playerid, playertextid)) return 1;
+    }
+
+    //    7. TOUCHPAD KONTROL KENDARAAN (Clickable TextDraw)
     if (gPlayerInVehicleHUD[playerid]) {
         if (playertextid == TD_SpeedBtnEngine[playerid]) {
             TogglePlayerVehicleEngine(playerid);
@@ -474,8 +514,8 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
         }
         if (gPlayerData[playerid][p_SelectingSkin]) {
             if (gPlayerData[playerid][p_IsNewCharacter]) {
-                SelectTextDraw(playerid, 0xE69958FF);
-                SendClientMessage(playerid, COL_YELLOW, "  * Tekan [ [OK] SIMPAN ] untuk mengonfirmasi penampilan karakter Anda.");
+                SelectTextDraw(playerid, COLOR_SKIN_PURPLE);
+                SendClientMessage(playerid, COL_YELLOW, "  * Tekan tombol [ Gunakan ] untuk mengonfirmasi penampilan karakter Anda.");
                 return 1;
             }
             SetPlayerSkin(playerid, gPlayerData[playerid][p_OriginalSkin]);
@@ -489,6 +529,14 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
         }
         if (gPlayerData[playerid][p_InGarageUI]) {
             CloseGarageUI(playerid);
+            return 1;
+        }
+        if (gPlayerData[playerid][p_InInventoryUI]) {
+            HideInventoryUI(playerid);
+            return 1;
+        }
+        if (gPlayerData[playerid][p_InTrunkUI]) {
+            HideTrunkUI(playerid);
             return 1;
         }
     }
@@ -516,7 +564,7 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
         for (new g = 0; g < PUBLIC_GARAGE_COUNT; g++) {
             if (IsPlayerInRangeOfPoint(playerid, 7.5, gPublicGarages[g][g_MarkerX], gPublicGarages[g][g_MarkerY], gPublicGarages[g][g_MarkerZ])) {
                 if (IsPlayerInAnyVehicle(playerid)) {
-                    if (GetPlayerVehicleID(playerid) == gPlayerData[playerid][p_ActiveVehID] && gPlayerData[playerid][p_ActiveVehID] != INVALID_VEHICLE_ID) {
+                    if (IsPlayerActiveVeh(playerid, GetPlayerVehicleID(playerid))) {
                         StoreVehicleInGarage(playerid, g);
                         return 1;
                     }

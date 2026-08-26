@@ -4,7 +4,8 @@
 #define _MODULE_DEALERSHIP_INC
 
 // ============================================================
-//  SantaraBaru Roleplay - Rodeo Luxury Dealership & Live 3D UI
+//  SantaraBaru Roleplay - Rodeo Luxury Dealership & Live 3D UI (/dealer)
+//  Dark Indigo (#1E1E2E) & Electric Purple (#5814EE) Theme
 // ============================================================
 
 enum E_DEALER_VEHICLE {
@@ -98,88 +99,96 @@ new const gSedanVehicles[][E_DEALER_VEHICLE] = {
 new const gSuvVehicles[][E_DEALER_VEHICLE] = {
     {579, "Huntley",        "Luxury Premium SUV",   350000000, 180, 4},
     {400, "Landstalker",    "SUV Keluarga Tangguh", 180000000, 170, 4},
-    {489, "Rancher",        "SUV Off-road 2-Pintu", 150000000, 165, 2},
-    {500, "Mesa",           "Jeep Terbuka 4x4",     160000000, 160, 2},
-    {495, "Sandking",       "Truk Reli Padang Pasir",490000000, 195, 2},
-    {444, "Monster",        "Monster Truck V8",     650000000, 140, 2},
-    {556, "Monster A",      "Monster Truck A",      650000000, 140, 2},
-    {557, "Monster B",      "Monster Truck B",      650000000, 140, 2},
-    {554, "Yosemite",       "Pick-up Modern Perkasa",125000000, 165, 2},
-    {422, "Bobcat",         "Pick-up Utility Murah", 75000000, 155, 2},
-    {600, "Picador",        "Coupe Pick-up Klasik",  80000000, 165, 2},
-    {478, "Walton",         "Vintage Farm Truck",    35000000, 130, 2},
-    {543, "Sadler",         "Pick-up Pekerja Keras", 40000000, 145, 2},
-    {568, "Bandito",        "Baja Sand Buggy",      180000000, 175, 1},
-    {424, "BF Injection",   "Custom Beach Buggy",   110000000, 165, 2},
-    {573, "Dune",           "Dakar Heavy Truck",    450000000, 140, 2},
-    {482, "Burrito",        "Van Kargo Tertutup",   115000000, 165, 4},
-    {413, "Pony",           "Van Komersial Serbaguna",85000000, 145, 2},
-    {440, "Rumpo",          "Van Pengangkut Barang", 90000000, 150, 4},
-    {483, "Camper",         "Hippie Camper Van",    140000000, 135, 3},
-    {508, "Journey",        "Motorhome Karavan Luas",220000000, 130, 2},
-    {571, "Kart",           "Go-Kart Sirkuit Mini",  50000000, 110, 1},
-    {471, "Quad",           "ATV Roda 4 Petualang",  45000000, 130, 2}
+    {489, "Rancher",        "SUV Off-Road 4x4",     140000000, 160, 2},
+    {505, "Rancher Lure",   "Special Off-Road 4x4", 160000000, 165, 2},
+    {500, "Mesa",           "Open-Top Jeep 4x4",    125000000, 155, 2},
+    {422, "Bobcat",         "Pick-up Klasik",        65000000, 155, 2},
+    {478, "Walton",         "Vintage Farm Pick-up",  45000000, 140, 2},
+    {543, "Sadler",         "Pekerja Keras Tangguh", 48000000, 145, 2},
+    {554, "Yosemite",       "Heavy-Duty Pick-up",   110000000, 165, 2},
+    {495, "Sandking",       "Dakar Rally Raid 4x4", 390000000, 185, 2},
+    {568, "Bandito",        "Desert Buggy Rail",    135000000, 170, 1},
+    {424, "BF Injection",   "Beach Dune Buggy",      90000000, 160, 2},
+    {571, "Kart",           "Mini Gokart Balap",     35000000, 120, 1},
+    {572, "Mower",          "Traktor Rumput Lucu",   18000000,  80, 1},
+    {483, "Camper",         "Hippie Camper Van",    115000000, 140, 3},
+    {508, "Journey",        "Motorhome Keluarga",   160000000, 130, 2},
+    {482, "Burrito",        "Van Kargo Modern",      95000000, 165, 4},
+    {413, "Pony",           "Van Pekerja Serbaguna", 70000000, 150, 4},
+    {440, "Rumpo",          "Van Komersil Luas",     80000000, 155, 4},
+    {459, "Berkleys RC Van","Van Ekspedisi Kurir",   85000000, 155, 4},
+    {499, "Benson",         "Truk Box Logistik",    130000000, 135, 2},
+    {609, "Boxville",       "Truk Box Paket",       120000000, 130, 2},
+    {414, "Mule",           "Truk Distribusi Usaha",105000000, 125, 2}
 };
 
 //    4. Sepeda Motor, Skuter & Sepeda (12 Kendaraan)          
 new const gBikeVehicles[][E_DEALER_VEHICLE] = {
-    {522, "NRG-500",        "Superbike Balap 500cc",250000000, 210, 2},
-    {521, "FCR-900",        "Naked Sport 900cc",    175000000, 190, 2},
-    {461, "PCJ-600",        "Sport Bike 600cc",     120000000, 185, 2},
-    {581, "BF-400",         "Streetfighter 400cc",   90000000, 175, 2},
-    {468, "Sanchez",        "Motor Trail Cross 4x4", 65000000, 165, 2},
-    {463, "Freeway",        "Cruiser Moge Klasik",  140000000, 160, 2},
-    {586, "Wayfarer",       "Touring Cruiser Moge", 130000000, 160, 2},
-    {462, "Faggio",         "Skuter Matic Praktis",  25000000, 110, 2},
-    {448, "Pizzaboy",       "Skuter Delivery Lincah",30000000, 115, 1},
-    {510, "Mountain Bike",  "Sepeda Gunung 21-Speed", 8500000,  60, 1},
-    {481, "BMX",            "Sepeda Freestyle BMX",   6000000,  55, 1},
-    {509, "Bike",           "Sepeda Santai Klasik",   4500000,  50, 1}
+    {522, "NRG-500",        "Superbike Balap 500cc",380000000, 220, 2},
+    {521, "FCR-900",        "Naked Sport 900cc",    195000000, 195, 2},
+    {461, "PCJ-600",        "Sport Street 600cc",   130000000, 185, 2},
+    {463, "Freeway",        "Cruiser Touring V-Twin",110000000, 175, 2},
+    {586, "Wayfarer",       "Touring Klasik Amerika", 95000000, 170, 2},
+    {468, "Sanchez",        "Dirt Trail Enduro",     75000000, 165, 2},
+    {471, "Quad",           "All-Terrain Quad 4-Roda",55000000, 140, 2},
+    {462, "Faggio",         "Skuter Matic Irit",     18000000, 110, 2},
+    {448, "Pizzaboy",       "Skuter Delivery Cepat", 22000000, 115, 1},
+    {510, "Mountain Bike",  "Sepeda Gunung Suspensi", 8500000,  65, 1},
+    {481, "BMX",            "Sepeda Freestyle BMX",   6500000,  60, 1},
+    {509, "Bike",           "Sepeda Santai Kota",     4500000,  50, 1}
 };
 
-//    Warna Display Dealer (18 Warna Populer GTA SA)           
+//    5. Pilihan Warna Cat Showroom (20 Warna Premium)        
 new const gDealerColors[] = {
-    1,   // Putih
-    0,   // Hitam
-    3,   // Merah
-    6,   // Biru Tua
-    8,   // Biru Langit
-    12,  // Hijau Tua
-    16,  // Hijau Daun
-    25,  // Kuning Cerah
-    36,  // Emas / Bronze
-    42,  // Cokelat
-    53,  // Ungu
-    65,  // Oranye
-    79,  // Abu-Abu Gelap
-    86,  // Abu-Abu Terang / Silver
-    92,  // Cyan / Teal
-    101, // Merah Marun
-    114, // Biru Sapphire
-    126  // Putih Mutiara
+    1,   // Solid Pure White
+    0,   // Midnight Jet Black
+    3,   // Torchfire Crimson Red
+    6,   // Racing Sunburst Yellow
+    79,  // Electric Sapphire Blue
+    86,  // Emerald British Racing Green
+    64,  // Sunset Tangerine Orange
+    148, // Velvet Royal Purple
+    25,  // Silver Chrome Metallic
+    134, // Liquid Gunmetal Grey
+    151, // Arctic Ice Aqua Blue
+    139, // Rose Gold Blush Pink
+    130, // Platinum Titanium Silver
+    75,  // Deep Indigo Navy Blue
+    141, // Midnight Bordeaux Maroon
+    144, // Forest Camo Dark Olive
+    138, // Warm Champagne Gold
+    129, // Slate Steel Charcoal
+    158, // Hot Neon Fuchsia Pink
+    135  // Mocha Bronze Metallic
 };
 #define DEALER_COLOR_COUNT (sizeof(gDealerColors))
 
-new const gDealerColorNames[][20] = {
-    "Putih Salju", "Hitam Glossy", "Merah Sport", "Biru Tua", "Biru Langit",
-    "Hijau Tua", "Hijau Daun", "Kuning Cerah", "Emas / Bronze", "Cokelat",
-    "Ungu Metalik", "Oranye Balap", "Abu-Abu Gelap", "Silver Metalik",
-    "Teal / Cyan", "Merah Marun", "Biru Sapphire", "Putih Mutiara"
+new const gDealerColorNames[][24] = {
+    "Pure White", "Jet Black", "Crimson Red", "Sunburst Yellow",
+    "Sapphire Blue", "Racing Green", "Tangerine Orange", "Royal Purple",
+    "Silver Chrome", "Gunmetal Grey", "Arctic Aqua", "Rose Gold",
+    "Platinum Silver", "Navy Blue", "Bordeaux Maroon", "Dark Olive",
+    "Champagne Gold", "Steel Charcoal", "Neon Fuchsia", "Mocha Bronze"
 };
 
-// TextDraw Handles Dealership (Sisi Kanan X: 430.0 .. 610.0)
+// Colors from Reference Design
+#define COLOR_DEALER_BG       0x1E1E2EFF  // Dark Indigo Background
+#define COLOR_DEALER_PURPLE   0x5814EEFF  // Electric Purple Accent & Action
+#define COLOR_DEALER_RED      0xFA1E38FF  // Vibrant Red Cancel & [X] Close Button
+#define COLOR_DEALER_SLATE    0x3E3E44EE  // Dark Slate Button
+
+// TextDraw Handles Dealership (Sisi Kanan X: 430.0 .. 620.0)
 new PlayerText:TD_DealerBox[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_DealerHeader[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_DealerTitle[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_DealerCatBadge[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DealerTopBar[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DealerCloseBtn[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DealerCatTile[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_DealerInfo[MAX_PLAYERS]      = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_DealerPrev[MAX_PLAYERS]      = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_DealerNext[MAX_PLAYERS]      = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_DealerCatBtn[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_DealerColorBtn[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DealerCatBtn[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_DealerBuyBtn[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_DealerCancelBtn[MAX_PLAYERS] = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_DealerHint[MAX_PLAYERS]      = {PlayerText:INVALID_TEXT_DRAW, ...};
 
 stock GetDealerCategoryCount(cat) {
     switch (cat) {
@@ -191,43 +200,53 @@ stock GetDealerCategoryCount(cat) {
     return 0;
 }
 
+stock GetDealerCategoryName(cat, name[], len = 32) {
+    switch (cat) {
+        case DEALER_CAT_SPORT: format(name, len, "Mobil Sport");
+        case DEALER_CAT_SEDAN: format(name, len, "Sedan & Klasik");
+        case DEALER_CAT_SUV:   format(name, len, "SUV & Off-Road");
+        case DEALER_CAT_BIKE:  format(name, len, "Motor & Skuter");
+        default:               format(name, len, "Kendaraan");
+    }
+}
+
 stock GetDealerVehicleData(cat, idx, &modelid, name[], type[], &price, &topspeed, &seats) {
     switch (cat) {
         case DEALER_CAT_SPORT: {
             if (idx < 0 || idx >= sizeof(gSportVehicles)) idx = 0;
-            modelid = gSportVehicles[idx][d_ModelID];
+            modelid  = gSportVehicles[idx][d_ModelID];
             format(name, 28, "%s", gSportVehicles[idx][d_Name]);
             format(type, 28, "%s", gSportVehicles[idx][d_Type]);
-            price = gSportVehicles[idx][d_Price];
+            price    = gSportVehicles[idx][d_Price];
             topspeed = gSportVehicles[idx][d_TopSpeed];
-            seats = gSportVehicles[idx][d_Seats];
+            seats    = gSportVehicles[idx][d_Seats];
         }
         case DEALER_CAT_SEDAN: {
             if (idx < 0 || idx >= sizeof(gSedanVehicles)) idx = 0;
-            modelid = gSedanVehicles[idx][d_ModelID];
+            modelid  = gSedanVehicles[idx][d_ModelID];
             format(name, 28, "%s", gSedanVehicles[idx][d_Name]);
             format(type, 28, "%s", gSedanVehicles[idx][d_Type]);
-            price = gSedanVehicles[idx][d_Price];
+            price    = gSedanVehicles[idx][d_Price];
             topspeed = gSedanVehicles[idx][d_TopSpeed];
-            seats = gSedanVehicles[idx][d_Seats];
+            seats    = gSedanVehicles[idx][d_Seats];
         }
         case DEALER_CAT_SUV: {
             if (idx < 0 || idx >= sizeof(gSuvVehicles)) idx = 0;
-            modelid = gSuvVehicles[idx][d_ModelID];
+            modelid  = gSuvVehicles[idx][d_ModelID];
             format(name, 28, "%s", gSuvVehicles[idx][d_Name]);
             format(type, 28, "%s", gSuvVehicles[idx][d_Type]);
-            price = gSuvVehicles[idx][d_Price];
+            price    = gSuvVehicles[idx][d_Price];
             topspeed = gSuvVehicles[idx][d_TopSpeed];
-            seats = gSuvVehicles[idx][d_Seats];
+            seats    = gSuvVehicles[idx][d_Seats];
         }
         case DEALER_CAT_BIKE: {
             if (idx < 0 || idx >= sizeof(gBikeVehicles)) idx = 0;
-            modelid = gBikeVehicles[idx][d_ModelID];
+            modelid  = gBikeVehicles[idx][d_ModelID];
             format(name, 28, "%s", gBikeVehicles[idx][d_Name]);
             format(type, 28, "%s", gBikeVehicles[idx][d_Type]);
-            price = gBikeVehicles[idx][d_Price];
+            price    = gBikeVehicles[idx][d_Price];
             topspeed = gBikeVehicles[idx][d_TopSpeed];
-            seats = gBikeVehicles[idx][d_Seats];
+            seats    = gBikeVehicles[idx][d_Seats];
         }
     }
 }
@@ -237,17 +256,17 @@ stock DestroyPlayerDealerTextDraws(playerid) {
         PlayerTextDrawDestroy(playerid, TD_DealerBox[playerid]);
         TD_DealerBox[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_DealerHeader[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_DealerHeader[playerid]);
-        TD_DealerHeader[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DealerTopBar[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DealerTopBar[playerid]);
+        TD_DealerTopBar[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_DealerTitle[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_DealerTitle[playerid]);
-        TD_DealerTitle[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DealerCloseBtn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DealerCloseBtn[playerid]);
+        TD_DealerCloseBtn[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_DealerCatBadge[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_DealerCatBadge[playerid]);
-        TD_DealerCatBadge[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DealerCatTile[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DealerCatTile[playerid]);
+        TD_DealerCatTile[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
     if (TD_DealerInfo[playerid] != PlayerText:INVALID_TEXT_DRAW) {
         PlayerTextDrawDestroy(playerid, TD_DealerInfo[playerid]);
@@ -261,13 +280,13 @@ stock DestroyPlayerDealerTextDraws(playerid) {
         PlayerTextDrawDestroy(playerid, TD_DealerNext[playerid]);
         TD_DealerNext[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_DealerCatBtn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_DealerCatBtn[playerid]);
-        TD_DealerCatBtn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
     if (TD_DealerColorBtn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
         PlayerTextDrawDestroy(playerid, TD_DealerColorBtn[playerid]);
         TD_DealerColorBtn[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    }
+    if (TD_DealerCatBtn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DealerCatBtn[playerid]);
+        TD_DealerCatBtn[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
     if (TD_DealerBuyBtn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
         PlayerTextDrawDestroy(playerid, TD_DealerBuyBtn[playerid]);
@@ -277,10 +296,130 @@ stock DestroyPlayerDealerTextDraws(playerid) {
         PlayerTextDrawDestroy(playerid, TD_DealerCancelBtn[playerid]);
         TD_DealerCancelBtn[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_DealerHint[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_DealerHint[playerid]);
-        TD_DealerHint[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
+}
+
+stock CreatePlayerDealerTextDraws(playerid) {
+    DestroyPlayerDealerTextDraws(playerid);
+
+    // 1. Background Box (Dark Indigo #1E1E2EFF di Kanan X: 430.0 .. 620.0, Y: 85.0 .. 298.0)
+    TD_DealerBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 85.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_DealerBox[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerBox[playerid], COLOR_DEALER_BG);
+    PlayerTextDrawTextSize(playerid, TD_DealerBox[playerid], 620.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_DealerBox[playerid], 0.0, 23.5);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerBox[playerid], false);
+
+    // 2. Top Accent Line (Electric Purple #5814EEFF, X: 430.0 .. 602.0, Y: 85.0)
+    TD_DealerTopBar[playerid] = CreatePlayerTextDraw(playerid, 430.0, 85.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_DealerTopBar[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerTopBar[playerid], COLOR_DEALER_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_DealerTopBar[playerid], 602.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_DealerTopBar[playerid], 0.0, 0.75);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerTopBar[playerid], false);
+
+    // 3. Top-Right Red Close Button [X] (Center X: 611.0, Y: 84.0)
+    TD_DealerCloseBtn[playerid] = CreatePlayerTextDraw(playerid, 611.0, 84.0, "X");
+    PlayerTextDrawFont(playerid, TD_DealerCloseBtn[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DealerCloseBtn[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_DealerCloseBtn[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DealerCloseBtn[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerCloseBtn[playerid], COLOR_DEALER_RED);
+    PlayerTextDrawTextSize(playerid, TD_DealerCloseBtn[playerid], 10.0, 18.0);
+    PlayerTextDrawAlignment(playerid, TD_DealerCloseBtn[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DealerCloseBtn[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerCloseBtn[playerid], true);
+
+    // 4. Header Title Tile [ Kategori : Mobil Sport ] (Center X: 525.0, Y: 97.0)
+    TD_DealerCatTile[playerid] = CreatePlayerTextDraw(playerid, 525.0, 97.0, "Kategori : Mobil Sport");
+    PlayerTextDrawFont(playerid, TD_DealerCatTile[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DealerCatTile[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_DealerCatTile[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DealerCatTile[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerCatTile[playerid], COLOR_DEALER_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_DealerCatTile[playerid], 14.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_DealerCatTile[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DealerCatTile[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerCatTile[playerid], false);
+
+    // 5. Vehicle Info Text Box (Kendaraan, Harga, Uang Anda, Jumlah Kursi, Pilihan) (X: 442.0, Y: 118.0)
+    TD_DealerInfo[playerid] = CreatePlayerTextDraw(playerid, 442.0, 118.0, "Memuat info kendaraan...");
+    PlayerTextDrawFont(playerid, TD_DealerInfo[playerid], 1);
+    PlayerTextDrawLetterSize(playerid, TD_DealerInfo[playerid], 0.18, 0.95);
+    PlayerTextDrawColor(playerid, TD_DealerInfo[playerid], 0xFFFFFFFF);
+    PlayerTextDrawSetOutline(playerid, TD_DealerInfo[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerInfo[playerid], false);
+
+    // 6. Navigation Button: < Sebelum (Center X: 481.0, Y: 178.0)
+    TD_DealerPrev[playerid] = CreatePlayerTextDraw(playerid, 481.0, 178.0, "< Sebelum");
+    PlayerTextDrawFont(playerid, TD_DealerPrev[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DealerPrev[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_DealerPrev[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DealerPrev[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerPrev[playerid], COLOR_DEALER_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_DealerPrev[playerid], 14.0, 82.0);
+    PlayerTextDrawAlignment(playerid, TD_DealerPrev[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DealerPrev[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerPrev[playerid], true);
+
+    // 7. Navigation Button: Selanjutnya > (Center X: 569.0, Y: 178.0)
+    TD_DealerNext[playerid] = CreatePlayerTextDraw(playerid, 569.0, 178.0, "Selanjutnya >");
+    PlayerTextDrawFont(playerid, TD_DealerNext[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DealerNext[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_DealerNext[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DealerNext[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerNext[playerid], COLOR_DEALER_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_DealerNext[playerid], 14.0, 82.0);
+    PlayerTextDrawAlignment(playerid, TD_DealerNext[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DealerNext[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerNext[playerid], true);
+
+    // 8. Action Button: [ Ganti Warna ] (Center X: 525.0, Y: 200.0)
+    TD_DealerColorBtn[playerid] = CreatePlayerTextDraw(playerid, 525.0, 200.0, "Ganti Warna");
+    PlayerTextDrawFont(playerid, TD_DealerColorBtn[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DealerColorBtn[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_DealerColorBtn[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DealerColorBtn[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerColorBtn[playerid], COLOR_DEALER_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_DealerColorBtn[playerid], 14.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_DealerColorBtn[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DealerColorBtn[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerColorBtn[playerid], true);
+
+    // 9. Action Button: [ Ganti Kategori ] (Center X: 525.0, Y: 222.0)
+    TD_DealerCatBtn[playerid] = CreatePlayerTextDraw(playerid, 525.0, 222.0, "Ganti Kategori");
+    PlayerTextDrawFont(playerid, TD_DealerCatBtn[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DealerCatBtn[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_DealerCatBtn[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DealerCatBtn[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerCatBtn[playerid], COLOR_DEALER_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_DealerCatBtn[playerid], 14.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_DealerCatBtn[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DealerCatBtn[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerCatBtn[playerid], true);
+
+    // 10. Primary Action Button: [ Beli ] (Center X: 525.0, Y: 246.0)
+    TD_DealerBuyBtn[playerid] = CreatePlayerTextDraw(playerid, 525.0, 246.0, "Beli");
+    PlayerTextDrawFont(playerid, TD_DealerBuyBtn[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DealerBuyBtn[playerid], 0.17, 1.05);
+    PlayerTextDrawColor(playerid, TD_DealerBuyBtn[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DealerBuyBtn[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerBuyBtn[playerid], COLOR_DEALER_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_DealerBuyBtn[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_DealerBuyBtn[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DealerBuyBtn[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerBuyBtn[playerid], true);
+
+    // 11. Secondary Button: [ Batal ] (Center X: 525.0, Y: 268.0)
+    TD_DealerCancelBtn[playerid] = CreatePlayerTextDraw(playerid, 525.0, 268.0, "Batal");
+    PlayerTextDrawFont(playerid, TD_DealerCancelBtn[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DealerCancelBtn[playerid], 0.17, 1.05);
+    PlayerTextDrawColor(playerid, TD_DealerCancelBtn[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DealerCancelBtn[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DealerCancelBtn[playerid], COLOR_DEALER_RED);
+    PlayerTextDrawTextSize(playerid, TD_DealerCancelBtn[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_DealerCancelBtn[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DealerCancelBtn[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DealerCancelBtn[playerid], true);
 }
 
 stock UpdateDealershipUI(playerid) {
@@ -288,50 +427,35 @@ stock UpdateDealershipUI(playerid) {
 
     new cat = gPlayerData[playerid][p_DealerCat];
     new idx = gPlayerData[playerid][p_DealerIndex];
-    new colorIdx = gPlayerData[playerid][p_DealerColorIdx];
-    new count = GetDealerCategoryCount(cat);
 
     new modelid, name[28], type[28], price, topspeed, seats;
     GetDealerVehicleData(cat, idx, modelid, name, type, price, topspeed, seats);
 
-    // Update Badge Kategori
-    new badgeStr[48];
-    switch (cat) {
-        case DEALER_CAT_SPORT: format(badgeStr, sizeof(badgeStr), "Kategori: MOBIL SPORT");
-        case DEALER_CAT_SEDAN: format(badgeStr, sizeof(badgeStr), "Kategori: SEDAN & KLASIK");
-        case DEALER_CAT_SUV:   format(badgeStr, sizeof(badgeStr), "Kategori: SUV & OFF-ROAD");
-        case DEALER_CAT_BIKE:  format(badgeStr, sizeof(badgeStr), "Kategori: MOTOR & SKUTER");
-    }
-    PlayerTextDrawSetString(playerid, TD_DealerCatBadge[playerid], badgeStr);
+    new catName[32];
+    GetDealerCategoryName(cat, catName, sizeof(catName));
 
-    // Format Harga & Uang Pemain (dengan pemisah ribuan)
-    new priceStr[32], cashStr[32];
-    FormatRupiah(price, priceStr, sizeof(priceStr));
-    FormatRupiah(gPlayerData[playerid][p_Cash], cashStr, sizeof(cashStr));
+    new catTileStr[64];
+    format(catTileStr, sizeof(catTileStr), "Kategori : %s", catName);
+    PlayerTextDrawSetString(playerid, TD_DealerCatTile[playerid], catTileStr);
 
-    new moneyColor[8];
-    if (gPlayerData[playerid][p_Cash] >= price) {
-        format(moneyColor, sizeof(moneyColor), "~g~");
-    } else {
-        format(moneyColor, sizeof(moneyColor), "~r~");
-    }
+    new priceFmt[32], cashFmt[32];
+    FormatRupiah(price, priceFmt, sizeof(priceFmt));
+    FormatRupiah(gPlayerData[playerid][p_Cash], cashFmt, sizeof(cashFmt));
+    new count = GetDealerCategoryCount(cat);
 
-    new str[384];
-    format(str, sizeof(str),
-        "~w~Kendaraan : ~y~%s~n~" \
-        "~w~Model GTA : ~y~#%d~n~" \
-        "~w~Tipe : ~w~%s~n~" \
-        "~w~Top Speed : ~g~%d km/h~n~" \
-        "~w~Kapasitas : ~w~%d Kursi~n~" \
-        "~w~Warna : ~y~%s~n~" \
-        "~w~Harga : ~g~%s~n~" \
-        "~w~Uang Anda : %s%s~n~" \
-        "~w~Pilihan : ~y~%d / %d",
-        name, modelid, type, topspeed, seats,
-        gDealerColorNames[colorIdx], priceStr, moneyColor, cashStr,
-        idx + 1, count);
+    new infoStr[256];
+    format(infoStr, sizeof(infoStr),
+        "~w~Kendaraan : ~w~%s~n~" \
+        "~w~Harga : ~w~%s~n~" \
+        "~w~Uang Anda : ~w~%s~n~" \
+        "~w~Jumlah Kursi : ~w~%d Kursi~n~" \
+        "~w~Pilihan : ~w~%d/%d",
+        name, priceFmt, cashFmt, seats, idx + 1, count);
 
-    PlayerTextDrawSetString(playerid, TD_DealerInfo[playerid], str);
+    PlayerTextDrawSetString(playerid, TD_DealerInfo[playerid], infoStr);
+
+    PlayerTextDrawShow(playerid, TD_DealerCatTile[playerid]);
+    PlayerTextDrawShow(playerid, TD_DealerInfo[playerid]);
 }
 
 stock UpdateDealershipPreview(playerid) {
@@ -361,7 +485,6 @@ stock UpdateDealershipPreview(playerid) {
     // Matikan mesin & kunci pintu kendaraan preview
     if (gPlayerData[playerid][p_DealerPreviewVeh] != INVALID_VEHICLE_ID) {
         SetVehicleParamsEx(gPlayerData[playerid][p_DealerPreviewVeh], 0, 0, 0, 1, 0, 0, 0);
-        // Link to player's virtual world if needed (VW 0)
         SetVehicleVirtualWorld(gPlayerData[playerid][p_DealerPreviewVeh], 0);
     }
 
@@ -386,141 +509,23 @@ stock OpenDealership(playerid) {
     DestroyPlayerDealerTextDraws(playerid);
     HidePlayerMoneyHUD(playerid);
 
-    //    Buat UI TextDraw Dealership di KANAN (X: 430 .. 610)    
-
-    // 1. Background Box (#1D1D1D Dark Matte di Kanan)
-    TD_DealerBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 95.0, "_");
-    PlayerTextDrawUseBox(playerid, TD_DealerBox[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_DealerBox[playerid], 0x1D1D1DF5);
-    PlayerTextDrawTextSize(playerid, TD_DealerBox[playerid], 610.0, 0.0);
-    PlayerTextDrawLetterSize(playerid, TD_DealerBox[playerid], 0.0, 31.0);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerBox[playerid], 0);
-
-    // 2. Header Bar Box (#00BCD4 Teal Cyan Header)
-    TD_DealerHeader[playerid] = CreatePlayerTextDraw(playerid, 430.0, 95.0, "_");
-    PlayerTextDrawUseBox(playerid, TD_DealerHeader[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_DealerHeader[playerid], 0x00BCD4FF);
-    PlayerTextDrawTextSize(playerid, TD_DealerHeader[playerid], 610.0, 0.0);
-    PlayerTextDrawLetterSize(playerid, TD_DealerHeader[playerid], 0.0, 2.7);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerHeader[playerid], 0);
-
-    // 3. Header Title Text
-    TD_DealerTitle[playerid] = CreatePlayerTextDraw(playerid, 520.0, 100.0, "COUTT & SCHUTZ");
-    PlayerTextDrawFont(playerid, TD_DealerTitle[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_DealerTitle[playerid], 0.25, 1.2);
-    PlayerTextDrawColor(playerid, TD_DealerTitle[playerid], 0xFFFFFFFF);
-    PlayerTextDrawAlignment(playerid, TD_DealerTitle[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_DealerTitle[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerTitle[playerid], 0);
-
-    // 4. Badge Kategori Bar
-    TD_DealerCatBadge[playerid] = CreatePlayerTextDraw(playerid, 520.0, 126.0, "Kategori: MOBIL SPORT");
-    PlayerTextDrawFont(playerid, TD_DealerCatBadge[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_DealerCatBadge[playerid], 0.19, 1.05);
-    PlayerTextDrawColor(playerid, TD_DealerCatBadge[playerid], 0x00EEFFFF);
-    PlayerTextDrawAlignment(playerid, TD_DealerCatBadge[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_DealerCatBadge[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerCatBadge[playerid], 0);
-
-    // 5. Vehicle Info Text Box
-    TD_DealerInfo[playerid] = CreatePlayerTextDraw(playerid, 438.0, 142.0, "Memuat info kendaraan...");
-    PlayerTextDrawFont(playerid, TD_DealerInfo[playerid], 1);
-    PlayerTextDrawLetterSize(playerid, TD_DealerInfo[playerid], 0.21, 1.05);
-    PlayerTextDrawColor(playerid, TD_DealerInfo[playerid], 0xFFFFFFFF);
-    PlayerTextDrawSetOutline(playerid, TD_DealerInfo[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerInfo[playerid], 0);
-
-    // 6. Button: << PREV (Clickable)
-    TD_DealerPrev[playerid] = CreatePlayerTextDraw(playerid, 438.0, 246.0, "< SEBELUM");
-    PlayerTextDrawFont(playerid, TD_DealerPrev[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_DealerPrev[playerid], 0.20, 1.25);
-    PlayerTextDrawColor(playerid, TD_DealerPrev[playerid], 0x00BCD4FF);
-    PlayerTextDrawUseBox(playerid, TD_DealerPrev[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_DealerPrev[playerid], 0x2A2A2AFF);
-    PlayerTextDrawTextSize(playerid, TD_DealerPrev[playerid], 517.0, 15.0);
-    PlayerTextDrawSetOutline(playerid, TD_DealerPrev[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerPrev[playerid], 1);
-
-    // 7. Button: NEXT >> (Clickable)
-    TD_DealerNext[playerid] = CreatePlayerTextDraw(playerid, 524.0, 246.0, "LANJUT >");
-    PlayerTextDrawFont(playerid, TD_DealerNext[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_DealerNext[playerid], 0.20, 1.25);
-    PlayerTextDrawColor(playerid, TD_DealerNext[playerid], 0x00BCD4FF);
-    PlayerTextDrawUseBox(playerid, TD_DealerNext[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_DealerNext[playerid], 0x2A2A2AFF);
-    PlayerTextDrawTextSize(playerid, TD_DealerNext[playerid], 602.0, 15.0);
-    PlayerTextDrawSetOutline(playerid, TD_DealerNext[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerNext[playerid], 1);
-
-    // 8. Button: [ GANTI KATEGORI ] (Clickable)
-    TD_DealerCatBtn[playerid] = CreatePlayerTextDraw(playerid, 438.0, 269.0, "  [ GANTI KATEGORI ]");
-    PlayerTextDrawFont(playerid, TD_DealerCatBtn[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_DealerCatBtn[playerid], 0.20, 1.25);
-    PlayerTextDrawColor(playerid, TD_DealerCatBtn[playerid], 0xE69958FF);
-    PlayerTextDrawUseBox(playerid, TD_DealerCatBtn[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_DealerCatBtn[playerid], 0x33261CFF);
-    PlayerTextDrawTextSize(playerid, TD_DealerCatBtn[playerid], 602.0, 15.0);
-    PlayerTextDrawSetOutline(playerid, TD_DealerCatBtn[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerCatBtn[playerid], 1);
-
-    // 9. Button: [ GANTI WARNA ] (Clickable)
-    TD_DealerColorBtn[playerid] = CreatePlayerTextDraw(playerid, 438.0, 292.0, "    [ PILIH WARNA ]");
-    PlayerTextDrawFont(playerid, TD_DealerColorBtn[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_DealerColorBtn[playerid], 0.20, 1.25);
-    PlayerTextDrawColor(playerid, TD_DealerColorBtn[playerid], 0xFFD700FF);
-    PlayerTextDrawUseBox(playerid, TD_DealerColorBtn[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_DealerColorBtn[playerid], 0x332B1AFF);
-    PlayerTextDrawTextSize(playerid, TD_DealerColorBtn[playerid], 602.0, 15.0);
-    PlayerTextDrawSetOutline(playerid, TD_DealerColorBtn[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerColorBtn[playerid], 1);
-
-    // 10. Button: [ BELI KENDARAAN ] (Clickable)
-    TD_DealerBuyBtn[playerid] = CreatePlayerTextDraw(playerid, 438.0, 315.0, "   [ BELI KENDARAAN ]");
-    PlayerTextDrawFont(playerid, TD_DealerBuyBtn[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_DealerBuyBtn[playerid], 0.20, 1.35);
-    PlayerTextDrawColor(playerid, TD_DealerBuyBtn[playerid], 0x2ECC71FF);
-    PlayerTextDrawUseBox(playerid, TD_DealerBuyBtn[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_DealerBuyBtn[playerid], 0x1A3828FF);
-    PlayerTextDrawTextSize(playerid, TD_DealerBuyBtn[playerid], 602.0, 16.0);
-    PlayerTextDrawSetOutline(playerid, TD_DealerBuyBtn[playerid], true);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerBuyBtn[playerid], true);
-
-    // 11. Button: [ BATAL / KELUAR ] (Clickable)
-    TD_DealerCancelBtn[playerid] = CreatePlayerTextDraw(playerid, 438.0, 340.0, "   [ BATAL / KELUAR ]");
-    PlayerTextDrawFont(playerid, TD_DealerCancelBtn[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_DealerCancelBtn[playerid], 0.20, 1.25);
-    PlayerTextDrawColor(playerid, TD_DealerCancelBtn[playerid], 0xE74C3CFF);
-    PlayerTextDrawUseBox(playerid, TD_DealerCancelBtn[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_DealerCancelBtn[playerid], 0x3D1F1DFF);
-    PlayerTextDrawTextSize(playerid, TD_DealerCancelBtn[playerid], 602.0, 15.0);
-    PlayerTextDrawSetOutline(playerid, TD_DealerCancelBtn[playerid], true);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerCancelBtn[playerid], true);
-
-    // 12. Hint Footer
-    TD_DealerHint[playerid] = CreatePlayerTextDraw(playerid, 520.0, 363.0, "Klik menu di atas atau tekan ESC untuk keluar");
-    PlayerTextDrawFont(playerid, TD_DealerHint[playerid], 1);
-    PlayerTextDrawLetterSize(playerid, TD_DealerHint[playerid], 0.17, 0.85);
-    PlayerTextDrawColor(playerid, TD_DealerHint[playerid], 0xAAAAAAFF);
-    PlayerTextDrawAlignment(playerid, TD_DealerHint[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_DealerHint[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_DealerHint[playerid], 0);
+    CreatePlayerDealerTextDraws(playerid);
 
     // Tampilkan semua TextDraw ke pemain
     PlayerTextDrawShow(playerid, TD_DealerBox[playerid]);
-    PlayerTextDrawShow(playerid, TD_DealerHeader[playerid]);
-    PlayerTextDrawShow(playerid, TD_DealerTitle[playerid]);
-    PlayerTextDrawShow(playerid, TD_DealerCatBadge[playerid]);
+    PlayerTextDrawShow(playerid, TD_DealerTopBar[playerid]);
+    PlayerTextDrawShow(playerid, TD_DealerCloseBtn[playerid]);
+    PlayerTextDrawShow(playerid, TD_DealerCatTile[playerid]);
     PlayerTextDrawShow(playerid, TD_DealerInfo[playerid]);
     PlayerTextDrawShow(playerid, TD_DealerPrev[playerid]);
     PlayerTextDrawShow(playerid, TD_DealerNext[playerid]);
-    PlayerTextDrawShow(playerid, TD_DealerCatBtn[playerid]);
     PlayerTextDrawShow(playerid, TD_DealerColorBtn[playerid]);
+    PlayerTextDrawShow(playerid, TD_DealerCatBtn[playerid]);
     PlayerTextDrawShow(playerid, TD_DealerBuyBtn[playerid]);
     PlayerTextDrawShow(playerid, TD_DealerCancelBtn[playerid]);
-    PlayerTextDrawShow(playerid, TD_DealerHint[playerid]);
 
-    // Aktifkan mode kursor mouse
-    SelectTextDraw(playerid, 0x00BCD4FF);
+    // Aktifkan mode kursor mouse (Electric Purple)
+    SelectTextDraw(playerid, COLOR_DEALER_PURPLE);
 
     // Tampilkan kendaraan preview pertama
     UpdateDealershipPreview(playerid);
@@ -561,7 +566,7 @@ stock ShowDealerCatDialog(playerid) {
         sizeof(gBikeVehicles));
 
     ShowPlayerDialog(playerid, DLG_DEALER_CAT, DIALOG_STYLE_LIST,
-        "{00EEFF}PILIH KATEGORI KENDARAAN DEALERSHIP",
+        "{5814EE}Pilih Kategori Kendaraan Dealership",
         dialogText, "Pilih", "Batal");
 }
 
@@ -576,7 +581,7 @@ stock HandleDealershipDialog(playerid, dialogid, response, listitem) {
         PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
     }
     // Re-enable select textdraw in case dialog closed
-    SelectTextDraw(playerid, 0x00BCD4FF);
+    SelectTextDraw(playerid, COLOR_DEALER_PURPLE);
     return 1;
 }
 
@@ -586,6 +591,14 @@ forward BuyCurrentDealerVehicle(playerid);
 stock HandleDealershipClick(playerid, PlayerText:playertextid) {
     if (!gPlayerData[playerid][p_InDealership]) return 0;
 
+    // 1. Tombol [X] Merah atau BATAL
+    if (playertextid == TD_DealerCloseBtn[playerid] || playertextid == TD_DealerCancelBtn[playerid]) {
+        PlayerPlaySound(playerid, 1084, 0.0, 0.0, 0.0);
+        CloseDealership(playerid);
+        return 1;
+    }
+
+    // 2. Tombol < SEBELUM
     if (playertextid == TD_DealerPrev[playerid]) {
         new cat = gPlayerData[playerid][p_DealerCat];
         new count = GetDealerCategoryCount(cat);
@@ -598,6 +611,7 @@ stock HandleDealershipClick(playerid, PlayerText:playertextid) {
         return 1;
     }
 
+    // 3. Tombol SELANJUTNYA >
     if (playertextid == TD_DealerNext[playerid]) {
         new cat = gPlayerData[playerid][p_DealerCat];
         new count = GetDealerCategoryCount(cat);
@@ -610,12 +624,7 @@ stock HandleDealershipClick(playerid, PlayerText:playertextid) {
         return 1;
     }
 
-    if (playertextid == TD_DealerCatBtn[playerid]) {
-        PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
-        ShowDealerCatDialog(playerid);
-        return 1;
-    }
-
+    // 4. Tombol GANTI WARNA
     if (playertextid == TD_DealerColorBtn[playerid]) {
         gPlayerData[playerid][p_DealerColorIdx]++;
         if (gPlayerData[playerid][p_DealerColorIdx] >= DEALER_COLOR_COUNT) {
@@ -626,15 +635,18 @@ stock HandleDealershipClick(playerid, PlayerText:playertextid) {
         return 1;
     }
 
+    // 5. Tombol GANTI KATEGORI
+    if (playertextid == TD_DealerCatBtn[playerid]) {
+        PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
+        ShowDealerCatDialog(playerid);
+        return 1;
+    }
+
+    // 6. Tombol BELI
     if (playertextid == TD_DealerBuyBtn[playerid]) {
         BuyCurrentDealerVehicle(playerid);
         return 1;
     }
 
-    if (playertextid == TD_DealerCancelBtn[playerid]) {
-        PlayerPlaySound(playerid, 1084, 0.0, 0.0, 0.0);
-        CloseDealership(playerid);
-        return 1;
-    }
     return 0;
 }

@@ -286,9 +286,12 @@ CMD:delveh(playerid, params[]) {
         new currentVeh = GetPlayerVehicleID(playerid);
         // Cari DB ID kendaraan aktif dari pemain yang sedang online
         for (new p = 0; p < MAX_PLAYERS; p++) {
-            if (IsPlayerConnected(p) && gPlayerData[p][p_ActiveVehID] == currentVeh) {
-                targetDBID = gPlayerData[p][p_ActiveVehDBID];
-                break;
+            if (IsPlayerConnected(p)) {
+                new slot = GetPlayerActiveVehSlot(p, currentVeh);
+                if (slot != -1) {
+                    targetDBID = gPlayerData[p][p_ActiveVehDBID][slot];
+                    break;
+                }
             }
         }
 
@@ -324,8 +327,12 @@ CMD:delveh(playerid, params[]) {
     // Jika pemilik sedang online dan kendaraan aktif, hancurkan objeknya
     for (new p = 0; p < MAX_PLAYERS; p++) {
         if (IsPlayerConnected(p) && gPlayerData[p][p_CharID] == ownerCharID) {
-            if (gPlayerData[p][p_ActiveVehDBID] == targetDBID) {
-                DestroyPlayerActiveVehicle(p);
+            new slot = GetPlayerActiveVehSlotByDBID(p, targetDBID);
+            if (slot != -1) {
+                new veh = gPlayerData[p][p_ActiveVehID][slot];
+                if (veh != INVALID_VEHICLE_ID) DestroyVehicle(veh);
+                gPlayerData[p][p_ActiveVehID][slot] = INVALID_VEHICLE_ID;
+                gPlayerData[p][p_ActiveVehDBID][slot] = 0;
             }
             SendClientMessage(p, COL_RED, "  [Kendaraan] Kepemilikan kendaraan Anda telah dicabut / dihapus oleh Administrator.");
             break;

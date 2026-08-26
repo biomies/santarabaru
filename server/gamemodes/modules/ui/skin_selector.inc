@@ -4,10 +4,17 @@
 #define _MODULE_SKIN_SELECTOR_INC
 
 // ============================================================
-//  SantaraBaru Roleplay - Live 3D Skin Selector UI & Skin Catalog
+//  SantaraBaru Roleplay - Live 3D Skin Selector UI & Skin Catalog (/skin)
+//  Dark Indigo (#1E1E2E) & Electric Purple (#5814EE) Theme
 // ============================================================
 
-// Daftar semua 310 skin GTA SA / MTA Wiki (Model name sesuai https://wiki.multitheftauto.com/wiki/All_Skins_Page)
+// Colors from Reference Design
+#define COLOR_SKIN_BG       0x1E1E2EFF  // Dark Indigo Background
+#define COLOR_SKIN_PURPLE   0x5814EEFF  // Electric Purple Accent & Action
+#define COLOR_SKIN_RED      0xFA1E38FF  // Vibrant Red Cancel & [X] Close Button
+#define COLOR_SKIN_SLATE    0x3E3E44EE  // Dark Slate Button (< Sebelum / Selanjutnya >)
+
+// Daftar semua 310 skin GTA SA / MTA Wiki
 new const gSkins[] = {
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -80,15 +87,14 @@ new const gSkinNames[][24] = {
 
 // TextDraw Handles
 new PlayerText:TD_SkinBox[MAX_PLAYERS]      = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SkinHeader[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SkinTopBar[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SkinCloseBtn[MAX_PLAYERS] = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_SkinTitle[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_SkinInfo[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_SkinPrev[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_SkinNext[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SkinRand[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_SkinSave[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_SkinCancel[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SkinHint[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
 
 forward Timer_FixSkinCamera(playerid);
 public Timer_FixSkinCamera(playerid) {
@@ -103,9 +109,13 @@ stock DestroyPlayerSkinTextDraws(playerid) {
         PlayerTextDrawDestroy(playerid, TD_SkinBox[playerid]);
         TD_SkinBox[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SkinHeader[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SkinHeader[playerid]);
-        TD_SkinHeader[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_SkinTopBar[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_SkinTopBar[playerid]);
+        TD_SkinTopBar[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    }
+    if (TD_SkinCloseBtn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_SkinCloseBtn[playerid]);
+        TD_SkinCloseBtn[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
     if (TD_SkinTitle[playerid] != PlayerText:INVALID_TEXT_DRAW) {
         PlayerTextDrawDestroy(playerid, TD_SkinTitle[playerid]);
@@ -123,10 +133,6 @@ stock DestroyPlayerSkinTextDraws(playerid) {
         PlayerTextDrawDestroy(playerid, TD_SkinNext[playerid]);
         TD_SkinNext[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SkinRand[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SkinRand[playerid]);
-        TD_SkinRand[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
     if (TD_SkinSave[playerid] != PlayerText:INVALID_TEXT_DRAW) {
         PlayerTextDrawDestroy(playerid, TD_SkinSave[playerid]);
         TD_SkinSave[playerid] = PlayerText:INVALID_TEXT_DRAW;
@@ -134,10 +140,6 @@ stock DestroyPlayerSkinTextDraws(playerid) {
     if (TD_SkinCancel[playerid] != PlayerText:INVALID_TEXT_DRAW) {
         PlayerTextDrawDestroy(playerid, TD_SkinCancel[playerid]);
         TD_SkinCancel[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-    if (TD_SkinHint[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SkinHint[playerid]);
-        TD_SkinHint[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
 }
 
@@ -198,13 +200,8 @@ stock UpdateSkinSelectorUI(playerid) {
     new cat[32];
     GetSkinCategory(skinid, cat, sizeof(cat));
 
-    new str[256];
-    format(str, sizeof(str),
-        "~w~Model : ~y~%s~n~" \
-        "~w~Skin ID : ~y~%d~n~" \
-        "~w~Gender : ~w~%s~n~" \
-        "~w~Pilihan : ~y~%d / %d",
-        gSkinNames[idx], skinid, cat, idx + 1, SKIN_COUNT);
+    new str[128];
+    format(str, sizeof(str), "~w~Gender : ~w~%s~n~~w~Pilihan : ~w~%d/%d", cat, idx + 1, SKIN_COUNT);
 
     PlayerTextDrawSetString(playerid, TD_SkinInfo[playerid], str);
 }
@@ -234,125 +231,123 @@ stock OpenSkinSelection(playerid, bool:isNewChar = false) {
     DestroyPlayerSkinTextDraws(playerid);
     HidePlayerMoneyHUD(playerid);
 
-    //    Buat UI TextDraw di sebelah KANAN (X: 430 .. 610)       
+    //    Buat UI TextDraw di sebelah KANAN (X: 430.0 .. 620.0, Y: 100.0 .. 260.0)       
 
-    // 1. Background Box (#1D1D1D Dark Matte di Kanan)
-    TD_SkinBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 105.0, "_");
-    PlayerTextDrawUseBox(playerid, TD_SkinBox[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SkinBox[playerid], 0x1D1D1DF2);
-    PlayerTextDrawTextSize(playerid, TD_SkinBox[playerid], 610.0, 0.0);
-    PlayerTextDrawLetterSize(playerid, TD_SkinBox[playerid], 0.0, 26.0);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinBox[playerid], 0);
+    // 1. Background Box (Dark Indigo #1E1E2EFF di Kanan)
+    TD_SkinBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 100.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_SkinBox[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SkinBox[playerid], COLOR_SKIN_BG);
+    PlayerTextDrawTextSize(playerid, TD_SkinBox[playerid], 620.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_SkinBox[playerid], 0.0, 17.0);
+    PlayerTextDrawSetSelectable(playerid, TD_SkinBox[playerid], false);
 
-    // 2. Header Bar Box (#E69958 Warm Amber Header)
-    TD_SkinHeader[playerid] = CreatePlayerTextDraw(playerid, 430.0, 105.0, "_");
-    PlayerTextDrawUseBox(playerid, TD_SkinHeader[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SkinHeader[playerid], 0xE69958FF);
-    PlayerTextDrawTextSize(playerid, TD_SkinHeader[playerid], 610.0, 0.0);
-    PlayerTextDrawLetterSize(playerid, TD_SkinHeader[playerid], 0.0, 2.7);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinHeader[playerid], 0);
+    // 2. Top Accent Line (Electric Purple #5814EEFF, X: 430.0 .. 602.0, Y: 100.0)
+    TD_SkinTopBar[playerid] = CreatePlayerTextDraw(playerid, 430.0, 100.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_SkinTopBar[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SkinTopBar[playerid], COLOR_SKIN_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_SkinTopBar[playerid], 602.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_SkinTopBar[playerid], 0.0, 0.75);
+    PlayerTextDrawSetSelectable(playerid, TD_SkinTopBar[playerid], false);
 
-    // 3. Header Title Text
-    TD_SkinTitle[playerid] = CreatePlayerTextDraw(playerid, 520.0, 110.0, "PILIH PENAMPILAN");
+    // 3. Top-Right Red Close Button [X] (Center X: 611.0, Y: 99.0)
+    TD_SkinCloseBtn[playerid] = CreatePlayerTextDraw(playerid, 611.0, 99.0, "X");
+    PlayerTextDrawFont(playerid, TD_SkinCloseBtn[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_SkinCloseBtn[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_SkinCloseBtn[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_SkinCloseBtn[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SkinCloseBtn[playerid], COLOR_SKIN_RED);
+    PlayerTextDrawTextSize(playerid, TD_SkinCloseBtn[playerid], 10.0, 18.0);
+    PlayerTextDrawAlignment(playerid, TD_SkinCloseBtn[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_SkinCloseBtn[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SkinCloseBtn[playerid], true);
+
+    // 4. Header Title Tile [ Pilih Penampilan ] (Center X: 525.0, Y: 112.0)
+    TD_SkinTitle[playerid] = CreatePlayerTextDraw(playerid, 525.0, 112.0, "Pilih Penampilan");
     PlayerTextDrawFont(playerid, TD_SkinTitle[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SkinTitle[playerid], 0.25, 1.2);
+    PlayerTextDrawLetterSize(playerid, TD_SkinTitle[playerid], 0.16, 0.95);
     PlayerTextDrawColor(playerid, TD_SkinTitle[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_SkinTitle[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SkinTitle[playerid], COLOR_SKIN_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_SkinTitle[playerid], 14.0, 170.0);
     PlayerTextDrawAlignment(playerid, TD_SkinTitle[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SkinTitle[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinTitle[playerid], 0);
+    PlayerTextDrawSetSelectable(playerid, TD_SkinTitle[playerid], false);
 
-    // 4. Skin Info Text Box
-    TD_SkinInfo[playerid] = CreatePlayerTextDraw(playerid, 438.0, 142.0, "Memuat info skin...");
+    // 5. Skin Info Text Box (Gender & Pilihan) (X: 442.0, Y: 136.0)
+    TD_SkinInfo[playerid] = CreatePlayerTextDraw(playerid, 442.0, 136.0, "Memuat info...");
     PlayerTextDrawFont(playerid, TD_SkinInfo[playerid], 1);
-    PlayerTextDrawLetterSize(playerid, TD_SkinInfo[playerid], 0.22, 1.15);
+    PlayerTextDrawLetterSize(playerid, TD_SkinInfo[playerid], 0.18, 1.00);
     PlayerTextDrawColor(playerid, TD_SkinInfo[playerid], 0xFFFFFFFF);
     PlayerTextDrawSetOutline(playerid, TD_SkinInfo[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinInfo[playerid], 0);
+    PlayerTextDrawSetSelectable(playerid, TD_SkinInfo[playerid], false);
 
-    // 5. Button: << PREV (Clickable)
-    TD_SkinPrev[playerid] = CreatePlayerTextDraw(playerid, 438.0, 212.0, "< SEBELUM");
+    // 6. Navigation Button: < Sebelum (Center X: 481.0, Y: 172.0)
+    TD_SkinPrev[playerid] = CreatePlayerTextDraw(playerid, 481.0, 172.0, "< Sebelum");
     PlayerTextDrawFont(playerid, TD_SkinPrev[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SkinPrev[playerid], 0.21, 1.3);
-    PlayerTextDrawColor(playerid, TD_SkinPrev[playerid], 0xE69958FF);
-    PlayerTextDrawUseBox(playerid, TD_SkinPrev[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SkinPrev[playerid], 0x2A2A2AFF);
-    PlayerTextDrawTextSize(playerid, TD_SkinPrev[playerid], 517.0, 16.0);
+    PlayerTextDrawLetterSize(playerid, TD_SkinPrev[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_SkinPrev[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_SkinPrev[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SkinPrev[playerid], COLOR_SKIN_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_SkinPrev[playerid], 14.0, 82.0);
+    PlayerTextDrawAlignment(playerid, TD_SkinPrev[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SkinPrev[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinPrev[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SkinPrev[playerid], true);
 
-    // 6. Button: NEXT >> (Clickable)
-    TD_SkinNext[playerid] = CreatePlayerTextDraw(playerid, 524.0, 212.0, "LANJUT >");
+    // 7. Navigation Button: Selanjutnya > (Center X: 569.0, Y: 172.0)
+    TD_SkinNext[playerid] = CreatePlayerTextDraw(playerid, 569.0, 172.0, "Selanjutnya >");
     PlayerTextDrawFont(playerid, TD_SkinNext[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SkinNext[playerid], 0.21, 1.3);
-    PlayerTextDrawColor(playerid, TD_SkinNext[playerid], 0xE69958FF);
-    PlayerTextDrawUseBox(playerid, TD_SkinNext[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SkinNext[playerid], 0x2A2A2AFF);
-    PlayerTextDrawTextSize(playerid, TD_SkinNext[playerid], 602.0, 16.0);
+    PlayerTextDrawLetterSize(playerid, TD_SkinNext[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_SkinNext[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_SkinNext[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SkinNext[playerid], COLOR_SKIN_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_SkinNext[playerid], 14.0, 82.0);
+    PlayerTextDrawAlignment(playerid, TD_SkinNext[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SkinNext[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinNext[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SkinNext[playerid], true);
 
-    // 7. Button: [ PILIH ACAK ] (Clickable)
-    TD_SkinRand[playerid] = CreatePlayerTextDraw(playerid, 438.0, 238.0, "   [ PILIH ACAK ]");
-    PlayerTextDrawFont(playerid, TD_SkinRand[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SkinRand[playerid], 0.21, 1.3);
-    PlayerTextDrawColor(playerid, TD_SkinRand[playerid], 0xE69958FF);
-    PlayerTextDrawUseBox(playerid, TD_SkinRand[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SkinRand[playerid], 0x33261CFF);
-    PlayerTextDrawTextSize(playerid, TD_SkinRand[playerid], 602.0, 16.0);
-    PlayerTextDrawSetOutline(playerid, TD_SkinRand[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinRand[playerid], 1);
-
-    // 8. Button: [ PILIH SKIN INI ] (Clickable - #E69958 Accent)
-    TD_SkinSave[playerid] = CreatePlayerTextDraw(playerid, 438.0, 265.0, "  ~w~[ PILIH SKIN INI ]");
+    // 8. Primary Action Button: [ Gunakan ] (Center X: 525.0, Y: 196.0)
+    TD_SkinSave[playerid] = CreatePlayerTextDraw(playerid, 525.0, 196.0, "Gunakan");
     PlayerTextDrawFont(playerid, TD_SkinSave[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SkinSave[playerid], 0.21, 1.35);
+    PlayerTextDrawLetterSize(playerid, TD_SkinSave[playerid], 0.17, 1.05);
     PlayerTextDrawColor(playerid, TD_SkinSave[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SkinSave[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SkinSave[playerid], 0xE69958FF);
-    PlayerTextDrawTextSize(playerid, TD_SkinSave[playerid], 602.0, 18.0);
+    PlayerTextDrawUseBox(playerid, TD_SkinSave[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SkinSave[playerid], COLOR_SKIN_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_SkinSave[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_SkinSave[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SkinSave[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinSave[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SkinSave[playerid], true);
 
-    // 9. Button: [ BATAL ] (Clickable - Dark Crimson)
-    TD_SkinCancel[playerid] = CreatePlayerTextDraw(playerid, 438.0, 293.0, "      ~w~[ ~r~BATAL ~w~]");
+    // 9. Secondary Button: [ Batal ] (Center X: 525.0, Y: 218.0)
+    TD_SkinCancel[playerid] = CreatePlayerTextDraw(playerid, 525.0, 218.0, "Batal");
     PlayerTextDrawFont(playerid, TD_SkinCancel[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SkinCancel[playerid], 0.21, 1.3);
+    PlayerTextDrawLetterSize(playerid, TD_SkinCancel[playerid], 0.17, 1.05);
     PlayerTextDrawColor(playerid, TD_SkinCancel[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SkinCancel[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SkinCancel[playerid], 0x481E1EFF);
-    PlayerTextDrawTextSize(playerid, TD_SkinCancel[playerid], 602.0, 16.0);
+    PlayerTextDrawUseBox(playerid, TD_SkinCancel[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SkinCancel[playerid], COLOR_SKIN_RED);
+    PlayerTextDrawTextSize(playerid, TD_SkinCancel[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_SkinCancel[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SkinCancel[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinCancel[playerid], 1);
-
-    // 10. Hint text di bawah
-    TD_SkinHint[playerid] = CreatePlayerTextDraw(playerid, 520.0, 318.0, "~w~Klik tombol di atas untuk memilih");
-    PlayerTextDrawFont(playerid, TD_SkinHint[playerid], 1);
-    PlayerTextDrawLetterSize(playerid, TD_SkinHint[playerid], 0.16, 0.9);
-    PlayerTextDrawColor(playerid, TD_SkinHint[playerid], 0xCCCCCCFF);
-    PlayerTextDrawAlignment(playerid, TD_SkinHint[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SkinHint[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SkinHint[playerid], 0);
+    PlayerTextDrawSetSelectable(playerid, TD_SkinCancel[playerid], true);
 
     // Tampilkan semua TextDraw ke pemain
     PlayerTextDrawShow(playerid, TD_SkinBox[playerid]);
-    PlayerTextDrawShow(playerid, TD_SkinHeader[playerid]);
+    PlayerTextDrawShow(playerid, TD_SkinTopBar[playerid]);
+    PlayerTextDrawShow(playerid, TD_SkinCloseBtn[playerid]);
     PlayerTextDrawShow(playerid, TD_SkinTitle[playerid]);
     PlayerTextDrawShow(playerid, TD_SkinInfo[playerid]);
     PlayerTextDrawShow(playerid, TD_SkinPrev[playerid]);
     PlayerTextDrawShow(playerid, TD_SkinNext[playerid]);
-    PlayerTextDrawShow(playerid, TD_SkinRand[playerid]);
     PlayerTextDrawShow(playerid, TD_SkinSave[playerid]);
     PlayerTextDrawShow(playerid, TD_SkinCancel[playerid]);
-    PlayerTextDrawShow(playerid, TD_SkinHint[playerid]);
 
     // Update info text
     UpdateSkinSelectorUI(playerid);
 
-    // Aktifkan mode kursor klik TextDraw (Highlight warna #E69958 Warm Amber)
-    SelectTextDraw(playerid, 0xE69958FF);
+    // Aktifkan mode kursor klik TextDraw (Highlight warna Electric Purple)
+    SelectTextDraw(playerid, COLOR_SKIN_PURPLE);
 
-    SendClientMessage(playerid, COL_CYAN, "  [Live 3D] Pilih penampilan karakter Anda di menu sebelah kiri.");
-    SendClientMessage(playerid, COL_WHITE, "  Karakter di sebelah kanan akan berubah secara langsung saat Anda memilih!");
+    SendClientMessage(playerid, COL_CYAN, "  [Live 3D] Pilih penampilan karakter Anda di menu sebelah kanan.");
+    SendClientMessage(playerid, COL_WHITE, "  Karakter di sebelah kiri akan berubah secara langsung saat Anda memilih!");
 }
 
 stock CloseSkinSelection(playerid, bool:saved = true) {

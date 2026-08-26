@@ -52,8 +52,9 @@ enum E_PLAYER_DATA {
     p_DealerIndex,
     p_DealerColorIdx,
     p_DealerPreviewVeh,
-    p_ActiveVehID,
-    p_ActiveVehDBID,
+    #define MAX_PLAYER_SPAWNED_VEHICLES 5
+    p_ActiveVehID[MAX_PLAYER_SPAWNED_VEHICLES],
+    p_ActiveVehDBID[MAX_PLAYER_SPAWNED_VEHICLES],
     //    Status Live 3D Garasi Kota & Manajemen Kendaraan   
     bool:p_InGarageUI,
     p_GarageCurrentID,
@@ -65,6 +66,31 @@ enum E_PLAYER_DATA {
     p_VehListDBIDs[32],
     p_VehListCount,
     bool:p_HasActiveCheckpoint,
+    //    Status Kebutuhan Hidup & Vitalitas   
+    Float:p_Hunger,             // 0.0 - 100.0%
+    Float:p_Thirst,             // 0.0 - 100.0%
+    //    Status Sesi Inventory Pemain   
+    bool:p_InInventoryUI,
+    p_InvCurrentPage,
+    p_InvSlotItemID[64],
+    p_InvSlotAmount[64],
+    p_InvItemCount,
+    p_SelectedInvSlot,
+    p_SelectedInvItemID,
+    p_TargetGivePlayerID,
+    //    Status Sesi Bagasi Mobil (Vehicle Trunk)   
+    bool:p_InTrunkUI,
+    p_TrunkVehID,
+    p_TrunkVehDBID,
+    p_TrunkActiveTab,           // 0 = Isi Bagasi Mobil, 1 = Barang di Tas Karakter
+    p_TrunkCurrentPage,
+    p_TrunkSlotItemID[64],
+    p_TrunkSlotAmount[64],
+    p_TrunkItemCount,
+    p_SelectedTrunkSlot,
+    p_SelectedTrunkItemID,
+    //    Status Pekerjaan Karakter
+    p_Job,                      // 0 = Pengangguran
     //    Status Administrator Akun   
     p_AdminLevel,               // 0 = Player, 1 = Admin, 2 = Owner
     bool:p_AdminDuty            // Status On-Duty Admin
@@ -85,12 +111,15 @@ stock ResetPlayerData(playerid) {
     format(gPlayerData[playerid][p_BirthDate], 16, "01/01/2000");
     gPlayerData[playerid][p_Gender]         = 1;
     gPlayerData[playerid][p_Skin]           = 0;
+    gPlayerData[playerid][p_Job]            = 0;
     gPlayerData[playerid][p_X]              = SPAWN_BUS_X;
     gPlayerData[playerid][p_Y]              = SPAWN_BUS_Y;
     gPlayerData[playerid][p_Z]              = SPAWN_BUS_Z;
     gPlayerData[playerid][p_A]              = SPAWN_BUS_A;
     gPlayerData[playerid][p_Score]          = 1;
     gPlayerData[playerid][p_Cash]           = 500;
+    gPlayerData[playerid][p_Hunger]         = 100.0;
+    gPlayerData[playerid][p_Thirst]         = 100.0;
     gPlayerData[playerid][p_Registered]     = false;
     gPlayerData[playerid][p_LoggedIn]       = false;
     gPlayerData[playerid][p_Spawned]        = false;
@@ -118,8 +147,10 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_DealerIndex]    = 0;
     gPlayerData[playerid][p_DealerColorIdx] = 0;
     gPlayerData[playerid][p_DealerPreviewVeh] = INVALID_VEHICLE_ID;
-    gPlayerData[playerid][p_ActiveVehID]    = INVALID_VEHICLE_ID;
-    gPlayerData[playerid][p_ActiveVehDBID]  = 0;
+    for (new v = 0; v < MAX_PLAYER_SPAWNED_VEHICLES; v++) {
+        gPlayerData[playerid][p_ActiveVehID][v]    = INVALID_VEHICLE_ID;
+        gPlayerData[playerid][p_ActiveVehDBID][v]  = 0;
+    }
     gPlayerData[playerid][p_InGarageUI]     = false;
     gPlayerData[playerid][p_GarageCurrentID] = 0;
     gPlayerData[playerid][p_GarageVehIndex] = 0;
@@ -132,6 +163,20 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_SelectedVehDBID] = 0;
     gPlayerData[playerid][p_VehListCount]   = 0;
     gPlayerData[playerid][p_HasActiveCheckpoint] = false;
+    gPlayerData[playerid][p_InInventoryUI]  = false;
+    gPlayerData[playerid][p_InvCurrentPage] = 0;
+    gPlayerData[playerid][p_InvItemCount]   = 0;
+    gPlayerData[playerid][p_SelectedInvSlot] = -1;
+    gPlayerData[playerid][p_SelectedInvItemID] = 0;
+    gPlayerData[playerid][p_TargetGivePlayerID] = INVALID_PLAYER_ID;
+    gPlayerData[playerid][p_InTrunkUI]      = false;
+    gPlayerData[playerid][p_TrunkVehID]     = INVALID_VEHICLE_ID;
+    gPlayerData[playerid][p_TrunkVehDBID]   = 0;
+    gPlayerData[playerid][p_TrunkActiveTab] = 0;
+    gPlayerData[playerid][p_TrunkCurrentPage] = 0;
+    gPlayerData[playerid][p_TrunkItemCount] = 0;
+    gPlayerData[playerid][p_SelectedTrunkSlot] = -1;
+    gPlayerData[playerid][p_SelectedTrunkItemID] = 0;
     gPlayerData[playerid][p_AdminLevel]     = 0;
     gPlayerData[playerid][p_AdminDuty]      = false;
 }

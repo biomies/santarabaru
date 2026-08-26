@@ -191,9 +191,6 @@ stock TogglePlayerVehicleEngine(playerid) {
 stock TogglePlayerVehicleLock(playerid) {
     if (!CheckSpawned(playerid)) return 0;
 
-    new activeDbId = gPlayerData[playerid][p_ActiveVehDBID];
-    new activeVehId = gPlayerData[playerid][p_ActiveVehID];
-
     // Cek jika pemain di dalam kendaraan
     if (IsPlayerInAnyVehicle(playerid)) {
         new vehId = GetPlayerVehicleID(playerid);
@@ -215,29 +212,44 @@ stock TogglePlayerVehicleLock(playerid) {
         return 1;
     }
 
-    // Jika pemain di luar mobil dan dekat mobil pribadi miliknya
-    if (activeVehId != INVALID_VEHICLE_ID && activeDbId > 0) {
-        new Float:vx, Float:vy, Float:vz;
-        GetVehiclePos(activeVehId, vx, vy, vz);
-        if (IsPlayerInRangeOfPoint(playerid, 6.0, vx, vy, vz)) {
-            new engine, lights, alarm, doors, bonnet, boot, objective;
-            GetVehicleParamsEx(activeVehId, engine, lights, alarm, doors, bonnet, boot, objective);
+    // Jika pemain di luar mobil -> Cari mobil aktif terdekat milik pemain (dalam radius 8.0 meter)
+    new nearestVeh = INVALID_VEHICLE_ID;
+    new Float:minDist = 999.0;
+    new Float:px, Float:py, Float:pz;
+    GetPlayerPos(playerid, px, py, pz);
 
-            if (doors == 1) {
-                SetVehicleParamsEx(activeVehId, engine, lights, alarm, 0, bonnet, boot, objective);
-                PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
-                SendClientMessage(playerid, COL_GREEN, "  [Kendaraan] Kunci pintu mobil pribadi Anda: {FFFFFF}TERBUKA (Unlocked).");
-                GameTextForPlayer(playerid, "~g~PINTU MOBIL TERBUKA", 1500, 4);
-            } else {
-                SetVehicleParamsEx(activeVehId, engine, lights, alarm, 1, bonnet, boot, objective);
-                PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
-                SendClientMessage(playerid, COL_YELLOW, "  [Kendaraan] Kunci pintu mobil pribadi Anda: {E74C3C}TERKUNCI (Locked).");
-                GameTextForPlayer(playerid, "~r~PINTU MOBIL TERKUNCI", 1500, 4);
+    for (new v = 0; v < MAX_PLAYER_SPAWNED_VEHICLES; v++) {
+        new veh = gPlayerData[playerid][p_ActiveVehID][v];
+        if (veh != INVALID_VEHICLE_ID && gPlayerData[playerid][p_ActiveVehDBID][v] > 0) {
+            new Float:vx, Float:vy, Float:vz;
+            GetVehiclePos(veh, vx, vy, vz);
+            new Float:dx = px - vx; new Float:dy = py - vy; new Float:dz = pz - vz;
+            new Float:dist = floatsqroot((dx * dx) + (dy * dy) + (dz * dz));
+            if (dist <= 8.0 && dist < minDist) {
+                minDist = dist;
+                nearestVeh = veh;
             }
-            return 1;
         }
     }
 
-    SendClientMessage(playerid, COL_RED, "  [Kendaraan] Anda harus berada di dalam kendaraan atau dekat mobil pribadi Anda!");
+    if (nearestVeh != INVALID_VEHICLE_ID) {
+        new engine, lights, alarm, doors, bonnet, boot, objective;
+        GetVehicleParamsEx(nearestVeh, engine, lights, alarm, doors, bonnet, boot, objective);
+
+        if (doors == 1) {
+            SetVehicleParamsEx(nearestVeh, engine, lights, alarm, 0, bonnet, boot, objective);
+            PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
+            SendClientMessage(playerid, COL_GREEN, "  [Kendaraan] Kunci pintu mobil pribadi Anda: {FFFFFF}TERBUKA (Unlocked).");
+            GameTextForPlayer(playerid, "~g~PINTU MOBIL TERBUKA", 1500, 4);
+        } else {
+            SetVehicleParamsEx(nearestVeh, engine, lights, alarm, 1, bonnet, boot, objective);
+            PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
+            SendClientMessage(playerid, COL_YELLOW, "  [Kendaraan] Kunci pintu mobil pribadi Anda: {E74C3C}TERKUNCI (Locked).");
+            GameTextForPlayer(playerid, "~r~PINTU MOBIL TERKUNCI", 1500, 4);
+        }
+        return 1;
+    }
+
+    SendClientMessage(playerid, COL_RED, "  [Kendaraan] Anda harus berada di dalam kendaraan atau dekat (maks 8m) mobil pribadi Anda!");
     return 0;
 }

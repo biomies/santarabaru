@@ -14,10 +14,11 @@ stock DoSavePlayer(playerid) {
     GetPlayerFacingAngle(playerid, a);
     new query[512];
     format(query, sizeof(query),
-        "UPDATE `characters` SET `skin_id`=%d, `x`=%.4f, `y`=%.4f, `z`=%.4f, `angle`=%.4f, `score`=%d, `cash`=%d, `play_minutes`=`play_minutes`+%d WHERE `id`=%d",
+        "UPDATE `characters` SET `skin_id`=%d, `x`=%.4f, `y`=%.4f, `z`=%.4f, `angle`=%.4f, `score`=%d, `cash`=%d, `hunger`=%.2f, `thirst`=%.2f, `play_minutes`=`play_minutes`+%d WHERE `id`=%d",
         gPlayerData[playerid][p_Skin],
         x, y, z, a,
         GetPlayerScore(playerid), gPlayerData[playerid][p_Cash],
+        gPlayerData[playerid][p_Hunger], gPlayerData[playerid][p_Thirst],
         gPlayerData[playerid][p_PlayTime],
         gPlayerData[playerid][p_CharID]);
     DB_FreeResultSet(DB_ExecuteQuery(gDB, query));
@@ -27,7 +28,7 @@ stock DoSavePlayer(playerid) {
 stock LoadCharacter(playerid, charid) {
     new query[256];
     format(query, sizeof(query),
-        "SELECT `id`, `char_name`, `birthplace`, `birthdate`, `gender`, `skin_id`, `x`, `y`, `z`, `angle`, `score`, `cash`, `has_ktp` FROM `characters` WHERE `id` = %d AND `account_id` = %d AND `is_active` = 1 LIMIT 1",
+        "SELECT `id`, `char_name`, `birthplace`, `birthdate`, `gender`, `skin_id`, `x`, `y`, `z`, `angle`, `score`, `cash`, `has_ktp`, `hunger`, `thirst` FROM `characters` WHERE `id` = %d AND `account_id` = %d AND `is_active` = 1 LIMIT 1",
         charid, gPlayerData[playerid][p_AccountID]);
 
     new DBResult:res = DB_ExecuteQuery(gDB, query);
@@ -47,6 +48,10 @@ stock LoadCharacter(playerid, charid) {
     gPlayerData[playerid][p_Cash]   = DB_GetFieldIntByName(res, "cash");
     gPlayerData[playerid][p_Gender] = DB_GetFieldIntByName(res, "gender");
     gPlayerData[playerid][p_HasKTP] = (DB_GetFieldIntByName(res, "has_ktp") == 1);
+    gPlayerData[playerid][p_Hunger] = DB_GetFieldFloatByName(res, "hunger");
+    gPlayerData[playerid][p_Thirst] = DB_GetFieldFloatByName(res, "thirst");
+    if (gPlayerData[playerid][p_Hunger] <= 0.0) gPlayerData[playerid][p_Hunger] = 100.0;
+    if (gPlayerData[playerid][p_Thirst] <= 0.0) gPlayerData[playerid][p_Thirst] = 100.0;
     DB_GetFieldStringByName(res, "char_name", gPlayerData[playerid][p_CharName], 48);
     DB_GetFieldStringByName(res, "birthplace", gPlayerData[playerid][p_BirthPlace], 32);
     DB_GetFieldStringByName(res, "birthdate", gPlayerData[playerid][p_BirthDate], 16);
