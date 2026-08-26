@@ -1,61 +1,13 @@
 # ============================================================
 # SantaraBaru Roleplay — Docker Compose
-# Layanan: open.mp server, MySQL, phpMyAdmin, playit.gg tunnel
+# Layanan: open.mp server (SQLite Native), playit.gg tunnel
 # ============================================================
 
-networks:
-  santara_net:
-    driver: bridge
-
 volumes:
-  mysql_data:
   server_data:
   playit_data:
 
 services:
-
-  # ── MySQL Database ──────────────────────────────────────────
-  mysql:
-    image: mysql:8.0
-    container_name: santara_mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE:      ${MYSQL_DATABASE}
-      MYSQL_USER:          ${MYSQL_USER}
-      MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    networks:
-      - santara_net
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-
-  # ── phpMyAdmin ──────────────────────────────────────────────
-  phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: santara_phpmyadmin
-    restart: unless-stopped
-    depends_on:
-      mysql:
-        condition: service_healthy
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      UPLOAD_LIMIT: 64M
-    ports:
-      - "${PHPMYADMIN_PORT:-8085}:80"
-    networks:
-      - santara_net
 
   # ── open.mp SA-MP Server ────────────────────────────────────
   omp-server:
@@ -64,18 +16,10 @@ services:
       dockerfile: Dockerfile
     container_name: santara_omp
     restart: unless-stopped
-    depends_on:
-      mysql:
-        condition: service_healthy
     network_mode: host
     environment:
       SAMP_PORT:     ${SAMP_PORT:-50034}
       VOICE_PORT:    ${VOICE_PORT:-39966}
-      DB_HOST:       127.0.0.1
-      DB_PORT:       3306
-      DB_USER:       ${MYSQL_USER}
-      DB_PASS:       ${MYSQL_PASSWORD}
-      DB_NAME:       ${MYSQL_DATABASE}
       RCON_PASSWORD: ${RCON_PASSWORD:-SantaraRcon2024}
       SERVER_NAME:   ${SERVER_NAME}
       ARTWORK_CDN:   ${ARTWORK_CDN:-https://raw.githubusercontent.com/biomies/santarabaru/main/server/models}
@@ -108,3 +52,4 @@ services:
         fi
     volumes:
       - playit_data:/etc/playit
+
