@@ -8,6 +8,8 @@
 //  Pure ASCII, 36 Legal Items, Needs (Hunger, Thirst), Medical HP, /give, /pay
 // ============================================================
 
+#define MAX_REGISTERED_ITEMS    200
+
 enum E_ITEM_INFO {
     item_ID,
     item_Name[32],
@@ -17,76 +19,69 @@ enum E_ITEM_INFO {
     Float:item_HealthVal,
     bool:item_IsFullHeal,
     item_AnimLib[32],
-    item_AnimName[32]
+    item_AnimName[32],
+    item_Price
 };
 
-stock const gItemRegistry[TOTAL_ITEM_COUNT][E_ITEM_INFO] = {
-    // ----------------- MAKANAN UTAMA (1 - 14) -----------------
-    {ITEM_BURGER,          "Burger",            "Makanan Utama",  35.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_CHEESEBURGER,    "Cheeseburger",      "Makanan Utama",  40.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_HOTDOG,          "Hotdog",            "Makanan Utama",  30.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_PIZZA,           "Pizza",             "Makanan Utama",  45.0,  0.0,   0.0, false, "FOOD", "eat_pizza"},
-    {ITEM_SANDWICH,        "Sandwich",          "Makanan Utama",  25.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_TACO,            "Taco",              "Makanan Utama",  30.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_BURRITO,         "Burrito",           "Makanan Utama",  35.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_FRIED_CHICKEN,   "Fried Chicken",     "Makanan Utama",  45.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_FRENCH_FRIES,    "Kentang Goreng",    "Makanan Utama",  20.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_DONUT,           "Donat",             "Makanan Utama",  20.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_INSTANT_NOODLE,  "Mie Instan",        "Makanan Utama",  30.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_FRIED_RICE,      "Nasi Goreng",       "Makanan Utama",  50.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_AYAM_GORENG,     "Ayam Goreng",       "Makanan Utama",  45.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_SATE,            "Sate",              "Makanan Utama",  40.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
+new gItemRegistry[MAX_REGISTERED_ITEMS][E_ITEM_INFO];
+new gTotalRegisteredItems = 0;
 
-    // ----------------- SNACK (15 - 22) -----------------
-    {ITEM_POTATO_CHIPS,    "Keripik Kentang",   "Snack Ringan",   15.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_CHOCOLATE,       "Cokelat",           "Snack Ringan",   12.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_CANDY,           "Permen",            "Snack Ringan",    8.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_BISCUIT,         "Biskuit",           "Snack Ringan",   12.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_BREAD,           "Roti",              "Snack Ringan",   18.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_POPCORN,         "Popcorn",           "Snack Ringan",   10.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_PEANUTS,         "Kacang",            "Snack Ringan",   12.0,  0.0,   0.0, false, "FOOD", "eat_burger"},
-    {ITEM_ICE_CREAM,       "Es Krim",           "Snack Ringan",   15.0,  5.0,   0.0, false, "FOOD", "eat_burger"},
-
-    // ----------------- MINUMAN (23 - 31) -----------------
-    {ITEM_MINERAL_WATER,   "Air Mineral",       "Minuman",         0.0, 30.0,   0.0, false, "DRINK_cw", "drink_sprank"},
-    {ITEM_SODA,            "Soda",              "Minuman",         0.0, 35.0,   0.0, false, "DRINK_cw", "drink_sprank"},
-    {ITEM_COLA,            "Cola",              "Minuman",         0.0, 35.0,   0.0, false, "DRINK_cw", "drink_sprank"},
-    {ITEM_ORANGE_JUICE,    "Jus Jeruk",         "Minuman",         0.0, 40.0,   0.0, false, "DRINK_cw", "drink_sprank"},
-    {ITEM_COFFEE,          "Kopi",              "Minuman",         0.0, 25.0,   0.0, false, "DRINK_cw", "drink_sprank"},
-    {ITEM_TEA,             "Teh",               "Minuman",         0.0, 30.0,   0.0, false, "DRINK_cw", "drink_sprank"},
-    {ITEM_ENERGY_DRINK,    "Energy Drink",      "Minuman",         0.0, 50.0,   0.0, false, "DRINK_cw", "drink_sprank"},
-    {ITEM_MILK,            "Susu",              "Minuman",         5.0, 35.0,   0.0, false, "DRINK_cw", "drink_sprank"},
-    {ITEM_MILKSHAKE,       "Milkshake",         "Minuman",        10.0, 40.0,   0.0, false, "DRINK_cw", "drink_sprank"},
-
-    // ----------------- MEDICAL (32 - 34) -----------------
-    {ITEM_BANDAGE,         "Bandage",           "Medis / Obat",    0.0,  0.0,  25.0, false, "MISC", "bitchslap"},
-    {ITEM_MEDKIT,          "Medkit",            "Medis / Obat",    0.0,  0.0,  60.0, false, "MISC", "bitchslap"},
-    {ITEM_FIRST_AID,       "First Aid Kit",     "Medis / Obat",    0.0,  0.0, 100.0, true,  "MISC", "bitchslap"},
-
-    // ----------------- DOKUMEN & LAINNYA (35 - 36) -----------------
-    {ITEM_PHONE,           "Ponsel",            "Elektronik",      0.0,  0.0,   0.0, false, "", ""},
-    {ITEM_KTP,             "KTP (Kartu Identitas)","Dokumen",      0.0,  0.0,   0.0, false, "", ""}
-};
+stock GetItemRegistryIndex(itemid) {
+    for (new i = 0; i < gTotalRegisteredItems; i++) {
+        if (gItemRegistry[i][item_ID] == itemid) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 stock GetItemNameByID(itemid, name[], maxlen) {
-    for (new i = 0; i < TOTAL_ITEM_COUNT; i++) {
-        if (gItemRegistry[i][item_ID] == itemid) {
-            format(name, maxlen, "%s", gItemRegistry[i][item_Name]);
-            return 1;
-        }
+    new idx = GetItemRegistryIndex(itemid);
+    if (idx != -1) {
+        format(name, maxlen, "%s", gItemRegistry[idx][item_Name]);
+        return 1;
     }
     format(name, maxlen, "Barang Tidak Dikenal");
     return 0;
 }
 
 stock GetItemIDByName(const name[]) {
-    for (new i = 0; i < TOTAL_ITEM_COUNT; i++) {
+    for (new i = 0; i < gTotalRegisteredItems; i++) {
         if (strfind(gItemRegistry[i][item_Name], name, true) != -1) {
             return gItemRegistry[i][item_ID];
         }
     }
     return 0;
 }
+
+stock Inventory_LoadItemsFromDB() {
+    gTotalRegisteredItems = 0;
+    new DBResult:res = DB_ExecuteQuery(gDB_Master, "SELECT `id`, `name`, `category`, `hunger`, `thirst`, `health`, `is_full_heal`, `anim_lib`, `anim_name`, `price` FROM `items` ORDER BY `id` ASC");
+    if (!res || DB_GetRowCount(res) == 0) {
+        if (res) DB_FreeResultSet(res);
+        return 0;
+    }
+
+    new rows = DB_GetRowCount(res);
+    for (new i = 0; i < rows && i < MAX_REGISTERED_ITEMS; i++) {
+        gItemRegistry[i][item_ID]          = DB_GetFieldIntByName(res, "id");
+        DB_GetFieldStringByName(res, "name", gItemRegistry[i][item_Name], 32);
+        DB_GetFieldStringByName(res, "category", gItemRegistry[i][item_Category], 24);
+        gItemRegistry[i][item_HungerVal]   = DB_GetFieldFloatByName(res, "hunger");
+        gItemRegistry[i][item_ThirstVal]   = DB_GetFieldFloatByName(res, "thirst");
+        gItemRegistry[i][item_HealthVal]   = DB_GetFieldFloatByName(res, "health");
+        gItemRegistry[i][item_IsFullHeal]  = (DB_GetFieldIntByName(res, "is_full_heal") == 1);
+        DB_GetFieldStringByName(res, "anim_lib", gItemRegistry[i][item_AnimLib], 32);
+        DB_GetFieldStringByName(res, "anim_name", gItemRegistry[i][item_AnimName], 32);
+        gItemRegistry[i][item_Price]       = DB_GetFieldIntByName(res, "price");
+        gTotalRegisteredItems++;
+        DB_SelectNextRow(res);
+    }
+    DB_FreeResultSet(res);
+    printf("[Inventory] Sukses memuat %d barang dari database ke memori RAM.", gTotalRegisteredItems);
+    return gTotalRegisteredItems;
+}
+
 
 // ------------------------------------------------------------
 //  Database & In-Memory Inventory Helpers
@@ -133,7 +128,7 @@ stock Inventory_LoadPlayerItems(playerid) {
 
 stock Inventory_AddItem(playerid, itemid, amount) {
     if (!gPlayerData[playerid][p_LoggedIn] || gPlayerData[playerid][p_CharID] <= 0) return 0;
-    if (amount <= 0 || itemid < 1 || itemid > TOTAL_ITEM_COUNT) return 0;
+    if (amount <= 0 || GetItemRegistryIndex(itemid) == -1) return 0;
 
     new currentAmt = Inventory_GetItemCount(playerid, itemid);
     new query[256];
@@ -155,7 +150,7 @@ stock Inventory_AddItem(playerid, itemid, amount) {
 
 stock Inventory_RemoveItem(playerid, itemid, amount) {
     if (!gPlayerData[playerid][p_LoggedIn] || gPlayerData[playerid][p_CharID] <= 0) return 0;
-    if (amount <= 0 || itemid < 1 || itemid > TOTAL_ITEM_COUNT) return 0;
+    if (amount <= 0 || GetItemRegistryIndex(itemid) == -1) return 0;
 
     new currentAmt = Inventory_GetItemCount(playerid, itemid);
     if (currentAmt < amount) return 0;
@@ -188,20 +183,14 @@ stock UseInventoryItem(playerid, itemid) {
         return 0;
     }
 
-    new itemIdx = -1;
-    for (new i = 0; i < TOTAL_ITEM_COUNT; i++) {
-        if (gItemRegistry[i][item_ID] == itemid) {
-            itemIdx = i;
-            break;
-        }
-    }
+    new itemIdx = GetItemRegistryIndex(itemid);
     if (itemIdx == -1) return 0;
 
     new charname[48], rpMsg[160];
     GetCharName(playerid, charname);
 
-    // 1. MAKANAN UTAMA & SNACK (Murni Mengisi Lapar / Hunger)
-    if (itemid >= ITEM_BURGER && itemid <= ITEM_ICE_CREAM) {
+    // 1. MAKANAN (Murni Mengisi Lapar / Hunger)
+    if (itemid >= ITEM_BURGER && itemid <= ITEM_PIZZA) {
         GivePlayerHunger(playerid, gItemRegistry[itemIdx][item_HungerVal]);
         if (gItemRegistry[itemIdx][item_ThirstVal] > 0.0) {
             GivePlayerThirst(playerid, gItemRegistry[itemIdx][item_ThirstVal]);
@@ -315,9 +304,9 @@ stock OpenInventoryMenu(playerid) {
     for (new i = 0; i < count; i++) {
         new itId = gPlayerData[playerid][p_InvSlotItemID][i];
         new itAmt = gPlayerData[playerid][p_InvSlotAmount][i];
-        new itIdx = itId - 1;
+        new itIdx = GetItemRegistryIndex(itId);
 
-        if (itIdx >= 0 && itIdx < TOTAL_ITEM_COUNT) {
+        if (itIdx != -1) {
             new line[128];
             format(line, sizeof(line), "{FFFFFF}%s\t{A0AEC0}%s\t{00EEFF}%dx\n",
                 gItemRegistry[itIdx][item_Name], gItemRegistry[itIdx][item_Category], itAmt);
@@ -687,7 +676,7 @@ CMD:give(playerid, params[]) {
     if (itId <= 0) {
         // Cek jika user input itemid secara angka
         itId = strval(itemName);
-        if (itId < 1 || itId > TOTAL_ITEM_COUNT) {
+        if (GetItemRegistryIndex(itId) == -1) {
             SendClientMessage(playerid, COL_RED, "  [Error] Nama barang tidak valid! Buka /inv untuk melihat nama barang.");
             return 1;
         }
@@ -745,7 +734,7 @@ CMD:giveitem(playerid, params[]) {
 
     new targetid, itemName[32], amount;
     if (sscanf(params, "us[32]I(1)", targetid, itemName, amount)) {
-        SendClientMessage(playerid, COL_ORANGE, "  [Admin] Gunakan: /giveitem [Player ID / Nama] [Nama Barang / ID (1 - 36)] [Jumlah]");
+        SendClientMessage(playerid, COL_ORANGE, "  [Admin] Gunakan: /giveitem [Player ID / Nama] [Nama Barang / ID] [Jumlah]");
         SendClientMessage(playerid, COL_GREY,   "  * Contoh: /giveitem 0 Burger 5 atau /giveitem 0 FirstAid 2");
         return 1;
     }
@@ -758,8 +747,8 @@ CMD:giveitem(playerid, params[]) {
     new itId = GetItemIDByName(itemName);
     if (itId <= 0) {
         itId = strval(itemName);
-        if (itId < 1 || itId > TOTAL_ITEM_COUNT) {
-            SendClientMessage(playerid, COL_RED, "  [Error] Nama atau ID barang tidak valid (ID: 1 - 36)!");
+        if (GetItemRegistryIndex(itId) == -1) {
+            SendClientMessage(playerid, COL_RED, "  [Error] Nama atau ID barang tidak valid!");
             return 1;
         }
     }

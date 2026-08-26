@@ -52,53 +52,26 @@
 // ============================================================
 //  Item ID Constants (Legal, Makanan, Minuman, Medis, Dokumen)
 // ============================================================
-// 1. Makanan Utama (1 - 14)
+// 1. Makanan (1 - 3)
 #define ITEM_BURGER             1
-#define ITEM_CHEESEBURGER       2
-#define ITEM_HOTDOG             3
-#define ITEM_PIZZA              4
-#define ITEM_SANDWICH           5
-#define ITEM_TACO               6
-#define ITEM_BURRITO            7
-#define ITEM_FRIED_CHICKEN      8
-#define ITEM_FRENCH_FRIES       9
-#define ITEM_DONUT              10
-#define ITEM_INSTANT_NOODLE     11
-#define ITEM_FRIED_RICE         12
-#define ITEM_AYAM_GORENG        13
-#define ITEM_SATE               14
+#define ITEM_HOTDOG             2
+#define ITEM_PIZZA              3
 
-// 2. Snack (15 - 22)
-#define ITEM_POTATO_CHIPS       15
-#define ITEM_CHOCOLATE          16
-#define ITEM_CANDY              17
-#define ITEM_BISCUIT            18
-#define ITEM_BREAD              19
-#define ITEM_POPCORN            20
-#define ITEM_PEANUTS            21
-#define ITEM_ICE_CREAM          22
+// 2. Minuman (4 - 6)
+#define ITEM_MINERAL_WATER      4
+#define ITEM_COLA               5
+#define ITEM_MILKSHAKE          6
 
-// 3. Minuman (23 - 31)
-#define ITEM_MINERAL_WATER      23
-#define ITEM_SODA               24
-#define ITEM_COLA               25
-#define ITEM_ORANGE_JUICE       26
-#define ITEM_COFFEE             27
-#define ITEM_TEA                28
-#define ITEM_ENERGY_DRINK       29
-#define ITEM_MILK               30
-#define ITEM_MILKSHAKE          31
+// 3. Medical / Pemulihan HP (7 - 9)
+#define ITEM_BANDAGE            7
+#define ITEM_MEDKIT             8
+#define ITEM_FIRST_AID          9
 
-// 4. Medical / Pemulihan HP (32 - 34)
-#define ITEM_BANDAGE            32
-#define ITEM_MEDKIT             33
-#define ITEM_FIRST_AID          34
+// 4. Dokumen & Perlengkapan (10 - 11)
+#define ITEM_PHONE              10
+#define ITEM_KTP                11
 
-// 5. Dokumen & Perlengkapan (35 - 36)
-#define ITEM_PHONE              35
-#define ITEM_KTP                36
-
-#define TOTAL_ITEM_COUNT        36
+#define TOTAL_ITEM_COUNT        11
 
 // Status Kendaraan Pribadi
 #define VEH_STATUS_OUTSIDE      0   // Terparkir di Luar (Dunia Game)

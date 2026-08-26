@@ -108,6 +108,8 @@ public OnGameModeInit() {
     AddPlayerClass(0, SPAWN_BUS_X, SPAWN_BUS_Y, SPAWN_BUS_Z, SPAWN_BUS_A, 0, 0, 0, 0, 0, 0);
 
     DB_InitDatabase();
+    Inventory_LoadItemsFromDB();
+    Dealership_LoadDataFromDB();
     InitVoiceSystem();
     InitBuildings();
 

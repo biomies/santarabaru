@@ -17,159 +17,110 @@ enum E_DEALER_VEHICLE {
     d_Seats
 };
 
-//    1. Mobil Sport, Tuners & Supercar (24 Kendaraan)         
-new const gSportVehicles[][E_DEALER_VEHICLE] = {
-    {411, "Infernus",       "Supercar V12 Top",     750000000, 240, 2},
-    {451, "Turismo",        "Supercar Italia",      680000000, 235, 2},
-    {541, "Bullet",         "Supercar Balap",       580000000, 230, 2},
-    {415, "Cheetah",        "Supercar Klasik",      520000000, 225, 2},
-    {429, "Banshee",        "Roadster Sport V10",   450000000, 220, 2},
-    {506, "Super GT",       "Grand Tourer V8",      480000000, 225, 2},
-    {477, "ZR-350",         "Rotary Sport Coupe",   260000000, 210, 2},
-    {480, "Comet",          "Convertible Sport",    380000000, 215, 2},
-    {402, "Buffalo",        "Modern Muscle V8",     240000000, 205, 2},
-    {602, "Alpha",          "Luxury Sport Coupe",   290000000, 210, 2},
-    {603, "Phoenix",        "Classic Muscle V8",    230000000, 200, 2},
-    {587, "Euros",          "Touring Sport Coupe",  220000000, 200, 2},
-    {560, "Sultan",         "Sedan Sport 4-Pintu",  320000000, 210, 4},
-    {562, "Elegy",          "Drift King Tuner",     290000000, 205, 2},
-    {559, "Jester",         "Tuner Sport Coupe",    275000000, 200, 2},
-    {565, "Flash",          "Hatchback Sport",      210000000, 195, 2},
-    {558, "Uranus",         "Street Tuner Coupe",   200000000, 190, 2},
-    {561, "Stratum",        "Sport Station Wagon",  185000000, 185, 4},
-    {494, "Hotring Racer",  "NASCAR Track Racer",   600000000, 245, 2},
-    {502, "Hotring Racer A","NASCAR Track Racer A", 600000000, 245, 2},
-    {503, "Hotring Racer B","NASCAR Track Racer B", 600000000, 245, 2},
-    {555, "Windsor",        "Luxury Convertible",   310000000, 190, 2},
-    {589, "Club",           "Compact Sport",        160000000, 185, 2},
-    {434, "Hotknife",       "Custom Hot Rod",       420000000, 200, 2}
-};
+#define MAX_DEALER_VEHICLES_PER_CAT 64
+#define MAX_DEALER_COLORS           32
 
-//    2. Mobil Sedan, Klasik & Lowrider (46 Kendaraan)         
-new const gSedanVehicles[][E_DEALER_VEHICLE] = {
-    {426, "Premier",        "Sedan Harian Tangguh",  95000000, 190, 4},
-    {405, "Sentinel",       "Sedan Eksekutif Mewah",140000000, 190, 4},
-    {421, "Washington",     "Sedan Pejabat Berkelas",165000000, 185, 4},
-    {445, "Admiral",        "Sedan Klasik Eropa",   110000000, 180, 4},
-    {507, "Elegant",        "Sedan Nyaman Elegan",  135000000, 185, 4},
-    {551, "Merit",          "Sedan Menengah Modern",105000000, 180, 4},
-    {550, "Sunrise",        "Sedan Keluarga Irit",   98000000, 175, 4},
-    {580, "Stafford",       "Vintage Royal Luxury", 340000000, 175, 4},
-    {585, "Emperor",        "Sedan Klasik Nyaman",   88000000, 170, 4},
-    {540, "Vincent",        "Sedan Kompak Harian",   78000000, 165, 4},
-    {546, "Intruder",       "Sedan 4-Pintu Sporty",  82000000, 170, 4},
-    {547, "Primo",          "Sedan Standar Murah",   65000000, 160, 4},
-    {516, "Nebula",         "Sedan Keluarga Santai", 72000000, 165, 4},
-    {529, "Willard",        "Sedan Komuter Kota",    68000000, 160, 4},
-    {492, "Greenwood",      "Sedan Retro Klasik",    75000000, 165, 4},
-    {466, "Glendale",       "Sedan Vintage 1960s",   55000000, 155, 4},
-    {467, "Oceanic",        "Sedan Klasik Elegan",   62000000, 160, 4},
-    {474, "Hermes",         "Lead Sled Custom",     120000000, 160, 2},
-    {567, "Savanna",        "Lowrider 4-Pintu",     175000000, 185, 4},
-    {566, "Tahoma",         "Lowrider Sedan Mewah",  85000000, 175, 4},
-    {536, "Blade",          "Lowrider Coupe V8",    160000000, 190, 2},
-    {534, "Remington",      "Luxury Lowrider Coupe",195000000, 185, 2},
-    {535, "Slamvan",        "Custom Lowrider Truck",180000000, 180, 2},
-    {412, "Voodoo",         "Lowrider Klasik V8",   130000000, 180, 2},
-    {575, "Broadway",       "Vintage Convertible",  150000000, 170, 2},
-    {576, "Tornado",        "Classic Lowrider 50s", 115000000, 170, 2},
-    {545, "Hustler",        "1930s Gangster Coupe", 210000000, 165, 2},
-    {527, "Cadrona",        "Coupe 2-Pintu Murah",   58000000, 165, 2},
-    {526, "Fortune",        "Coupe Nyaman 2-Pintu",  64000000, 170, 2},
-    {517, "Majestic",       "Sedan Coupe Klasik",    69000000, 170, 2},
-    {518, "Buccaneer",      "Muscle Coupe Klasik",   85000000, 175, 2},
-    {419, "Esperanto",      "Sedan Retro Mewah",     76000000, 165, 2},
-    {533, "Feltzer",        "Roadster Klasik Elegan",145000000, 180, 2},
-    {542, "Clover",         "Muscle Car Murah",      52000000, 175, 2},
-    {549, "Tampa",          "Classic Muscle Coupe",  70000000, 170, 2},
-    {491, "Virgo",          "Coupe Retro Nyaman",    66000000, 165, 2},
-    {475, "Sabre",          "Street Muscle V8",     110000000, 185, 2},
-    {439, "Stallion",       "Convertible Muscle",   125000000, 185, 2},
-    {436, "Previon",        "Coupe Irit Praktis",    48000000, 160, 2},
-    {401, "Bravura",        "Coupe Pemula Murah",    42000000, 155, 2},
-    {410, "Manana",         "Hatchback Klasik",      38000000, 145, 2},
-    {496, "Blista Compact", "Hatchback Lincah Irit", 70000000, 175, 2},
-    {404, "Perennial",      "Station Wagon Murah",   45000000, 145, 4},
-    {479, "Regina",         "Station Wagon Klasik",  56000000, 155, 4},
-    {458, "Solair",         "Station Wagon Nyaman",  74000000, 165, 4},
-    {418, "Moonbeam",       "Minivan Keluarga Luas", 60000000, 145, 4}
-};
+new gSportVehicles[MAX_DEALER_VEHICLES_PER_CAT][E_DEALER_VEHICLE];
+new gSedanVehicles[MAX_DEALER_VEHICLES_PER_CAT][E_DEALER_VEHICLE];
+new gSuvVehicles[MAX_DEALER_VEHICLES_PER_CAT][E_DEALER_VEHICLE];
+new gBikeVehicles[MAX_DEALER_VEHICLES_PER_CAT][E_DEALER_VEHICLE];
 
-//    3. SUV, Pick-up & Off-Road (23 Kendaraan)                
-new const gSuvVehicles[][E_DEALER_VEHICLE] = {
-    {579, "Huntley",        "Luxury Premium SUV",   350000000, 180, 4},
-    {400, "Landstalker",    "SUV Keluarga Tangguh", 180000000, 170, 4},
-    {489, "Rancher",        "SUV Off-Road 4x4",     140000000, 160, 2},
-    {505, "Rancher Lure",   "Special Off-Road 4x4", 160000000, 165, 2},
-    {500, "Mesa",           "Open-Top Jeep 4x4",    125000000, 155, 2},
-    {422, "Bobcat",         "Pick-up Klasik",        65000000, 155, 2},
-    {478, "Walton",         "Vintage Farm Pick-up",  45000000, 140, 2},
-    {543, "Sadler",         "Pekerja Keras Tangguh", 48000000, 145, 2},
-    {554, "Yosemite",       "Heavy-Duty Pick-up",   110000000, 165, 2},
-    {495, "Sandking",       "Dakar Rally Raid 4x4", 390000000, 185, 2},
-    {568, "Bandito",        "Desert Buggy Rail",    135000000, 170, 1},
-    {424, "BF Injection",   "Beach Dune Buggy",      90000000, 160, 2},
-    {571, "Kart",           "Mini Gokart Balap",     35000000, 120, 1},
-    {572, "Mower",          "Traktor Rumput Lucu",   18000000,  80, 1},
-    {483, "Camper",         "Hippie Camper Van",    115000000, 140, 3},
-    {508, "Journey",        "Motorhome Keluarga",   160000000, 130, 2},
-    {482, "Burrito",        "Van Kargo Modern",      95000000, 165, 4},
-    {413, "Pony",           "Van Pekerja Serbaguna", 70000000, 150, 4},
-    {440, "Rumpo",          "Van Komersil Luas",     80000000, 155, 4},
-    {459, "Berkleys RC Van","Van Ekspedisi Kurir",   85000000, 155, 4},
-    {499, "Benson",         "Truk Box Logistik",    130000000, 135, 2},
-    {609, "Boxville",       "Truk Box Paket",       120000000, 130, 2},
-    {414, "Mule",           "Truk Distribusi Usaha",105000000, 125, 2}
-};
+new gSportVehicleCount = 0;
+new gSedanVehicleCount = 0;
+new gSuvVehicleCount   = 0;
+new gBikeVehicleCount  = 0;
 
-//    4. Sepeda Motor, Skuter & Sepeda (12 Kendaraan)          
-new const gBikeVehicles[][E_DEALER_VEHICLE] = {
-    {522, "NRG-500",        "Superbike Balap 500cc",380000000, 220, 2},
-    {521, "FCR-900",        "Naked Sport 900cc",    195000000, 195, 2},
-    {461, "PCJ-600",        "Sport Street 600cc",   130000000, 185, 2},
-    {463, "Freeway",        "Cruiser Touring V-Twin",110000000, 175, 2},
-    {586, "Wayfarer",       "Touring Klasik Amerika", 95000000, 170, 2},
-    {468, "Sanchez",        "Dirt Trail Enduro",     75000000, 165, 2},
-    {471, "Quad",           "All-Terrain Quad 4-Roda",55000000, 140, 2},
-    {462, "Faggio",         "Skuter Matic Irit",     18000000, 110, 2},
-    {448, "Pizzaboy",       "Skuter Delivery Cepat", 22000000, 115, 1},
-    {510, "Mountain Bike",  "Sepeda Gunung Suspensi", 8500000,  65, 1},
-    {481, "BMX",            "Sepeda Freestyle BMX",   6500000,  60, 1},
-    {509, "Bike",           "Sepeda Santai Kota",     4500000,  50, 1}
-};
+new gDealerColors[MAX_DEALER_COLORS];
+new gDealerColorNames[MAX_DEALER_COLORS][24];
+new gDealerColorCount = 0;
 
-//    5. Pilihan Warna Cat Showroom (20 Warna Premium)        
-new const gDealerColors[] = {
-    1,   // Solid Pure White
-    0,   // Midnight Jet Black
-    3,   // Torchfire Crimson Red
-    6,   // Racing Sunburst Yellow
-    79,  // Electric Sapphire Blue
-    86,  // Emerald British Racing Green
-    64,  // Sunset Tangerine Orange
-    148, // Velvet Royal Purple
-    25,  // Silver Chrome Metallic
-    134, // Liquid Gunmetal Grey
-    151, // Arctic Ice Aqua Blue
-    139, // Rose Gold Blush Pink
-    130, // Platinum Titanium Silver
-    75,  // Deep Indigo Navy Blue
-    141, // Midnight Bordeaux Maroon
-    144, // Forest Camo Dark Olive
-    138, // Warm Champagne Gold
-    129, // Slate Steel Charcoal
-    158, // Hot Neon Fuchsia Pink
-    135  // Mocha Bronze Metallic
-};
-#define DEALER_COLOR_COUNT (sizeof(gDealerColors))
+#define DEALER_COLOR_COUNT (gDealerColorCount > 0 ? gDealerColorCount : 20)
 
-new const gDealerColorNames[][24] = {
-    "Pure White", "Jet Black", "Crimson Red", "Sunburst Yellow",
-    "Sapphire Blue", "Racing Green", "Tangerine Orange", "Royal Purple",
-    "Silver Chrome", "Gunmetal Grey", "Arctic Aqua", "Rose Gold",
-    "Platinum Silver", "Navy Blue", "Bordeaux Maroon", "Dark Olive",
-    "Champagne Gold", "Steel Charcoal", "Neon Fuchsia", "Mocha Bronze"
-};
+stock Dealership_LoadDataFromDB() {
+    gSportVehicleCount = 0;
+    gSedanVehicleCount = 0;
+    gSuvVehicleCount   = 0;
+    gBikeVehicleCount  = 0;
+    gDealerColorCount  = 0;
+
+    // 1. Load Vehicles from santara_master.db
+    new DBResult:resVeh = DB_ExecuteQuery(gDB_Master, "SELECT `model_id`, `name`, `description`, `category`, `price`, `top_speed`, `seats` FROM `dealership_vehicles` ORDER BY `id` ASC");
+    if (resVeh) {
+        new rowCount = DB_GetRowCount(resVeh);
+        for (new i = 0; i < rowCount; i++) {
+            new cat = DB_GetFieldIntByName(resVeh, "category");
+            switch (cat) {
+                case DEALER_CAT_SPORT: {
+                    if (gSportVehicleCount < MAX_DEALER_VEHICLES_PER_CAT) {
+                        new idx = gSportVehicleCount;
+                        gSportVehicles[idx][d_ModelID]  = DB_GetFieldIntByName(resVeh, "model_id");
+                        DB_GetFieldStringByName(resVeh, "name", gSportVehicles[idx][d_Name], 28);
+                        DB_GetFieldStringByName(resVeh, "description", gSportVehicles[idx][d_Type], 28);
+                        gSportVehicles[idx][d_Price]    = DB_GetFieldIntByName(resVeh, "price");
+                        gSportVehicles[idx][d_TopSpeed] = DB_GetFieldIntByName(resVeh, "top_speed");
+                        gSportVehicles[idx][d_Seats]    = DB_GetFieldIntByName(resVeh, "seats");
+                        gSportVehicleCount++;
+                    }
+                }
+                case DEALER_CAT_SEDAN: {
+                    if (gSedanVehicleCount < MAX_DEALER_VEHICLES_PER_CAT) {
+                        new idx = gSedanVehicleCount;
+                        gSedanVehicles[idx][d_ModelID]  = DB_GetFieldIntByName(resVeh, "model_id");
+                        DB_GetFieldStringByName(resVeh, "name", gSedanVehicles[idx][d_Name], 28);
+                        DB_GetFieldStringByName(resVeh, "description", gSedanVehicles[idx][d_Type], 28);
+                        gSedanVehicles[idx][d_Price]    = DB_GetFieldIntByName(resVeh, "price");
+                        gSedanVehicles[idx][d_TopSpeed] = DB_GetFieldIntByName(resVeh, "top_speed");
+                        gSedanVehicles[idx][d_Seats]    = DB_GetFieldIntByName(resVeh, "seats");
+                        gSedanVehicleCount++;
+                    }
+                }
+                case DEALER_CAT_SUV: {
+                    if (gSuvVehicleCount < MAX_DEALER_VEHICLES_PER_CAT) {
+                        new idx = gSuvVehicleCount;
+                        gSuvVehicles[idx][d_ModelID]  = DB_GetFieldIntByName(resVeh, "model_id");
+                        DB_GetFieldStringByName(resVeh, "name", gSuvVehicles[idx][d_Name], 28);
+                        DB_GetFieldStringByName(resVeh, "description", gSuvVehicles[idx][d_Type], 28);
+                        gSuvVehicles[idx][d_Price]    = DB_GetFieldIntByName(resVeh, "price");
+                        gSuvVehicles[idx][d_TopSpeed] = DB_GetFieldIntByName(resVeh, "top_speed");
+                        gSuvVehicles[idx][d_Seats]    = DB_GetFieldIntByName(resVeh, "seats");
+                        gSuvVehicleCount++;
+                    }
+                }
+                case DEALER_CAT_BIKE: {
+                    if (gBikeVehicleCount < MAX_DEALER_VEHICLES_PER_CAT) {
+                        new idx = gBikeVehicleCount;
+                        gBikeVehicles[idx][d_ModelID]  = DB_GetFieldIntByName(resVeh, "model_id");
+                        DB_GetFieldStringByName(resVeh, "name", gBikeVehicles[idx][d_Name], 28);
+                        DB_GetFieldStringByName(resVeh, "description", gBikeVehicles[idx][d_Type], 28);
+                        gBikeVehicles[idx][d_Price]    = DB_GetFieldIntByName(resVeh, "price");
+                        gBikeVehicles[idx][d_TopSpeed] = DB_GetFieldIntByName(resVeh, "top_speed");
+                        gBikeVehicles[idx][d_Seats]    = DB_GetFieldIntByName(resVeh, "seats");
+                        gBikeVehicleCount++;
+                    }
+                }
+            }
+            DB_SelectNextRow(resVeh);
+        }
+        DB_FreeResultSet(resVeh);
+    }
+
+    // 2. Load Colors from santara_master.db
+    new DBResult:resCol = DB_ExecuteQuery(gDB_Master, "SELECT `color_id`, `name` FROM `dealership_colors` ORDER BY `id` ASC");
+    if (resCol) {
+        new colCount = DB_GetRowCount(resCol);
+        for (new i = 0; i < colCount && i < MAX_DEALER_COLORS; i++) {
+            gDealerColors[i] = DB_GetFieldIntByName(resCol, "color_id");
+            DB_GetFieldStringByName(resCol, "name", gDealerColorNames[i], 24);
+            gDealerColorCount++;
+            DB_SelectNextRow(resCol);
+        }
+        DB_FreeResultSet(resCol);
+    }
+
+    printf("[Dealership] Sukses memuat %d Sport, %d Sedan, %d SUV, %d Motor, dan %d Warna dari santara_master.db ke RAM.",
+        gSportVehicleCount, gSedanVehicleCount, gSuvVehicleCount, gBikeVehicleCount, gDealerColorCount);
+    return 1;
+}
 
 // Colors from Reference Design
 #define COLOR_DEALER_BG       0x1E1E2EFF  // Dark Indigo Background
@@ -192,10 +143,10 @@ new PlayerText:TD_DealerCancelBtn[MAX_PLAYERS] = {PlayerText:INVALID_TEXT_DRAW, 
 
 stock GetDealerCategoryCount(cat) {
     switch (cat) {
-        case DEALER_CAT_SPORT: return sizeof(gSportVehicles);
-        case DEALER_CAT_SEDAN: return sizeof(gSedanVehicles);
-        case DEALER_CAT_SUV:   return sizeof(gSuvVehicles);
-        case DEALER_CAT_BIKE:  return sizeof(gBikeVehicles);
+        case DEALER_CAT_SPORT: return gSportVehicleCount;
+        case DEALER_CAT_SEDAN: return gSedanVehicleCount;
+        case DEALER_CAT_SUV:   return gSuvVehicleCount;
+        case DEALER_CAT_BIKE:  return gBikeVehicleCount;
     }
     return 0;
 }
@@ -213,7 +164,7 @@ stock GetDealerCategoryName(cat, name[], len = 32) {
 stock GetDealerVehicleData(cat, idx, &modelid, name[], type[], &price, &topspeed, &seats) {
     switch (cat) {
         case DEALER_CAT_SPORT: {
-            if (idx < 0 || idx >= sizeof(gSportVehicles)) idx = 0;
+            if (idx < 0 || idx >= gSportVehicleCount) idx = 0;
             modelid  = gSportVehicles[idx][d_ModelID];
             format(name, 28, "%s", gSportVehicles[idx][d_Name]);
             format(type, 28, "%s", gSportVehicles[idx][d_Type]);
@@ -222,7 +173,7 @@ stock GetDealerVehicleData(cat, idx, &modelid, name[], type[], &price, &topspeed
             seats    = gSportVehicles[idx][d_Seats];
         }
         case DEALER_CAT_SEDAN: {
-            if (idx < 0 || idx >= sizeof(gSedanVehicles)) idx = 0;
+            if (idx < 0 || idx >= gSedanVehicleCount) idx = 0;
             modelid  = gSedanVehicles[idx][d_ModelID];
             format(name, 28, "%s", gSedanVehicles[idx][d_Name]);
             format(type, 28, "%s", gSedanVehicles[idx][d_Type]);
@@ -231,7 +182,7 @@ stock GetDealerVehicleData(cat, idx, &modelid, name[], type[], &price, &topspeed
             seats    = gSedanVehicles[idx][d_Seats];
         }
         case DEALER_CAT_SUV: {
-            if (idx < 0 || idx >= sizeof(gSuvVehicles)) idx = 0;
+            if (idx < 0 || idx >= gSuvVehicleCount) idx = 0;
             modelid  = gSuvVehicles[idx][d_ModelID];
             format(name, 28, "%s", gSuvVehicles[idx][d_Name]);
             format(type, 28, "%s", gSuvVehicles[idx][d_Type]);
@@ -240,7 +191,7 @@ stock GetDealerVehicleData(cat, idx, &modelid, name[], type[], &price, &topspeed
             seats    = gSuvVehicles[idx][d_Seats];
         }
         case DEALER_CAT_BIKE: {
-            if (idx < 0 || idx >= sizeof(gBikeVehicles)) idx = 0;
+            if (idx < 0 || idx >= gBikeVehicleCount) idx = 0;
             modelid  = gBikeVehicles[idx][d_ModelID];
             format(name, 28, "%s", gBikeVehicles[idx][d_Name]);
             format(type, 28, "%s", gBikeVehicles[idx][d_Type]);
@@ -560,10 +511,10 @@ stock ShowDealerCatDialog(playerid) {
         " Mobil Sedan & Klasik\t(%d Unit)\n" \
         "  SUV, Pick-up & Off-Road\t(%d Unit)\n" \
         "   Sepeda Motor & Skuter\t(%d Unit)",
-        sizeof(gSportVehicles),
-        sizeof(gSedanVehicles),
-        sizeof(gSuvVehicles),
-        sizeof(gBikeVehicles));
+        gSportVehicleCount,
+        gSedanVehicleCount,
+        gSuvVehicleCount,
+        gBikeVehicleCount);
 
     ShowPlayerDialog(playerid, DLG_DEALER_CAT, DIALOG_STYLE_LIST,
         "{5814EE}Pilih Kategori Kendaraan Dealership",

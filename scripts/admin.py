@@ -10,7 +10,19 @@ import sqlite3
 import socket
 import struct
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "server", "scriptfiles", "santara_rp.db")
+def get_db_path():
+    possible_paths = [
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "server", "scriptfiles", "santara_players.db"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "scriptfiles", "santara_players.db"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "server", "scriptfiles", "santara_players.db"),
+        "/root/SantaraBaru/server/scriptfiles/santara_players.db"
+    ]
+    for p in possible_paths:
+        if os.path.exists(p):
+            return p
+    return possible_paths[0]
+
+DB_PATH = get_db_path()
 RCON_PASS = "SantaraRcon@2024"
 RCON_PORT = 50034
 

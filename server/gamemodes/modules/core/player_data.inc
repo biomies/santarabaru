@@ -98,7 +98,8 @@ enum E_PLAYER_DATA {
 
 new gPlayerData[MAX_PLAYERS][E_PLAYER_DATA];
 new gCharListNames[MAX_PLAYERS][MAX_CHARS_PER_ACCOUNT][48];
-new DB:gDB;                     // open.mp native DB handle
+new DB:gDB;                     // open.mp native DB handle (santara_players.db)
+new DB:gDB_Master;              // open.mp native DB handle (santara_master.db)
 new bool:gVoiceEnabled;         // SAMPVOICE terinisialisasi?
 new gPlayTimeTimer;             // Timer untuk hitung waktu bermain
 

@@ -37,7 +37,7 @@ new PlayerText:TD_StatusTxtHunger[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW,
 stock GetPlayerJobName(playerid, jobName[], len = 32) {
     new query[128];
     format(query, sizeof(query), "SELECT `name` FROM `jobs` WHERE `id` = %d LIMIT 1", gPlayerData[playerid][p_Job]);
-    new DBResult:res = DB_ExecuteQuery(gDB, query);
+    new DBResult:res = DB_ExecuteQuery(gDB_Master, query);
     if (res && DB_GetRowCount(res) > 0) {
         DB_GetFieldStringByName(res, "name", jobName, len);
         DB_FreeResultSet(res);

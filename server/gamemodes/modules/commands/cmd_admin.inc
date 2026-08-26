@@ -805,10 +805,10 @@ CMD:setjob(playerid, params[]) {
         return 1;
     }
 
-    // Cek apakah job_id ada di tabel jobs
+    // Cek apakah job_id ada di tabel jobs di santara_master.db
     new qCheck[128], jName[32];
     format(qCheck, sizeof(qCheck), "SELECT `name` FROM `jobs` WHERE `id`=%d LIMIT 1", jobid);
-    new DBResult:res = DB_ExecuteQuery(gDB, qCheck);
+    new DBResult:res = DB_ExecuteQuery(gDB_Master, qCheck);
     if (!res || DB_GetRowCount(res) == 0) {
         if (res) DB_FreeResultSet(res);
         SendClientMessage(playerid, COL_RED, "  [Error] Job ID tersebut tidak terdaftar di database jobs!");
