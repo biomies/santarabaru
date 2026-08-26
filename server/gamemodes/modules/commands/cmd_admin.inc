@@ -733,8 +733,8 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_ADMIN_TP_BURGER_SHOT, DIALOG_STYLE_TABLIST_HEADERS,
                     "{FFA500}Pilih Teleport Cabang Burger Shot", bsListStr, "Teleport", "Kembali");
             }
-            case 3: { // Burger Shot Interior Kasir & Dapur
-                AdminTeleportToPos(playerid, BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z, 0.0, BURGER_SHOT_INT_ID, 0, "Interior Kasir Restoran Burger Shot (Int: 10)");
+            case 3: { // Burger Shot Interior Kasir & Dapur (Default Cabang Marina LS VW: 101)
+                AdminTeleportToPos(playerid, BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z, 0.0, BURGER_SHOT_INT_ID, BURGER_SHOT_VW_BASE, "Interior Kasir Restoran Burger Shot (VW: 101)");
             }
             case 4: { // Coutt and Schutz Showroom
                 AdminTeleportToPos(playerid, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 90.0, 0, 0, "Coutt and Schutz Auto Showroom (Los Santos)");

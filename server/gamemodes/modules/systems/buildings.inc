@@ -75,22 +75,22 @@ stock InitBuildings() {
     }
 
     // ─── 3. Interior Restoran Burger Shot (Interior ID 10) ───
-    // Pintu Keluar Interior Burger Shot
-    CreatePickup(1318, 1, BURGER_SHOT_INT_X, BURGER_SHOT_INT_Y, BURGER_SHOT_INT_Z, 0);
+    // Pintu Keluar Interior Burger Shot (VW -1 agar berlaku untuk semua dimensi cabang)
+    CreatePickup(1318, 1, BURGER_SHOT_INT_X, BURGER_SHOT_INT_Y, BURGER_SHOT_INT_Z, -1);
     Create3DTextLabel(
         "{FFA500}[ PINTU KELUAR ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} untuk keluar ke kota",
         0xFFFFFFFF,
         BURGER_SHOT_INT_X, BURGER_SHOT_INT_Y, BURGER_SHOT_INT_Z + 0.5,
-        12.0, 0, false
+        12.0, -1, false
     );
 
-    // Kasir & Loket Pemesanan Makanan / Minuman
-    CreatePickup(1239, 1, BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z, 0);
+    // Kasir & Loket Pemesanan Makanan / Minuman (VW -1 agar berlaku untuk semua dimensi cabang)
+    CreatePickup(1239, 1, BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z, -1);
     Create3DTextLabel(
         "{FFA500}[ KASIR BURGER SHOT ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} atau ketik {FFFF00}/buy{FFFFFF}\n{AAAAAA}Untuk memesan makanan & minuman",
         0xFFFFFFFF,
         BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z + 0.5,
-        10.0, 0, false
+        10.0, -1, false
     );
 }
 
@@ -158,7 +158,9 @@ stock HandleBuildingKeys(playerid, KEY:newkeys, KEY:oldkeys) {
                     gPlayerData[playerid][p_LastExtA]  = gBurgerShots[i][bs_A];
                     gPlayerData[playerid][p_LastExtVW] = GetPlayerVirtualWorld(playerid);
 
+                    // Setiap cabang dialokasikan Virtual World uniknya sendiri (101 - 110)
                     SetPlayerInterior(playerid, BURGER_SHOT_INT_ID);
+                    SetPlayerVirtualWorld(playerid, BURGER_SHOT_VW_BASE + i);
                     SetPlayerPos(playerid, BURGER_SHOT_INT_X, BURGER_SHOT_INT_Y, BURGER_SHOT_INT_Z);
                     SetPlayerFacingAngle(playerid, BURGER_SHOT_INT_A);
                     SetCameraBehindPlayer(playerid);

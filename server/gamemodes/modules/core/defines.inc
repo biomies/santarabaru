@@ -69,6 +69,9 @@
 #define BURGER_SHOT_COUNTER_Y   -67.5000
 #define BURGER_SHOT_COUNTER_Z   1001.5000
 
+// Virtual World terpisah untuk masing-masing cabang restoran (101 - 110)
+#define BURGER_SHOT_VW_BASE     101
+
 // ============================================================
 //  Item ID Constants (Legal, Makanan, Minuman, Medis, Dokumen)
 // ============================================================
