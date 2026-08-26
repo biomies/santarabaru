@@ -292,6 +292,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
     if (HandleVehicleMenuDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleInsuranceDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleGPSDialog(playerid, dialogid, response, listitem)) return 1;
+    if (HandleBurgerShotDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleAdminTeleportDialog(playerid, dialogid, response, listitem)) return 1;
     return 1;
 }

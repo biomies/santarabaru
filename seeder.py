@@ -377,6 +377,31 @@ def set_veh_price(model_or_name, new_price):
     conn.close()
     print(f"{GREEN}[✓] Berhasil mengubah harga kendaraan '{model_or_name}' menjadi: {BOLD}{format_rupiah(new_price)}{RESET}")
 
+def get_players_db_path():
+    possible_paths = [
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "server", "scriptfiles", "santara_players.db"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "scriptfiles", "santara_players.db"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "server", "scriptfiles", "santara_players.db"),
+        "/root/SantaraBaru/server/scriptfiles/santara_players.db"
+    ]
+    for p in possible_paths:
+        if os.path.exists(p):
+            return p
+    return possible_paths[0]
+
+def wipe_inventory():
+    p_path = get_players_db_path()
+    if not os.path.exists(p_path):
+        print(f"{RED}[Error] Database santara_players.db tidak ditemukan di: {p_path}{RESET}")
+        return
+    conn = sqlite3.connect(p_path)
+    cur = conn.cursor()
+    cur.execute("DELETE FROM inventory;")
+    cur.execute("DELETE FROM vehicle_trunk;")
+    conn.commit()
+    conn.close()
+    print(f"{GREEN}[✓] Sukses mengosongkan seluruh isi inventory pemain dan vehicle_trunk di {p_path}.{RESET}")
+
 def show_help():
     print(f"""
 {BOLD}{CYAN}SantaraBaru — Database Master Seeder & Manager Tool{RESET}
@@ -389,10 +414,12 @@ def show_help():
   {GREEN}python3 seeder.py items{RESET}                            Lihat daftar barang & harga
   {GREEN}python3 seeder.py jobs{RESET}                             Lihat daftar pekerjaan & gaji
   {GREEN}python3 seeder.py set-price [model/nama] [harga_baru]{RESET} Ubah harga mobil di Showroom
+  {GREEN}python3 seeder.py clear-inv{RESET}                        Bersihkan seluruh inventory pemain & bagasi mobil
 
 {BOLD}CONTOH:{RESET}
   python3 seeder.py vehicles 0              (Lihat hanya mobil sport)
   python3 seeder.py set-price Infernus 800000000
+  python3 seeder.py clear-inv               (Wipe semua inventory & bagasi)
     """)
 
 def main():
@@ -413,6 +440,8 @@ def main():
         list_items()
     elif cmd in ["jobs", "job", "list-jobs"]:
         list_jobs()
+    elif cmd in ["clear-inv", "clear-trunks", "wipe-items", "wipe-inventory", "clear-inventory"]:
+        wipe_inventory()
     elif cmd in ["set-price", "setprice", "setvehprice"]:
         if len(sys.argv) < 4:
             print(f"{RED}[Error] Format: python3 seeder.py set-price [model/nama] [harga_baru]{RESET}")

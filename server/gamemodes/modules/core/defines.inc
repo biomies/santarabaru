@@ -32,12 +32,15 @@
 #define DLG_VEH_ACTION          31
 #define DLG_INSURANCE_MAIN      32
 #define DLG_INSURANCE_CONFIRM   33
+// GPS Dialogs
 #define DLG_GPS_MENU            40
 #define DLG_GPS_GARAGE          41
 #define DLG_GPS_INSURANCE       42
+#define DLG_GPS_BURGER_SHOT     43
 #define DLG_ADMIN_TELEPORT      50
 #define DLG_ADMIN_TP_INSURANCE  51
 #define DLG_ADMIN_TP_GARAGE     52
+#define DLG_ADMIN_TP_BURGER_SHOT 53
 
 // Inventory & Item Dialogs
 #define DLG_INV_MAIN            60
@@ -48,6 +51,23 @@
 #define DLG_TRUNK_TAKE_QTY      65
 #define DLG_TRUNK_STORE_QTY     66
 #define DLG_TRUNK_DROP_QTY      67
+
+// Restoran & Bisnis Dialogs
+#define DLG_BURGER_SHOT         70
+#define DLG_BURGER_SHOT_QTY     71
+
+// ============================================================
+//  Koordinat Gedung & Interior Restoran Burger Shot
+// ============================================================
+#define BURGER_SHOT_INT_ID      10
+#define BURGER_SHOT_INT_X       363.3857
+#define BURGER_SHOT_INT_Y       -74.7937
+#define BURGER_SHOT_INT_Z       1001.5078
+#define BURGER_SHOT_INT_A       315.0000
+
+#define BURGER_SHOT_COUNTER_X   376.5000
+#define BURGER_SHOT_COUNTER_Y   -67.5000
+#define BURGER_SHOT_COUNTER_Z   1001.5000
 
 // ============================================================
 //  Item ID Constants (Legal, Makanan, Minuman, Medis, Dokumen)

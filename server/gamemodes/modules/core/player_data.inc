@@ -93,7 +93,14 @@ enum E_PLAYER_DATA {
     p_Job,                      // 0 = Pengangguran
     //    Status Administrator Akun   
     p_AdminLevel,               // 0 = Player, 1 = Admin, 2 = Owner
-    bool:p_AdminDuty            // Status On-Duty Admin
+    bool:p_AdminDuty,           // Status On-Duty Admin
+    //    Status Interior & Eksterior Gedung   
+    Float:p_LastExtX,
+    Float:p_LastExtY,
+    Float:p_LastExtZ,
+    Float:p_LastExtA,
+    p_LastExtVW,
+    p_SelectedBuyItem
 }
 
 new gPlayerData[MAX_PLAYERS][E_PLAYER_DATA];
@@ -117,6 +124,12 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_Y]              = SPAWN_BUS_Y;
     gPlayerData[playerid][p_Z]              = SPAWN_BUS_Z;
     gPlayerData[playerid][p_A]              = SPAWN_BUS_A;
+    gPlayerData[playerid][p_LastExtX]       = 0.0;
+    gPlayerData[playerid][p_LastExtY]       = 0.0;
+    gPlayerData[playerid][p_LastExtZ]       = 0.0;
+    gPlayerData[playerid][p_LastExtA]       = 0.0;
+    gPlayerData[playerid][p_LastExtVW]      = 0;
+    gPlayerData[playerid][p_SelectedBuyItem]= 0;
     gPlayerData[playerid][p_Score]          = 1;
     gPlayerData[playerid][p_Cash]           = 500;
     gPlayerData[playerid][p_Hunger]         = 100.0;

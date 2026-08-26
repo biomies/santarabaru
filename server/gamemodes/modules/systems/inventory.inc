@@ -54,6 +54,14 @@ stock GetItemIDByName(const name[]) {
     return 0;
 }
 
+stock GetItemPriceByID(itemid) {
+    new idx = GetItemRegistryIndex(itemid);
+    if (idx != -1) {
+        return gItemRegistry[idx][item_Price];
+    }
+    return 0;
+}
+
 stock Inventory_LoadItemsFromDB() {
     gTotalRegisteredItems = 0;
     new DBResult:res = DB_ExecuteQuery(gDB_Master, "SELECT `id`, `name`, `category`, `hunger`, `thirst`, `health`, `is_full_heal`, `anim_lib`, `anim_name`, `price` FROM `items` ORDER BY `id` ASC");

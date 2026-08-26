@@ -696,11 +696,13 @@ stock AdminTeleportToPos(playerid, Float:x, Float:y, Float:z, Float:a = 0.0, int
 stock ShowAdminTeleportMenu(playerid) {
     if (!IsAdmin(playerid, 1)) return 0;
 
-    new menuStr[512];
+    new menuStr[768];
     format(menuStr, sizeof(menuStr),
         "Lokasi Fasilitas GPS\tWilayah & Keterangan\n" \
         "{33CCFF}[Balai Kota] Eksterior\t{FFFFFF}Pershing Square, Los Santos\n" \
         "{33CCFF}[Balai Kota] Interior Loket e-KTP\t{FFFFFF}Planning Department Interior\n" \
+        "{FFA500}[Burger Shot] 10 Cabang Eksterior\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
+        "{FFA500}[Burger Shot] Interior Kasir & Dapur\t{FFFFFF}Interior Restoran Burger Shot (Int: 10)\n" \
         "{00EEFF}[Showroom] Coutt & Schutz\t{FFFFFF}Rodeo / Market, Los Santos\n" \
         "{2ECC71}[Kantor Asuransi] 3 Kota\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
         "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos");
@@ -721,10 +723,23 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
             case 1: { // Loket KTP Interior
                 AdminTeleportToPos(playerid, KTP_DESK_X, KTP_DESK_Y, KTP_DESK_Z, KTP_DESK_A, KTP_DESK_INT_ID, KTP_DESK_VW_ID, "Loket Pembuatan e-KTP (Interior Balai Kota)");
             }
-            case 2: { // Coutt and Schutz Showroom
+            case 2: { // Burger Shot 10 Cabang Eksterior
+                new bsListStr[1024];
+                format(bsListStr, sizeof(bsListStr), "Nama Cabang Restoran\tKota / Wilayah\n");
+                for (new i = 0; i < BURGER_SHOT_COUNT; i++) {
+                    format(bsListStr, sizeof(bsListStr), "%s{FFFFFF}%s\t{FFA500}%s\n",
+                        bsListStr, gBurgerShots[i][bs_Name], gBurgerShots[i][bs_City]);
+                }
+                ShowPlayerDialog(playerid, DLG_ADMIN_TP_BURGER_SHOT, DIALOG_STYLE_TABLIST_HEADERS,
+                    "{FFA500}Pilih Teleport Cabang Burger Shot", bsListStr, "Teleport", "Kembali");
+            }
+            case 3: { // Burger Shot Interior Kasir & Dapur
+                AdminTeleportToPos(playerid, BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z, 0.0, BURGER_SHOT_INT_ID, 0, "Interior Kasir Restoran Burger Shot (Int: 10)");
+            }
+            case 4: { // Coutt and Schutz Showroom
                 AdminTeleportToPos(playerid, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 90.0, 0, 0, "Coutt and Schutz Auto Showroom (Los Santos)");
             }
-            case 3: { // Kantor Asuransi
+            case 5: { // Kantor Asuransi
                 new insListStr[512];
                 format(insListStr, sizeof(insListStr), "Cabang Asuransi\tKota / Wilayah\n");
                 for (new i = 0; i < INSURANCE_BRANCH_COUNT; i++) {
@@ -734,10 +749,22 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_ADMIN_TP_INSURANCE, DIALOG_STYLE_TABLIST_HEADERS,
                     "{2ECC71}Pilih Teleport Cabang Asuransi", insListStr, "Teleport", "Kembali");
             }
-            case 4: { // Los Santos Parking Lot
+            case 6: { // Los Santos Parking Lot
                 AdminTeleportToPos(playerid, gPublicGarages[0][g_MarkerX], gPublicGarages[0][g_MarkerY], gPublicGarages[0][g_MarkerZ], 0.0, 0, 0, "Los Santos Parking Lot (Downtown Los Santos)");
             }
         }
+        return 1;
+    }
+
+    if (dialogid == DLG_ADMIN_TP_BURGER_SHOT) {
+        if (!response) {
+            return ShowAdminTeleportMenu(playerid);
+        }
+        if (listitem < 0 || listitem >= BURGER_SHOT_COUNT) return 1;
+
+        new locName[96];
+        format(locName, sizeof(locName), "%s (%s)", gBurgerShots[listitem][bs_Name], gBurgerShots[listitem][bs_City]);
+        AdminTeleportToPos(playerid, gBurgerShots[listitem][bs_X], gBurgerShots[listitem][bs_Y], gBurgerShots[listitem][bs_Z], gBurgerShots[listitem][bs_A], 0, 0, locName);
         return 1;
     }
 

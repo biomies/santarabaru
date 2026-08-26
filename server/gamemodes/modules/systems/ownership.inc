@@ -987,6 +987,7 @@ stock ShowGPSMenu(playerid) {
     format(menuStr, sizeof(menuStr),
         "Lokasi Fasilitas Publik\tWilayah & Keterangan\n" \
         "{33CCFF}[Balai Kota] Loket e-KTP\t{FFFFFF}Pershing Square, Los Santos\n" \
+        "{FFA500}[Restoran] Burger Shot\t{FFFFFF}10 Cabang Restoran San Andreas\n" \
         "{00EEFF}[Showroom] Coutt & Schutz\t{FFFFFF}Rodeo / Market, Los Santos\n" \
         "{2ECC71}[Kantor Asuransi] 3 Kota\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
         "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos");
@@ -1007,13 +1008,23 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {33CCFF}Balai Kota Los Santos (Pershing Square).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
-            case 1: { // Coutt & Schutz Showroom
+            case 1: { // Restoran Burger Shot (Pilih 10 Cabang Kota)
+                new bsListStr[1024];
+                format(bsListStr, sizeof(bsListStr), "Nama Cabang Restoran\tKota / Wilayah\n");
+                for (new i = 0; i < BURGER_SHOT_COUNT; i++) {
+                    format(bsListStr, sizeof(bsListStr), "%s{FFFFFF}%s\t{FFA500}%s\n",
+                        bsListStr, gBurgerShots[i][bs_Name], gBurgerShots[i][bs_City]);
+                }
+                ShowPlayerDialog(playerid, DLG_GPS_BURGER_SHOT, DIALOG_STYLE_TABLIST_HEADERS,
+                    "{FFA500}Pilih Cabang Restoran Burger Shot", bsListStr, "Navigasi", "Kembali");
+            }
+            case 2: { // Coutt & Schutz Showroom
                 SetGPSWaypoint(playerid, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {00EEFF}Coutt and Schutz Auto Showroom (Los Santos).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
-            case 2: { // Kantor Asuransi (Pilih Cabang Kota)
+            case 3: { // Kantor Asuransi (Pilih Cabang Kota)
                 new insListStr[512];
                 format(insListStr, sizeof(insListStr), "Cabang Asuransi\tKota / Wilayah\n");
                 for (new i = 0; i < INSURANCE_BRANCH_COUNT; i++) {
@@ -1023,13 +1034,30 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_GPS_INSURANCE, DIALOG_STYLE_TABLIST_HEADERS,
                     "{2ECC71}Pilih Kantor Cabang Asuransi", insListStr, "Navigasi", "Kembali");
             }
-            case 3: { // Langsung Navigasi ke Los Santos Parking Lot
+            case 4: { // Langsung Navigasi ke Los Santos Parking Lot
                 SetGPSWaypoint(playerid, gPublicGarages[0][g_MarkerX], gPublicGarages[0][g_MarkerY], gPublicGarages[0][g_MarkerZ], 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {F1C40F}Los Santos Parking Lot (Downtown Los Santos).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
         }
+        return 1;
+    }
+
+    if (dialogid == DLG_GPS_BURGER_SHOT) {
+        if (!response) {
+            return ShowGPSMenu(playerid);
+        }
+        if (listitem < 0 || listitem >= BURGER_SHOT_COUNT) return 1;
+
+        SetGPSWaypoint(playerid, gBurgerShots[listitem][bs_X], gBurgerShots[listitem][bs_Y], gBurgerShots[listitem][bs_Z], 4.0);
+        PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+
+        new msg[144];
+        format(msg, sizeof(msg), "  [GPS] Menandai rute menuju: {FFA500}%s {FFFFFF}(%s).",
+            gBurgerShots[listitem][bs_Name], gBurgerShots[listitem][bs_City]);
+        SendClientMessage(playerid, COL_GREEN, msg);
+        SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
         return 1;
     }
 

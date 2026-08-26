@@ -1,0 +1,50 @@
+/server/gamemodes/modules/ui/ktp_card.inc(372) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(375) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(381) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(384) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(391) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(394) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(400) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(403) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(410) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(413) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(419) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(422) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(426) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(430) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(433) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(437) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(444) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(452) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(455) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(462) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(465) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(472) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(475) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(479) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(483) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(491) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/ktp_card.inc(494) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/systems/account.inc(42) : warning 234: function is deprecated (symbol "SHA256_PassHash") Use BCrypt for hashing passwords. For other purposes use SHA256_Hash
+/server/gamemodes/modules/systems/account.inc(95) : warning 234: function is deprecated (symbol "SHA256_PassHash") Use BCrypt for hashing passwords. For other purposes use SHA256_Hash
+/server/gamemodes/modules/systems/buildings.inc(214) : error 017: undefined symbol "GetItemPriceByID"
+/server/gamemodes/modules/systems/buildings.inc(217 -- 221) : error 017: undefined symbol "FormatNumber"
+/server/gamemodes/modules/systems/buildings.inc(242) : error 017: undefined symbol "GetItemPriceByID"
+/server/gamemodes/modules/systems/buildings.inc(248 -- 249) : error 017: undefined symbol "FormatNumber"
+/server/gamemodes/modules/systems/buildings.inc(263) : error 017: undefined symbol "GivePlayerCash"
+/server/gamemodes/modules/systems/buildings.inc(270 -- 271) : error 017: undefined symbol "FormatNumber"
+/server/gamemodes/modules/systems/buildings.inc(274 -- 276) : error 017: undefined symbol "FormatNumber"
+/server/gamemodes/modules/systems/buildings.inc(203) : warning 214: possibly a "const" array argument was intended: "inputtext"
+/server/gamemodes/modules/systems/ownership.inc(82) : warning 235: public function lacks forward declaration (symbol "GetGarageInfo")
+/server/gamemodes/modules/ui/speedometer.inc(45) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/speedometer.inc(52) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/speedometer.inc(56) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/speedometer.inc(63) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/ui/speedometer.inc(67) : warning 213: tag mismatch: expected tag "bool", but found none ("_")
+/server/gamemodes/modules/systems/inventory.inc(322) : warning 214: possibly a "const" array argument was intended: "inputtext"
+/server/gamemodes/modules/ui/trunk_ui.inc(626) : warning 214: possibly a "const" array argument was intended: "inputtext"
+/server/gamemodes/modules/commands/cmd_admin.inc(554) : warning 214: possibly a "const" array argument was intended: "cmd"
+Pawn compiler 3.10.11	 	 	Copyright (c) 1997-2006, ITB CompuPhase
+
+
+7 Errors.
