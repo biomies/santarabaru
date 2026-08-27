@@ -26,6 +26,7 @@
 #include "modules/ui/ktp_card.inc"
 #include "modules/ui/sim_ui.inc"
 #include "modules/ui/char_create_ui.inc"
+#include "modules/ui/char_select_ui.inc"
 #include "modules/ui/spawn_selector.inc"
 #include "modules/ui/skin_selector.inc"
 #include "modules/ui/dealership.inc"
@@ -318,6 +319,11 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
         if (HandleCharCreationClick(playerid, playertextid)) return 1;
     }
 
+    //    0.5 3D CHARACTER SELECTION UI
+    if (gPlayerData[playerid][p_SelectingChar3D]) {
+        if (HandleCharSelectClick(playerid, playertextid)) return 1;
+    }
+
     //    1. LIVE EAGLE-EYE SPAWN SELECTOR   
     if (gPlayerData[playerid][p_SelectingSpawn]) {
         new total = gPlayerData[playerid][p_IsNewCharacter] ? PUBLIC_SPAWN_COUNT : (PUBLIC_SPAWN_COUNT + 1);
@@ -540,6 +546,10 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
         }
         if (gShowingSIMCard[playerid]) {
             HidePlayerSIMCard(playerid);
+            return 1;
+        }
+        if (gPlayerData[playerid][p_SelectingChar3D]) {
+            SelectTextDraw(playerid, 0x5814EEFF);
             return 1;
         }
         if (gPlayerData[playerid][p_InCharForm]) {

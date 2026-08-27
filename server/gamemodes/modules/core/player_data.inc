@@ -39,6 +39,7 @@ enum E_PLAYER_DATA {
     //    Live 3D Skin Selector State   
     bool:p_SelectingSkin,
     p_SkinIndex,
+    bool:p_SelectingChar3D,
     p_OriginalSkin,
     bool:p_IsNewCharacter,
     bool:p_InCharForm,          // Status membuka form UI Buat Karakter TextDraw

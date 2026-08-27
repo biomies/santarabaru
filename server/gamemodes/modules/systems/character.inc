@@ -27,57 +27,7 @@ stock ShowCharFormDashboard(playerid) {
 }
 
 stock ShowCharacterSelection(playerid) {
-    new query[256];
-    format(query, sizeof(query),
-        "SELECT `id`, `char_name`, `skin_id`, `score`, `cash` FROM `characters` WHERE `account_id` = %d AND `is_active` = 1 ORDER BY `id` ASC LIMIT %d",
-        gPlayerData[playerid][p_AccountID], MAX_CHARS_PER_ACCOUNT);
-
-    new DBResult:res = DB_ExecuteQuery(gDB, query);
-    new count = 0;
-    if (res) {
-        count = DB_GetRowCount(res);
-    }
-
-    gPlayerData[playerid][p_CharListCount] = count;
-
-    if (count == 0) {
-        if (res) DB_FreeResultSet(res);
-        // Akun belum punya karakter aktif sama sekali -> buat karakter
-        StartNewCharacterCreation(playerid);
-        return 1;
-    }
-
-    new dialogBody[1024], line[128], rup[32];
-    format(dialogBody, sizeof(dialogBody), "Nama Karakter\tLevel\tUang Tunai\n");
-
-    for (new i = 0; i < count; i++) {
-        new cid = DB_GetFieldIntByName(res, "id");
-        new cname[48];
-        DB_GetFieldStringByName(res, "char_name", cname, sizeof(cname));
-        new cscore = DB_GetFieldIntByName(res, "score");
-        new ccash = DB_GetFieldIntByName(res, "cash");
-
-        gPlayerData[playerid][p_CharListIDs][i] = cid;
-        format(gCharListNames[playerid][i], 48, "%s", cname);
-        FormatRupiah(ccash, rup, sizeof(rup));
-
-        format(line, sizeof(line), "{FFFFFF}%s\t{F1C40F}Level %d\t{2ECC71}Rp %s\n", cname, cscore, rup);
-        strcat(dialogBody, line);
-
-        DB_SelectNextRow(res);
-    }
-    if (res) DB_FreeResultSet(res);
-
-    // Opsi Buat Karakter Baru jika belum penuh
-    if (count < MAX_CHARS_PER_ACCOUNT) {
-        strcat(dialogBody, "{00D2FF}+ Buat Karakter Baru\t\t\n");
-    }
-
-    // Opsi Hapus Karakter di baris list
-    strcat(dialogBody, "{FF4040}- Hapus Karakter (Soft Delete)\t\t\n");
-
-    ShowPlayerDialog(playerid, DLG_CHAR_SELECT, DIALOG_STYLE_TABLIST_HEADERS,
-        "Pilih Karakter - Santara Roleplay", dialogBody, "Mainkan", "Hapus Karakter");
+    OpenCharSelectUI(playerid);
     return 1;
 }
 
