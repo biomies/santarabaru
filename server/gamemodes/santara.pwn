@@ -24,6 +24,7 @@
 //    Modul UI & TextDraws                                     
 #include "modules/ui/hud_money.inc"
 #include "modules/ui/ktp_card.inc"
+#include "modules/ui/sim_ui.inc"
 #include "modules/ui/spawn_selector.inc"
 #include "modules/ui/skin_selector.inc"
 #include "modules/ui/dealership.inc"
@@ -34,6 +35,7 @@
 #include "modules/systems/character.inc"
 #include "modules/systems/account.inc"
 #include "modules/systems/buildings.inc"
+#include "modules/systems/driving_school.inc"
 #include "modules/systems/ownership.inc"
 #include "modules/ui/speedometer.inc"
 #include "modules/systems/inventory.inc"
@@ -211,6 +213,11 @@ public OnPlayerDisconnect(playerid, reason) {
     #pragma unused reason
     DoSavePlayer(playerid);
     DestroyPlayerActiveVehicle(playerid);
+    if (gPlayerData[playerid][p_InDrivingTest]) {
+        CancelDrivingTest(playerid, "Pemain terputus dari server");
+    }
+    CloseSimPanelUI(playerid);
+    DestroyPlayerSimTextDraws(playerid);
     CloseDealership(playerid);
     CloseGarageUI(playerid);
     HideInventoryUI(playerid);
@@ -229,7 +236,9 @@ public OnPlayerDisconnect(playerid, reason) {
 public OnPlayerRequestClass(playerid, classid) {
     #pragma unused classid
     // Jika karakter sudah login dan punya ID aktif, langsung spawn
+    // Tapi JANGAN spawn jika spawn selector sedang terbuka (p_SelectingSpawn)
     if (gPlayerData[playerid][p_LoggedIn] && gPlayerData[playerid][p_CharID] > 0) {
+        if (gPlayerData[playerid][p_SelectingSpawn]) return 1; // Tunggu — spawn selector sedang aktif
         SetSpawnInfo(playerid, 0, gPlayerData[playerid][p_Skin],
             gPlayerData[playerid][p_X], gPlayerData[playerid][p_Y], gPlayerData[playerid][p_Z],
             gPlayerData[playerid][p_A], 0, 0, 0, 0, 0, 0);
@@ -288,6 +297,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
     if (HandleCharacterDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleInventoryDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleTrunkDialog(playerid, dialogid, response, inputtext)) return 1;
+    if (HandleSimUIDialog(playerid, dialogid, response, inputtext)) return 1;
+    if (HandleDrivingSchoolDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleDealershipDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleVehicleMenuDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleInsuranceDialog(playerid, dialogid, response, listitem)) return 1;
@@ -482,7 +493,12 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
         if (HandleTrunkClick(playerid, playertextid)) return 1;
     }
 
-    //    7. TOUCHPAD KONTROL KENDARAAN (Clickable TextDraw)
+    //    8. INTERACTIVE TEXTDRAW SIM PANEL & CARD UI
+    if (gShowingSIMCard[playerid] || gPlayerData[playerid][p_InSimUI]) {
+        if (HandleSimUIClick(playerid, playertextid)) return 1;
+    }
+
+    //    9. TOUCHPAD KONTROL KENDARAAN (Clickable TextDraw)
     if (gPlayerInVehicleHUD[playerid]) {
         if (playertextid == TD_SpeedBtnEngine[playerid]) {
             TogglePlayerVehicleEngine(playerid);
@@ -503,6 +519,10 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
     if (clickedid == Text:INVALID_TEXT_DRAW) {
         if (gShowingKTP[playerid]) {
             HidePlayerKTPCard(playerid);
+            return 1;
+        }
+        if (gShowingSIMCard[playerid]) {
+            HidePlayerSIMCard(playerid);
             return 1;
         }
         if (gPlayerData[playerid][p_SelectingSpawn]) {
@@ -542,6 +562,10 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
             HideTrunkUI(playerid);
             return 1;
         }
+        if (gPlayerData[playerid][p_InSimUI]) {
+            CloseSimPanelUI(playerid);
+            return 1;
+        }
     }
     return 0;
 }
@@ -552,12 +576,19 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
     } else if (oldstate == PLAYER_STATE_DRIVER || oldstate == PLAYER_STATE_PASSENGER) {
         HideSpeedometer(playerid);
     }
+
+    if (oldstate == PLAYER_STATE_DRIVER && gPlayerData[playerid][p_InDrivingTest]) {
+        CancelDrivingTest(playerid, "Keluar dari kursi pengemudi saat ujian");
+    }
     return 1;
 }
 
 public OnPlayerDeath(playerid, killerid, reason) {
     #pragma unused killerid, reason
     HideSpeedometer(playerid);
+    if (gPlayerData[playerid][p_InDrivingTest]) {
+        CancelDrivingTest(playerid, "Pemain pingsan / mati saat ujian");
+    }
     return 1;
 }
 
@@ -621,6 +652,11 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
 }
 
 public OnVehicleDeath(vehicleid, killerid) {
+    for (new i = 0; i < MAX_PLAYERS; i++) {
+        if (IsPlayerConnected(i) && gPlayerData[i][p_InDrivingTest] && gPlayerData[i][p_DrivingTestVehID] == vehicleid) {
+            CancelDrivingTest(i, "Kendaraan ujian hancur / meledak");
+        }
+    }
     OnPlayerVehicleDeath(vehicleid, killerid);
     return 1;
 }
@@ -640,6 +676,10 @@ public OnPlayerEnterCheckpoint(playerid) {
 }
 
 public OnPlayerEnterRaceCheckpoint(playerid) {
+    if (gPlayerData[playerid][p_InDrivingTest]) {
+        HandleDrivingTestRaceCheckpoint(playerid);
+        return 1;
+    }
     if (gPlayerData[playerid][p_HasActiveCheckpoint]) {
         ClearGPSWaypoint(playerid);
         PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);

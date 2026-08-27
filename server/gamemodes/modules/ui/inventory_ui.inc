@@ -456,8 +456,8 @@ stock HandleInventoryClick(playerid, PlayerText:playertextid) {
             return 1;
         }
 
-        if (itId == ITEM_KTP) {
-            SendClientMessage(playerid, COL_RED, "  [Inventory] Kartu identitas e-KTP tidak dapat dibuang!");
+        if (itId == ITEM_KTP || itId == ITEM_SIM_A || itId == ITEM_SIM_B || itId == ITEM_SIM_C) {
+            SendClientMessage(playerid, COL_RED, "  [Inventory] Dokumen resmi (e-KTP / SIM) tidak dapat dibuang!");
             return 1;
         }
 

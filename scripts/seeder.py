@@ -31,7 +31,7 @@ BOLD = "\033[1m"
 RESET = "\033[0m"
 GREY = "\033[90m"
 
-# 1. Default 11 Master Items (Burger, Hotdog, Pizza, Air Mineral, Cola, Milkshake, Medis, HP, KTP)
+# 1. Default 12 Master Items (Burger, Hotdog, Pizza, Air Mineral, Cola, Milkshake, Medis, HP, KTP, SIM)
 DEFAULT_ITEMS = [
     (1, "Burger", "Makanan", 40.0, 0.0, 0.0, 0, "FOOD", "eat_burger", 25000),
     (2, "Hotdog", "Makanan", 35.0, 0.0, 0.0, 0, "FOOD", "eat_burger", 20000),
@@ -43,7 +43,10 @@ DEFAULT_ITEMS = [
     (8, "Medkit", "Medis / Obat", 0.0, 0.0, 60.0, 0, "MISC", "bitchslap", 60000),
     (9, "First Aid Kit", "Medis / Obat", 0.0, 0.0, 100.0, 1, "MISC", "bitchslap", 120000),
     (10, "Ponsel", "Elektronik", 0.0, 0.0, 0.0, 0, "", "", 150000),
-    (11, "KTP (Kartu Identitas)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 50000)
+    (11, "KTP (Kartu Identitas)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 50000),
+    (12, "Surat Izin Mengemudi (SIM A)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 50000),
+    (13, "Surat Izin Mengemudi (SIM B)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 100000),
+    (14, "Surat Izin Mengemudi (SIM C)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 25000)
 ]
 
 # 2. Default Master Jobs

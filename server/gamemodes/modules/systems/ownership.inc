@@ -983,10 +983,11 @@ stock SetupPlayerMapIcons(playerid) {
 stock ShowGPSMenu(playerid) {
     if (!CheckSpawned(playerid)) return 0;
 
-    new menuStr[512];
+    new menuStr[600];
     format(menuStr, sizeof(menuStr),
         "Lokasi Fasilitas Publik\tWilayah & Keterangan\n" \
         "{33CCFF}[Balai Kota] Loket e-KTP\t{FFFFFF}Pershing Square, Los Santos\n" \
+        "{5814EE}[Sekolah Mengemudi] Satpas DMV\t{FFFFFF}Garcia / Doherty, San Fierro\n" \
         "{FFA500}[Restoran] Burger Shot\t{FFFFFF}10 Cabang Restoran San Andreas\n" \
         "{00EEFF}[Showroom] Coutt & Schutz\t{FFFFFF}Rodeo / Market, Los Santos\n" \
         "{2ECC71}[Kantor Asuransi] 3 Kota\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
@@ -1008,7 +1009,13 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {33CCFF}Balai Kota Los Santos (Pershing Square).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
-            case 1: { // Restoran Burger Shot (Pilih 10 Cabang Kota)
+            case 1: { // Satpas DMV Driving School (San Fierro)
+                SetGPSWaypoint(playerid, DMV_DESK_X, DMV_DESK_Y, DMV_DESK_Z, 4.0);
+                PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {5814EE}Satpas DMV Driving School (Garcia / Doherty, San Fierro).");
+                SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
+            }
+            case 2: { // Restoran Burger Shot (Pilih 10 Cabang Kota)
                 new bsListStr[1024];
                 format(bsListStr, sizeof(bsListStr), "Nama Cabang Restoran\tKota / Wilayah\n");
                 for (new i = 0; i < BURGER_SHOT_COUNT; i++) {
@@ -1018,13 +1025,13 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_GPS_BURGER_SHOT, DIALOG_STYLE_TABLIST_HEADERS,
                     "{FFA500}Pilih Cabang Restoran Burger Shot", bsListStr, "Navigasi", "Kembali");
             }
-            case 2: { // Coutt & Schutz Showroom
+            case 3: { // Coutt & Schutz Showroom
                 SetGPSWaypoint(playerid, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {00EEFF}Coutt and Schutz Auto Showroom (Los Santos).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
-            case 3: { // Kantor Asuransi (Pilih Cabang Kota)
+            case 4: { // Kantor Asuransi (Pilih Cabang Kota)
                 new insListStr[512];
                 format(insListStr, sizeof(insListStr), "Cabang Asuransi\tKota / Wilayah\n");
                 for (new i = 0; i < INSURANCE_BRANCH_COUNT; i++) {
@@ -1034,7 +1041,7 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_GPS_INSURANCE, DIALOG_STYLE_TABLIST_HEADERS,
                     "{2ECC71}Pilih Kantor Cabang Asuransi", insListStr, "Navigasi", "Kembali");
             }
-            case 4: { // Langsung Navigasi ke Los Santos Parking Lot
+            case 5: { // Langsung Navigasi ke Los Santos Parking Lot
                 SetGPSWaypoint(playerid, gPublicGarages[0][g_MarkerX], gPublicGarages[0][g_MarkerY], gPublicGarages[0][g_MarkerZ], 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {F1C40F}Los Santos Parking Lot (Downtown Los Santos).");

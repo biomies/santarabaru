@@ -56,6 +56,32 @@
 #define DLG_BURGER_SHOT         70
 #define DLG_BURGER_SHOT_QTY     71
 
+// DMV & SIM Dialogs
+#define DLG_DMV_MAIN            80
+#define DLG_DMV_CONFIRM         81
+#define DLG_SIM_SHOW_TARGET     82
+#define DLG_SHOW_SIM            83
+
+// UI Color Palette untuk Panel SIM TextDraw
+#define COLOR_SIM_BG            0x1E1E28F0
+#define COLOR_SIM_PURPLE        0x5814EEFF
+#define COLOR_SIM_SLATE         0x333333FF
+#define COLOR_SIM_RED           0xE74C3CFF
+#define COLOR_SIM_EMPTY         0x2A2A38FF
+
+// ============================================================
+//  Koordinat Satpas DMV Driving School (Garcia / Doherty SF)
+// ============================================================
+#define DMV_DESK_X              -2026.4281
+#define DMV_DESK_Y              -100.8486
+#define DMV_DESK_Z              35.1640
+#define DMV_DESK_A              0.0000
+
+#define DMV_SPAWN_X             -2047.0263
+#define DMV_SPAWN_Y             -88.3369
+#define DMV_SPAWN_Z             35.1640
+#define DMV_SPAWN_A             0.0000
+
 // ============================================================
 //  Koordinat Gedung & Interior Restoran Burger Shot
 // ============================================================
@@ -90,11 +116,14 @@
 #define ITEM_MEDKIT             8
 #define ITEM_FIRST_AID          9
 
-// 4. Dokumen & Perlengkapan (10 - 11)
+// 4. Dokumen & Perlengkapan (10 - 14)
 #define ITEM_PHONE              10
 #define ITEM_KTP                11
+#define ITEM_SIM_A              12
+#define ITEM_SIM_B              13
+#define ITEM_SIM_C              14
 
-#define TOTAL_ITEM_COUNT        11
+#define TOTAL_ITEM_COUNT        14
 
 // Status Kendaraan Pribadi
 #define VEH_STATUS_OUTSIDE      0   // Terparkir di Luar (Dunia Game)

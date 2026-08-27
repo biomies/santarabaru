@@ -92,6 +92,9 @@ stock InitBuildings() {
         BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z + 0.5,
         10.0, -1, false
     );
+
+    // ─── 4. Satpas DMV Driving School (San Fierro) ───
+    InitDrivingSchool();
 }
 
 stock ShowBurgerShotMenu(playerid) {
@@ -144,6 +147,13 @@ stock HandleBuildingKeys(playerid, KEY:newkeys, KEY:oldkeys) {
         if (IsPlayerInRangeOfPoint(playerid, 2.5, KTP_DESK_X, KTP_DESK_Y, KTP_DESK_Z) && GetPlayerInterior(playerid) == KTP_DESK_INT_ID) {
             new emptyParam[1];
             cmd_ktp(playerid, emptyParam);
+            return 1;
+        }
+
+        // Interaksi Loket Satpas DMV Driving School (San Fierro)
+        if (IsPlayerInRangeOfPoint(playerid, 3.0, DMV_DESK_X, DMV_DESK_Y, DMV_DESK_Z) && GetPlayerInterior(playerid) == 0) {
+            ShowDMVDialog(playerid);
+            PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
             return 1;
         }
 

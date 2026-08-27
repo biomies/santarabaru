@@ -1,0 +1,40 @@
+{
+    "announce": true,
+    "chat_input_filter": false,
+    "language": "Indonesian",
+    "max_players": 50,
+    "name": "SantaraBaru Roleplay",
+    "password": "",
+    "port": 50034,
+    "rcon": {
+        "allow_teleport": false,
+        "password": "SantaraRcon2024"
+    },
+    "sleep": 5,
+    "use_player_ped_anims": true,
+    "pawn": {
+        "main_scripts": [
+            "santara 0"
+        ]
+    },
+    "logging": {
+        "enable": true,
+        "use_timestamp": true,
+        "log_chat": false,
+        "log_queries": false,
+        "log_connections": true
+    },
+    "art": {
+        "models": "models",
+        "cdn": ""
+    },
+    "network": {
+        "bind": "",
+        "use_lan_mode": false,
+        "port": 50034
+    },
+    "sampvoice": {
+        "voice_port": 39966,
+        "check_for_streamed_in": true
+    }
+}

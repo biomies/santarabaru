@@ -275,12 +275,45 @@ stock UseInventoryItem(playerid, itemid) {
 
     // 4. KTP (Buka Kartu Identitas Resmi)
     if (itemid == ITEM_KTP) {
+        if (gPlayerData[playerid][p_InInventoryUI]) {
+            HideInventoryUI(playerid);
+        }
         ShowPlayerKTPCard(playerid, playerid);
         SendClientMessage(playerid, COL_GREEN, "  [KTP] Membuka fisik Kartu Tanda Penduduk (e-KTP) Anda.");
         return 1;
     }
 
-    // 5. PONSEL
+    // 5. SIM A (Buka Kartu SIM A)
+    if (itemid == ITEM_SIM_A) {
+        if (gPlayerData[playerid][p_InInventoryUI]) {
+            HideInventoryUI(playerid);
+        }
+        ShowPlayerSIMCard(playerid, playerid, 0);
+        SendClientMessage(playerid, COL_GREEN, "  [SIM] Membuka fisik Surat Izin Mengemudi (SIM A) Anda.");
+        return 1;
+    }
+
+    // 6. SIM B (Buka Kartu SIM B)
+    if (itemid == ITEM_SIM_B) {
+        if (gPlayerData[playerid][p_InInventoryUI]) {
+            HideInventoryUI(playerid);
+        }
+        ShowPlayerSIMCard(playerid, playerid, 1);
+        SendClientMessage(playerid, COL_GREEN, "  [SIM] Membuka fisik Surat Izin Mengemudi (SIM B) Anda.");
+        return 1;
+    }
+
+    // 7. SIM C (Buka Kartu SIM C)
+    if (itemid == ITEM_SIM_C) {
+        if (gPlayerData[playerid][p_InInventoryUI]) {
+            HideInventoryUI(playerid);
+        }
+        ShowPlayerSIMCard(playerid, playerid, 2);
+        SendClientMessage(playerid, COL_GREEN, "  [SIM] Membuka fisik Surat Izin Mengemudi (SIM C) Anda.");
+        return 1;
+    }
+
+    // 8. PONSEL
     if (itemid == ITEM_PHONE) {
         SendClientMessage(playerid, COL_CYAN, "  [Ponsel] Layar smartphone menyala. (Sistem jaringan telepon aktif).");
         return 1;
@@ -369,8 +402,8 @@ stock HandleInventoryDialog(playerid, dialogid, response, listitem, inputtext[])
                 UseInventoryItem(playerid, itId);
             }
             case 1: { // Berikan ke Pemain
-                if (itId == ITEM_KTP) {
-                    SendClientMessage(playerid, COL_RED, "  [Inventory] Kartu identitas e-KTP tidak dapat diberikan ke orang lain!");
+                if (itId == ITEM_KTP || itId == ITEM_SIM_A || itId == ITEM_SIM_B || itId == ITEM_SIM_C) {
+                    SendClientMessage(playerid, COL_RED, "  [Inventory] Dokumen resmi (e-KTP / SIM) tidak dapat diberikan ke orang lain!");
                     OpenInventoryMenu(playerid);
                     return 1;
                 }
@@ -409,8 +442,8 @@ stock HandleInventoryDialog(playerid, dialogid, response, listitem, inputtext[])
                     "{E69958}Pilih Pemain Penerima", pListStr, "Pilih", "Batal");
             }
             case 2: { // Buang dari Tas
-                if (itId == ITEM_KTP) {
-                    SendClientMessage(playerid, COL_RED, "  [Inventory] Kartu identitas e-KTP tidak dapat dibuang!");
+                if (itId == ITEM_KTP || itId == ITEM_SIM_A || itId == ITEM_SIM_B || itId == ITEM_SIM_C) {
+                    SendClientMessage(playerid, COL_RED, "  [Inventory] Dokumen resmi (e-KTP / SIM) tidak dapat dibuang!");
                     OpenInventoryMenu(playerid);
                     return 1;
                 }
@@ -690,8 +723,8 @@ CMD:give(playerid, params[]) {
         }
     }
 
-    if (itId == ITEM_KTP) {
-        SendClientMessage(playerid, COL_RED, "  [Error] Kartu identitas e-KTP tidak dapat dipindahtangankan!");
+    if (itId == ITEM_KTP || itId == ITEM_SIM_A || itId == ITEM_SIM_B || itId == ITEM_SIM_C) {
+        SendClientMessage(playerid, COL_RED, "  [Error] Dokumen resmi (e-KTP / SIM) tidak dapat dipindahtangankan!");
         return 1;
     }
 

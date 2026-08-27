@@ -100,7 +100,22 @@ enum E_PLAYER_DATA {
     Float:p_LastExtZ,
     Float:p_LastExtA,
     p_LastExtVW,
-    p_SelectedBuyItem
+    p_SelectedBuyItem,
+    //    Status Surat Izin Mengemudi (SIM)
+    bool:p_HasSIM_A,
+    bool:p_HasSIM_B,
+    bool:p_HasSIM_C,
+    //    Status Ujian Praktik Mengemudi (Driving Test)
+    bool:p_InDrivingTest,
+    p_DrivingTestVehID,
+    p_DrivingTestStep,
+    p_DrivingTestErrors,
+    p_DrivingTestType,          // 1: SIM A, 2: SIM B, 3: SIM C
+    Float:p_DrivingVehLastHealth,
+    //    Status Panel UI SIM (Right Sidebar)
+    bool:p_InSimUI,
+    p_SelectedSimIndex,         // 0: SIM A, 1: SIM B, 2: SIM C
+    p_ViewingSimTarget
 }
 
 new gPlayerData[MAX_PLAYERS][E_PLAYER_DATA];
@@ -130,6 +145,18 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_LastExtA]       = 0.0;
     gPlayerData[playerid][p_LastExtVW]      = 0;
     gPlayerData[playerid][p_SelectedBuyItem]= 0;
+    gPlayerData[playerid][p_HasSIM_A]       = false;
+    gPlayerData[playerid][p_HasSIM_B]       = false;
+    gPlayerData[playerid][p_HasSIM_C]       = false;
+    gPlayerData[playerid][p_InDrivingTest]  = false;
+    gPlayerData[playerid][p_DrivingTestVehID] = INVALID_VEHICLE_ID;
+    gPlayerData[playerid][p_DrivingTestStep] = 0;
+    gPlayerData[playerid][p_DrivingTestErrors] = 0;
+    gPlayerData[playerid][p_DrivingTestType] = 0;
+    gPlayerData[playerid][p_DrivingVehLastHealth] = 1000.0;
+    gPlayerData[playerid][p_InSimUI]        = false;
+    gPlayerData[playerid][p_SelectedSimIndex] = 0;
+    gPlayerData[playerid][p_ViewingSimTarget] = INVALID_PLAYER_ID;
     gPlayerData[playerid][p_Score]          = 1;
     gPlayerData[playerid][p_Cash]           = 500;
     gPlayerData[playerid][p_Hunger]         = 100.0;
