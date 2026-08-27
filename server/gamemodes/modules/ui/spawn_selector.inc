@@ -407,9 +407,10 @@ stock OpenSpawnSelection(playerid, bool:isNewChar = false) {
     SelectTextDraw(playerid, COLOR_SPAWN_PURPLE);
 }
 
-stock CloseSpawnSelection(playerid) {
+stock CloseSpawnSelection(playerid, bool:cancelSelect = true) {
     gPlayerData[playerid][p_SelectingSpawn] = false;
-    CancelSelectTextDraw(playerid);
+    if (cancelSelect) {
+        CancelSelectTextDraw(playerid);
+    }
     DestroyPlayerSpawnTextDraws(playerid);
-    TogglePlayerSpectating(playerid, false);
 }

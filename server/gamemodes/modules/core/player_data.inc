@@ -41,6 +41,7 @@ enum E_PLAYER_DATA {
     p_SkinIndex,
     p_OriginalSkin,
     bool:p_IsNewCharacter,
+    bool:p_InCharForm,          // Status membuka form UI Buat Karakter TextDraw
     //    Status Kepemilikan Dokumen   
     bool:p_HasKTP,
     //    Status Download Custom Asset   
@@ -180,6 +181,7 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_SkinIndex]      = 0;
     gPlayerData[playerid][p_OriginalSkin]   = 0;
     gPlayerData[playerid][p_IsNewCharacter] = false;
+    gPlayerData[playerid][p_InCharForm]     = false;
     gPlayerData[playerid][p_HasKTP]         = false;
     gPlayerData[playerid][p_FinishedDownload] = false;
     gPlayerData[playerid][p_AuthLoaded]     = false;

@@ -25,6 +25,7 @@
 #include "modules/ui/hud_money.inc"
 #include "modules/ui/ktp_card.inc"
 #include "modules/ui/sim_ui.inc"
+#include "modules/ui/char_create_ui.inc"
 #include "modules/ui/spawn_selector.inc"
 #include "modules/ui/skin_selector.inc"
 #include "modules/ui/dealership.inc"
@@ -226,6 +227,8 @@ public OnPlayerDisconnect(playerid, reason) {
     DestroyVoiceStream(playerid);
     DestroyPlayerMoneyHUD(playerid);
     HideSpeedometer(playerid);
+    CloseCharCreationUI(playerid);
+    DestroyPlayerCharFormTextDraws(playerid);
     DestroyPlayerSpawnTextDraws(playerid);
     DestroyPlayerSkinTextDraws(playerid);
     DestroyPlayerKTPTextDraws(playerid);
@@ -263,6 +266,7 @@ public OnPlayerSpawn(playerid) {
         SetPlayerFrontCamera(playerid);
         SetTimerEx("Timer_FixSkinCamera", 150, false, "i", playerid);
     } else {
+        CancelSelectTextDraw(playerid);
         TogglePlayerControllable(playerid, true);
         SetCameraBehindPlayer(playerid);
         Inventory_LoadPlayerItems(playerid);
@@ -309,6 +313,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 }
 
 public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
+    //    0. CUSTOM CHARACTER CREATION FORM MODAL
+    if (gPlayerData[playerid][p_InCharForm]) {
+        if (HandleCharCreationClick(playerid, playertextid)) return 1;
+    }
+
     //    1. LIVE EAGLE-EYE SPAWN SELECTOR   
     if (gPlayerData[playerid][p_SelectingSpawn]) {
         new total = gPlayerData[playerid][p_IsNewCharacter] ? PUBLIC_SPAWN_COUNT : (PUBLIC_SPAWN_COUNT + 1);
@@ -368,9 +377,13 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
                 gPlayerData[playerid][p_Cash]   = 500;
 
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
-                CloseSpawnSelection(playerid);
+                CloseSpawnSelection(playerid, false);
 
                 gPlayerData[playerid][p_SelectingSkin] = true;
+                TogglePlayerSpectating(playerid, false);
+                SetSpawnInfo(playerid, 0, defaultSkin,
+                    gPlayerData[playerid][p_X], gPlayerData[playerid][p_Y], gPlayerData[playerid][p_Z],
+                    gPlayerData[playerid][p_A], 0, 0, 0, 0, 0, 0);
                 SpawnPlayer(playerid);
                 OpenSkinSelection(playerid, true);
             } else {
@@ -382,7 +395,11 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
                     gPlayerData[playerid][p_A] = gPublicSpawns[pIdx][s_SpawnA];
                 }
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
-                CloseSpawnSelection(playerid);
+                CloseSpawnSelection(playerid, false);
+                TogglePlayerSpectating(playerid, false);
+                SetSpawnInfo(playerid, 0, gPlayerData[playerid][p_Skin],
+                    gPlayerData[playerid][p_X], gPlayerData[playerid][p_Y], gPlayerData[playerid][p_Z],
+                    gPlayerData[playerid][p_A], 0, 0, 0, 0, 0, 0);
                 SpawnPlayer(playerid);
             }
             return 1;
@@ -392,10 +409,10 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
         if (playertextid == TD_SpawnCancel[playerid]) {
             PlayerPlaySound(playerid, 1084, 0.0, 0.0, 0.0);
             if (gPlayerData[playerid][p_IsNewCharacter]) {
-                CloseSpawnSelection(playerid);
-                ShowCharFormDashboard(playerid);
+                CloseSpawnSelection(playerid, false);
+                OpenCharCreationUI(playerid);
             } else {
-                CloseSpawnSelection(playerid);
+                CloseSpawnSelection(playerid, true);
                 ShowCharacterSelection(playerid);
             }
             return 1;
@@ -525,12 +542,17 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
             HidePlayerSIMCard(playerid);
             return 1;
         }
+        if (gPlayerData[playerid][p_InCharForm]) {
+            CloseCharCreationUI(playerid);
+            ShowCharacterSelection(playerid);
+            return 1;
+        }
         if (gPlayerData[playerid][p_SelectingSpawn]) {
             if (gPlayerData[playerid][p_IsNewCharacter]) {
-                CloseSpawnSelection(playerid);
-                ShowCharFormDashboard(playerid);
+                CloseSpawnSelection(playerid, false);
+                OpenCharCreationUI(playerid);
             } else {
-                CloseSpawnSelection(playerid);
+                CloseSpawnSelection(playerid, true);
                 ShowCharacterSelection(playerid);
             }
             return 1;

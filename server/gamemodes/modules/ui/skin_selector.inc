@@ -163,6 +163,8 @@ stock SetPlayerFrontCamera(playerid) {
     new Float:pz = gPlayerData[playerid][p_Z];
     new Float:pa = gPlayerData[playerid][p_A];
 
+    SetPlayerInterior(playerid, 0);
+    SetPlayerVirtualWorld(playerid, 0);
     SetPlayerPos(playerid, px, py, pz);
     SetPlayerFacingAngle(playerid, pa);
     TogglePlayerControllable(playerid, false);

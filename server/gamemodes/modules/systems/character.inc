@@ -13,50 +13,16 @@ stock StartNewCharacterCreation(playerid) {
     gPlayerData[playerid][p_BirthDate][0]   = '\0';
     gPlayerData[playerid][p_Gender]         = 0;
     gPlayerData[playerid][p_IsNewCharacter] = true;
-    ShowCharFormDashboard(playerid);
+    OpenCharCreationUI(playerid);
 }
 
 stock ShowCharFormDashboard(playerid) {
-    new nameStr[64], placeStr[48], dateStr[32], genderStr[32];
-
-    if (strlen(gPlayerData[playerid][p_CharName])) {
-        format(nameStr, sizeof(nameStr), "{2ECC71}%s", gPlayerData[playerid][p_CharName]);
+    if (!gPlayerData[playerid][p_InCharForm]) {
+        OpenCharCreationUI(playerid);
     } else {
-        format(nameStr, sizeof(nameStr), "{FF4040}[Belum Diisi]");
+        UpdateCharCreationUI(playerid);
+        SelectTextDraw(playerid, COLOR_CHARFORM_PURPLE);
     }
-
-    if (strlen(gPlayerData[playerid][p_BirthPlace])) {
-        format(placeStr, sizeof(placeStr), "{2ECC71}%s", gPlayerData[playerid][p_BirthPlace]);
-    } else {
-        format(placeStr, sizeof(placeStr), "{FF4040}[Belum Diisi]");
-    }
-
-    if (strlen(gPlayerData[playerid][p_BirthDate])) {
-        format(dateStr, sizeof(dateStr), "{2ECC71}%s", gPlayerData[playerid][p_BirthDate]);
-    } else {
-        format(dateStr, sizeof(dateStr), "{FF4040}[Belum Diisi]");
-    }
-
-    if (gPlayerData[playerid][p_Gender] == 1) {
-        format(genderStr, sizeof(genderStr), "{2ECC71}Laki-Laki (Pria)");
-    } else if (gPlayerData[playerid][p_Gender] == 2) {
-        format(genderStr, sizeof(genderStr), "{2ECC71}Perempuan (Wanita)");
-    } else {
-        format(genderStr, sizeof(genderStr), "{FF4040}[Belum Dipilih]");
-    }
-
-    new dialogBody[1024];
-    format(dialogBody, sizeof(dialogBody),
-        "Kolom Data\tIsian Data\tStatus\n\
-        {FFFFFF}1. Nama Karakter\t%s\t{AAAAAA}Klik untuk mengisi\n\
-        {FFFFFF}2. Tempat Lahir\t%s\t{AAAAAA}Klik untuk mengisi\n\
-        {FFFFFF}3. Tanggal Lahir\t%s\t{AAAAAA}Klik untuk mengisi\n\
-        {FFFFFF}4. Jenis Kelamin\t%s\t{AAAAAA}Klik untuk memilih\n\
-        {E69958}>>> [ LANJUT KE PEMILIHAN SPAWN ] >>>\t\t{00EEFF}[ Klik Selesai ]\n",
-        nameStr, placeStr, dateStr, genderStr);
-
-    ShowPlayerDialog(playerid, DLG_CHAR_DASHBOARD, DIALOG_STYLE_TABLIST_HEADERS,
-        "Formulir Karakter Baru - Santara Roleplay", dialogBody, "Pilih", "Batal");
     return 1;
 }
 
