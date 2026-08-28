@@ -37,10 +37,12 @@
 #define DLG_GPS_GARAGE          41
 #define DLG_GPS_INSURANCE       42
 #define DLG_GPS_BURGER_SHOT     43
+#define DLG_GPS_247             44
 #define DLG_ADMIN_TELEPORT      50
 #define DLG_ADMIN_TP_INSURANCE  51
 #define DLG_ADMIN_TP_GARAGE     52
 #define DLG_ADMIN_TP_BURGER_SHOT 53
+#define DLG_ADMIN_TP_247        54
 
 // Inventory & Item Dialogs
 #define DLG_INV_MAIN            60
@@ -55,12 +57,20 @@
 // Restoran & Bisnis Dialogs
 #define DLG_BURGER_SHOT         70
 #define DLG_BURGER_SHOT_QTY     71
+#define DLG_247_STORE           75
+#define DLG_247_STORE_QTY       76
 
 // DMV & SIM Dialogs
 #define DLG_DMV_MAIN            80
 #define DLG_DMV_CONFIRM         81
 #define DLG_SIM_SHOW_TARGET     82
+#define DLG_DOKUMEN_SHOW_TARGET 82
 #define DLG_SHOW_SIM            83
+
+// Smelter & Crafting Dialogs
+#define DLG_SMELTER_MAIN        90
+#define DLG_CRAFT_MAIN          91
+#define DLG_CRAFT_CATEGORY      92
 
 // UI Color Palette untuk Panel SIM TextDraw
 #define COLOR_SIM_BG            0x1E1E28F0
@@ -99,7 +109,64 @@
 #define BURGER_SHOT_VW_BASE     101
 
 // ============================================================
-//  Item ID Constants (Legal, Makanan, Minuman, Medis, Dokumen)
+//  Koordinat Gedung & Interior Supermarket (Interior ID 17)
+// ============================================================
+#define TWENTYFOUR_SEVEN_INT_ID   17
+#define TWENTYFOUR_SEVEN_INT_X    -25.8845
+#define TWENTYFOUR_SEVEN_INT_Y    -185.8680
+#define TWENTYFOUR_SEVEN_INT_Z    1003.5469
+#define TWENTYFOUR_SEVEN_INT_A    0.0000
+
+#define TWENTYFOUR_SEVEN_CASH1_X  -21.3273
+#define TWENTYFOUR_SEVEN_CASH1_Y  -185.1126
+#define TWENTYFOUR_SEVEN_CASH1_Z  1003.5468
+#define TWENTYFOUR_SEVEN_CASH1_A  175.7660
+
+#define TWENTYFOUR_SEVEN_CASH2_X  -9.3219
+#define TWENTYFOUR_SEVEN_CASH2_Y  -178.3290
+#define TWENTYFOUR_SEVEN_CASH2_Z  1003.5468
+#define TWENTYFOUR_SEVEN_CASH2_A  182.4088
+
+#define TWENTYFOUR_SEVEN_CASH_X   -21.3273
+#define TWENTYFOUR_SEVEN_CASH_Y   -185.1126
+#define TWENTYFOUR_SEVEN_CASH_Z   1003.5468
+
+// Virtual World terpisah untuk masing-masing cabang (201 - 205)
+#define TWENTYFOUR_SEVEN_VW_BASE  201
+
+// ============================================================
+//  Koordinat Meja Kerja Rahasia / Gunsmith Workbench
+// ============================================================
+#define CRAFT_BENCH_X           -1116.1784
+#define CRAFT_BENCH_Y           -1637.0214
+#define CRAFT_BENCH_Z           76.3671
+#define CRAFT_BENCH_A           107.1094
+
+// ============================================================
+//  Koordinat 4 Meja Peleburan / Smelter (Ocean Docks LS)
+// ============================================================
+#define SMELTER_TABLE1_X        2475.1838
+#define SMELTER_TABLE1_Y        -2080.1926
+#define SMELTER_TABLE1_Z        13.5468
+#define SMELTER_TABLE1_A        352.5955
+
+#define SMELTER_TABLE2_X        2481.9882
+#define SMELTER_TABLE2_Y        -2080.0844
+#define SMELTER_TABLE2_Z        13.5468
+#define SMELTER_TABLE2_A        355.2447
+
+#define SMELTER_TABLE3_X        2489.0581
+#define SMELTER_TABLE3_Y        -2080.0927
+#define SMELTER_TABLE3_Z        13.5468
+#define SMELTER_TABLE3_A        2.9976
+
+#define SMELTER_TABLE4_X        2496.2946
+#define SMELTER_TABLE4_Y        -2079.8083
+#define SMELTER_TABLE4_Z        13.5468
+#define SMELTER_TABLE4_A        17.7647
+
+// ============================================================
+//  Item ID Constants (Legal, Makanan, Minuman, Medis, Dokumen, Crafting)
 // ============================================================
 // 1. Makanan (1 - 3)
 #define ITEM_BURGER             1
@@ -123,7 +190,41 @@
 #define ITEM_SIM_B              13
 #define ITEM_SIM_C              14
 
-#define TOTAL_ITEM_COUNT        14
+// 5. Bahan Mentah Tambang & Alam (15 - 19)
+#define ITEM_IRON_ORE           15
+#define ITEM_SCRAP_METAL        16
+#define ITEM_SULFUR             17
+#define ITEM_CHARCOAL           18
+#define ITEM_COPPER_ORE         19
+
+// 6. Bahan Olahan Peleburan (20 - 22)
+#define ITEM_STEEL_BAR          20
+#define ITEM_BRASS_PLATE        21
+#define ITEM_GUNPOWDER          22
+
+// 7. Komponen Senjata (23 - 25)
+#define ITEM_BARREL_SLIDE       23
+#define ITEM_TRIGGER_MECH       24
+#define ITEM_EMPTY_MAG          25
+
+// 8. Amunisi & Rompi (26 - 30)
+#define ITEM_AMMO_9MM           26
+#define ITEM_AMMO_DEAGLE        27
+#define ITEM_AMMO_SHOTGUN       28
+#define ITEM_AMMO_RIFLE         29
+#define ITEM_KEVLAR_VEST        30
+
+// 9. Alat Kerja / Tools (31 - 32)
+#define ITEM_PICKAXE            31
+#define ITEM_TOOLBOX            32
+
+// 10. Senjata Api Jadi / Crafted Weapons (33 - 36)
+#define ITEM_WEAPON_COLT45      33
+#define ITEM_WEAPON_DEAGLE      34
+#define ITEM_WEAPON_SHOTGUN     35
+#define ITEM_WEAPON_AK47        36
+
+#define TOTAL_ITEM_COUNT        36
 
 // Status Kendaraan Pribadi
 #define VEH_STATUS_OUTSIDE      0   // Terparkir di Luar (Dunia Game)

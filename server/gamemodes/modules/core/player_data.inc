@@ -115,8 +115,8 @@ enum E_PLAYER_DATA {
     p_DrivingTestType,          // 1: SIM A, 2: SIM B, 3: SIM C
     Float:p_DrivingVehLastHealth,
     //    Status Panel UI SIM (Right Sidebar)
-    bool:p_InSimUI,
-    p_SelectedSimIndex,         // 0: SIM A, 1: SIM B, 2: SIM C
+    bool:p_InDokumenUI,
+    p_SelectedDokumenIndex,         // 0: SIM A, 1: SIM B, 2: SIM C
     p_ViewingSimTarget
 }
 
@@ -156,8 +156,8 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_DrivingTestErrors] = 0;
     gPlayerData[playerid][p_DrivingTestType] = 0;
     gPlayerData[playerid][p_DrivingVehLastHealth] = 1000.0;
-    gPlayerData[playerid][p_InSimUI]        = false;
-    gPlayerData[playerid][p_SelectedSimIndex] = 0;
+    gPlayerData[playerid][p_InDokumenUI]        = false;
+    gPlayerData[playerid][p_SelectedDokumenIndex] = 0;
     gPlayerData[playerid][p_ViewingSimTarget] = INVALID_PLAYER_ID;
     gPlayerData[playerid][p_Score]          = 1;
     gPlayerData[playerid][p_Cash]           = 500;

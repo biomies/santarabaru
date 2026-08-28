@@ -112,27 +112,28 @@ stock CreatePlayerMoneyHUD(playerid) {
     DestroyPlayerMoneyHUD(playerid);
 
     // ============================================================
-    //  A. Top-Right Identity HUD (X: 470.0 .. 630.0, Y: 12.0 .. 86.0)
+    //  A. Bottom-Left Identity HUD (X: 26.0 .. 160.0, Y: 320.0 .. 394.0)
+    //  Diletakkan tepat di atas Thirsty Bar (Y: 404.0) dengan jeda rapi 10px
     // ============================================================
 
     // 1. Background Box (Dark Indigo #1E1E2EFF)
-    TD_HudBox[playerid] = CreatePlayerTextDraw(playerid, 470.0, 12.0, "_");
+    TD_HudBox[playerid] = CreatePlayerTextDraw(playerid, 26.0, 320.0, "_");
     PlayerTextDrawUseBox(playerid, TD_HudBox[playerid], true);
     PlayerTextDrawBoxColor(playerid, TD_HudBox[playerid], COLOR_HUD_BG);
-    PlayerTextDrawTextSize(playerid, TD_HudBox[playerid], 630.0, 0.0);
+    PlayerTextDrawTextSize(playerid, TD_HudBox[playerid], 160.0, 0.0);
     PlayerTextDrawLetterSize(playerid, TD_HudBox[playerid], 0.0, 8.0);
     PlayerTextDrawSetSelectable(playerid, TD_HudBox[playerid], false);
 
     // 2. Top Accent Bar (Electric Purple #5814EEFF)
-    TD_HudTopBar[playerid] = CreatePlayerTextDraw(playerid, 470.0, 12.0, "_");
+    TD_HudTopBar[playerid] = CreatePlayerTextDraw(playerid, 26.0, 320.0, "_");
     PlayerTextDrawUseBox(playerid, TD_HudTopBar[playerid], true);
     PlayerTextDrawBoxColor(playerid, TD_HudTopBar[playerid], COLOR_HUD_PURPLE);
-    PlayerTextDrawTextSize(playerid, TD_HudTopBar[playerid], 630.0, 0.0);
+    PlayerTextDrawTextSize(playerid, TD_HudTopBar[playerid], 160.0, 0.0);
     PlayerTextDrawLetterSize(playerid, TD_HudTopBar[playerid], 0.0, 0.8);
     PlayerTextDrawSetSelectable(playerid, TD_HudTopBar[playerid], false);
 
     // 3. Watermark S Logo (Left Side of HUD)
-    TD_HudLogo[playerid] = CreatePlayerTextDraw(playerid, 492.0, 23.0, "S");
+    TD_HudLogo[playerid] = CreatePlayerTextDraw(playerid, 46.0, 331.0, "S");
     PlayerTextDrawFont(playerid, TD_HudLogo[playerid], 2);
     PlayerTextDrawLetterSize(playerid, TD_HudLogo[playerid], 1.25, 4.8);
     PlayerTextDrawColor(playerid, TD_HudLogo[playerid], COLOR_HUD_LOGO);
@@ -140,7 +141,7 @@ stock CreatePlayerMoneyHUD(playerid) {
     PlayerTextDrawSetSelectable(playerid, TD_HudLogo[playerid], false);
 
     // 4. Line 1: ID : 0 (Right-Aligned)
-    TD_HudID[playerid] = CreatePlayerTextDraw(playerid, 622.0, 24.0, "ID : 0");
+    TD_HudID[playerid] = CreatePlayerTextDraw(playerid, 152.0, 332.0, "ID : 0");
     PlayerTextDrawFont(playerid, TD_HudID[playerid], 2);
     PlayerTextDrawLetterSize(playerid, TD_HudID[playerid], 0.18, 0.95);
     PlayerTextDrawColor(playerid, TD_HudID[playerid], 0xFFFFFFFF);
@@ -149,7 +150,7 @@ stock CreatePlayerMoneyHUD(playerid) {
     PlayerTextDrawSetSelectable(playerid, TD_HudID[playerid], false);
 
     // 5. Line 2: [Nama Pemain] (Right-Aligned)
-    TD_HudName[playerid] = CreatePlayerTextDraw(playerid, 622.0, 36.0, "Nama Pemain");
+    TD_HudName[playerid] = CreatePlayerTextDraw(playerid, 152.0, 344.0, "Nama Pemain");
     PlayerTextDrawFont(playerid, TD_HudName[playerid], 2);
     PlayerTextDrawLetterSize(playerid, TD_HudName[playerid], 0.20, 1.05);
     PlayerTextDrawColor(playerid, TD_HudName[playerid], 0xFFFFFFFF);
@@ -158,7 +159,7 @@ stock CreatePlayerMoneyHUD(playerid) {
     PlayerTextDrawSetSelectable(playerid, TD_HudName[playerid], false);
 
     // 6. Line 3: Rp. xxx.xxx.xxx (Right-Aligned)
-    TD_HudMoney[playerid] = CreatePlayerTextDraw(playerid, 622.0, 49.0, "Rp. 0");
+    TD_HudMoney[playerid] = CreatePlayerTextDraw(playerid, 152.0, 357.0, "Rp. 0");
     PlayerTextDrawFont(playerid, TD_HudMoney[playerid], 2);
     PlayerTextDrawLetterSize(playerid, TD_HudMoney[playerid], 0.20, 1.05);
     PlayerTextDrawColor(playerid, TD_HudMoney[playerid], 0xFFFFFFFF);
@@ -167,7 +168,7 @@ stock CreatePlayerMoneyHUD(playerid) {
     PlayerTextDrawSetSelectable(playerid, TD_HudMoney[playerid], false);
 
     // 7. Line 4: Job : Pengangguran (Right-Aligned)
-    TD_HudJob[playerid] = CreatePlayerTextDraw(playerid, 622.0, 62.0, "Job : Pengangguran");
+    TD_HudJob[playerid] = CreatePlayerTextDraw(playerid, 152.0, 370.0, "Job : Pengangguran");
     PlayerTextDrawFont(playerid, TD_HudJob[playerid], 2);
     PlayerTextDrawLetterSize(playerid, TD_HudJob[playerid], 0.17, 0.95);
     PlayerTextDrawColor(playerid, TD_HudJob[playerid], 0xFFFFFFFF);

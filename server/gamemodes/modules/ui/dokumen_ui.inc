@@ -10,22 +10,22 @@
 // ============================================================
 
 // ─── 1. Sesi Panel Sidebar Kanan Layar (/sim) ───────────────
-new PlayerText:TD_SimMainBox[MAX_PLAYERS]        = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SimTopBar[MAX_PLAYERS]         = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SimCloseBtn[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SimHeader[MAX_PLAYERS]         = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DokumenMainBox[MAX_PLAYERS]        = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DokumenTopBar[MAX_PLAYERS]         = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DokumenCloseBtn[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DokumenHeader[MAX_PLAYERS]         = {PlayerText:INVALID_TEXT_DRAW, ...};
 
 // 3x Option Slots (SIM A, SIM B, SIM C)
-new PlayerText:TD_SimSlot[MAX_PLAYERS][3];
+new PlayerText:TD_DokumenSlot[MAX_PLAYERS][4];
 
 // Action Buttons
-new PlayerText:TD_SimBtnLihat[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SimBtnTunjukkan[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SimBtnBatal[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DokumenBtnLihat[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DokumenBtnTunjukkan[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DokumenBtnBatal[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
 
 // Navigation Buttons
-new PlayerText:TD_SimBtnNaik[MAX_PLAYERS]        = {PlayerText:INVALID_TEXT_DRAW, ...};
-new PlayerText:TD_SimBtnTurun[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DokumenBtnNaik[MAX_PLAYERS]        = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_DokumenBtnTurun[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
 
 // ─── 2. Kartu Fisik Digital "SANTARA Driving License" ────────
 new bool:gShowingSIMCard[MAX_PLAYERS]            = {false, ...};
@@ -76,50 +76,50 @@ new PlayerText:TD_SIMCard_Hint[MAX_PLAYERS]      = {PlayerText:INVALID_TEXT_DRAW
 //  Fungsi Destroy & Pembersihan TextDraw
 // ============================================================
 
-stock DestroyPlayerSimMenuTextDraws(playerid) {
-    if (TD_SimMainBox[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SimMainBox[playerid]);
-        TD_SimMainBox[playerid] = PlayerText:INVALID_TEXT_DRAW;
+stock DestroyPlayerDokumenMenuTextDraws(playerid) {
+    if (TD_DokumenMainBox[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DokumenMainBox[playerid]);
+        TD_DokumenMainBox[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SimTopBar[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SimTopBar[playerid]);
-        TD_SimTopBar[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DokumenTopBar[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DokumenTopBar[playerid]);
+        TD_DokumenTopBar[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SimCloseBtn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SimCloseBtn[playerid]);
-        TD_SimCloseBtn[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DokumenCloseBtn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DokumenCloseBtn[playerid]);
+        TD_DokumenCloseBtn[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SimHeader[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SimHeader[playerid]);
-        TD_SimHeader[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DokumenHeader[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DokumenHeader[playerid]);
+        TD_DokumenHeader[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
 
-    for (new i = 0; i < 3; i++) {
-        if (TD_SimSlot[playerid][i] != PlayerText:INVALID_TEXT_DRAW) {
-            PlayerTextDrawDestroy(playerid, TD_SimSlot[playerid][i]);
-            TD_SimSlot[playerid][i] = PlayerText:INVALID_TEXT_DRAW;
+    for (new i = 0; i < 4; i++) {
+        if (TD_DokumenSlot[playerid][i] != PlayerText:INVALID_TEXT_DRAW) {
+            PlayerTextDrawDestroy(playerid, TD_DokumenSlot[playerid][i]);
+            TD_DokumenSlot[playerid][i] = PlayerText:INVALID_TEXT_DRAW;
         }
     }
 
-    if (TD_SimBtnLihat[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SimBtnLihat[playerid]);
-        TD_SimBtnLihat[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DokumenBtnLihat[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DokumenBtnLihat[playerid]);
+        TD_DokumenBtnLihat[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SimBtnTunjukkan[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SimBtnTunjukkan[playerid]);
-        TD_SimBtnTunjukkan[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DokumenBtnTunjukkan[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DokumenBtnTunjukkan[playerid]);
+        TD_DokumenBtnTunjukkan[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SimBtnBatal[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SimBtnBatal[playerid]);
-        TD_SimBtnBatal[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DokumenBtnBatal[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DokumenBtnBatal[playerid]);
+        TD_DokumenBtnBatal[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SimBtnNaik[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SimBtnNaik[playerid]);
-        TD_SimBtnNaik[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DokumenBtnNaik[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DokumenBtnNaik[playerid]);
+        TD_DokumenBtnNaik[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
-    if (TD_SimBtnTurun[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SimBtnTurun[playerid]);
-        TD_SimBtnTurun[playerid] = PlayerText:INVALID_TEXT_DRAW;
+    if (TD_DokumenBtnTurun[playerid] != PlayerText:INVALID_TEXT_DRAW) {
+        PlayerTextDrawDestroy(playerid, TD_DokumenBtnTurun[playerid]);
+        TD_DokumenBtnTurun[playerid] = PlayerText:INVALID_TEXT_DRAW;
     }
 }
 
@@ -238,8 +238,8 @@ stock DestroyPlayerSIMCardTextDraws(playerid) {
     }
 }
 
-stock DestroyPlayerSimTextDraws(playerid) {
-    DestroyPlayerSimMenuTextDraws(playerid);
+stock DestroyPlayerDokumenTextDraws(playerid) {
+    DestroyPlayerDokumenMenuTextDraws(playerid);
     DestroyPlayerSIMCardTextDraws(playerid);
 }
 
@@ -247,148 +247,149 @@ stock DestroyPlayerSimTextDraws(playerid) {
 //  1. UI Menu Sisi Kanan Layar (/sim)
 // ============================================================
 
-stock CreatePlayerSimMenuTextDraws(playerid) {
-    DestroyPlayerSimMenuTextDraws(playerid);
+stock CreatePlayerDokumenMenuTextDraws(playerid) {
+    DestroyPlayerDokumenMenuTextDraws(playerid);
 
     // 1. Background Container Box (Right side: X: 430.0 .. 620.0, Y: 78.0 .. 275.0)
-    TD_SimMainBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 78.0, "_");
-    PlayerTextDrawUseBox(playerid, TD_SimMainBox[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_SimMainBox[playerid], COLOR_SIM_BG);
-    PlayerTextDrawTextSize(playerid, TD_SimMainBox[playerid], 620.0, 0.0);
-    PlayerTextDrawLetterSize(playerid, TD_SimMainBox[playerid], 0.0, 24.5);
-    PlayerTextDrawSetSelectable(playerid, TD_SimMainBox[playerid], false);
+    TD_DokumenMainBox[playerid] = CreatePlayerTextDraw(playerid, 430.0, 78.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_DokumenMainBox[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DokumenMainBox[playerid], COLOR_SIM_BG);
+    PlayerTextDrawTextSize(playerid, TD_DokumenMainBox[playerid], 620.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_DokumenMainBox[playerid], 0.0, 24.5);
+    PlayerTextDrawSetSelectable(playerid, TD_DokumenMainBox[playerid], false);
 
     // 2. Top Accent Line (Electric Purple, X: 430.0 .. 602.0, Y: 78.0)
-    TD_SimTopBar[playerid] = CreatePlayerTextDraw(playerid, 430.0, 78.0, "_");
-    PlayerTextDrawUseBox(playerid, TD_SimTopBar[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_SimTopBar[playerid], COLOR_SIM_PURPLE);
-    PlayerTextDrawTextSize(playerid, TD_SimTopBar[playerid], 602.0, 0.0);
-    PlayerTextDrawLetterSize(playerid, TD_SimTopBar[playerid], 0.0, 0.75);
-    PlayerTextDrawSetSelectable(playerid, TD_SimTopBar[playerid], false);
+    TD_DokumenTopBar[playerid] = CreatePlayerTextDraw(playerid, 430.0, 78.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_DokumenTopBar[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DokumenTopBar[playerid], COLOR_SIM_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_DokumenTopBar[playerid], 602.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_DokumenTopBar[playerid], 0.0, 0.75);
+    PlayerTextDrawSetSelectable(playerid, TD_DokumenTopBar[playerid], false);
 
     // 3. Top-Right Red Close Button [X] (Center X: 611.0, Y: 77.0)
-    TD_SimCloseBtn[playerid] = CreatePlayerTextDraw(playerid, 611.0, 77.0, "X");
-    PlayerTextDrawFont(playerid, TD_SimCloseBtn[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SimCloseBtn[playerid], 0.16, 0.95);
-    PlayerTextDrawColor(playerid, TD_SimCloseBtn[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SimCloseBtn[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_SimCloseBtn[playerid], COLOR_SIM_RED);
-    PlayerTextDrawTextSize(playerid, TD_SimCloseBtn[playerid], 10.0, 18.0);
-    PlayerTextDrawAlignment(playerid, TD_SimCloseBtn[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SimCloseBtn[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SimCloseBtn[playerid], true);
+    TD_DokumenCloseBtn[playerid] = CreatePlayerTextDraw(playerid, 611.0, 77.0, "X");
+    PlayerTextDrawFont(playerid, TD_DokumenCloseBtn[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DokumenCloseBtn[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_DokumenCloseBtn[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DokumenCloseBtn[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DokumenCloseBtn[playerid], COLOR_SIM_RED);
+    PlayerTextDrawTextSize(playerid, TD_DokumenCloseBtn[playerid], 10.0, 18.0);
+    PlayerTextDrawAlignment(playerid, TD_DokumenCloseBtn[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DokumenCloseBtn[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DokumenCloseBtn[playerid], true);
 
     // 4. Header Bar Box (SIM) (Center X: 525.0, Y: 92.0)
-    TD_SimHeader[playerid] = CreatePlayerTextDraw(playerid, 525.0, 92.0, "SIM");
-    PlayerTextDrawFont(playerid, TD_SimHeader[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SimHeader[playerid], 0.18, 1.05);
-    PlayerTextDrawColor(playerid, TD_SimHeader[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SimHeader[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_SimHeader[playerid], COLOR_SIM_PURPLE);
-    PlayerTextDrawTextSize(playerid, TD_SimHeader[playerid], 15.0, 170.0);
-    PlayerTextDrawAlignment(playerid, TD_SimHeader[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SimHeader[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SimHeader[playerid], false);
+    TD_DokumenHeader[playerid] = CreatePlayerTextDraw(playerid, 525.0, 92.0, "DOKUMEN");
+    PlayerTextDrawFont(playerid, TD_DokumenHeader[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DokumenHeader[playerid], 0.18, 1.05);
+    PlayerTextDrawColor(playerid, TD_DokumenHeader[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DokumenHeader[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DokumenHeader[playerid], COLOR_SIM_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_DokumenHeader[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_DokumenHeader[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DokumenHeader[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DokumenHeader[playerid], false);
 
     // 5. 3x Option Slots (SIM A, SIM B, SIM C) (Y: 114.0, 131.0, 148.0)
-    for (new i = 0; i < 3; i++) {
+    for (new i = 0; i < 4; i++) {
         new Float:slotY = 114.0 + (i * 17.0);
-        TD_SimSlot[playerid][i] = CreatePlayerTextDraw(playerid, 440.0, slotY, "SIM");
-        PlayerTextDrawFont(playerid, TD_SimSlot[playerid][i], 1);
-        PlayerTextDrawLetterSize(playerid, TD_SimSlot[playerid][i], 0.17, 1.00);
-        PlayerTextDrawColor(playerid, TD_SimSlot[playerid][i], 0xFFFFFFFF);
-        PlayerTextDrawUseBox(playerid, TD_SimSlot[playerid][i], true);
-        PlayerTextDrawBoxColor(playerid, TD_SimSlot[playerid][i], COLOR_SIM_EMPTY);
-        PlayerTextDrawTextSize(playerid, TD_SimSlot[playerid][i], 610.0, 14.0);
-        PlayerTextDrawSetOutline(playerid, TD_SimSlot[playerid][i], 1);
-        PlayerTextDrawSetSelectable(playerid, TD_SimSlot[playerid][i], true);
+        TD_DokumenSlot[playerid][i] = CreatePlayerTextDraw(playerid, 440.0, slotY, "SIM");
+        PlayerTextDrawFont(playerid, TD_DokumenSlot[playerid][i], 1);
+        PlayerTextDrawLetterSize(playerid, TD_DokumenSlot[playerid][i], 0.17, 1.00);
+        PlayerTextDrawColor(playerid, TD_DokumenSlot[playerid][i], 0xFFFFFFFF);
+        PlayerTextDrawUseBox(playerid, TD_DokumenSlot[playerid][i], true);
+        PlayerTextDrawBoxColor(playerid, TD_DokumenSlot[playerid][i], COLOR_SIM_EMPTY);
+        PlayerTextDrawTextSize(playerid, TD_DokumenSlot[playerid][i], 610.0, 14.0);
+        PlayerTextDrawSetOutline(playerid, TD_DokumenSlot[playerid][i], 1);
+        PlayerTextDrawSetSelectable(playerid, TD_DokumenSlot[playerid][i], true);
     }
 
     // 6. Action Button: Lihat (Center X: 525.0, Y: 172.0)
-    TD_SimBtnLihat[playerid] = CreatePlayerTextDraw(playerid, 525.0, 172.0, "Lihat");
-    PlayerTextDrawFont(playerid, TD_SimBtnLihat[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SimBtnLihat[playerid], 0.17, 1.05);
-    PlayerTextDrawColor(playerid, TD_SimBtnLihat[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SimBtnLihat[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_SimBtnLihat[playerid], COLOR_SIM_PURPLE);
-    PlayerTextDrawTextSize(playerid, TD_SimBtnLihat[playerid], 15.0, 170.0);
-    PlayerTextDrawAlignment(playerid, TD_SimBtnLihat[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SimBtnLihat[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SimBtnLihat[playerid], true);
+    TD_DokumenBtnLihat[playerid] = CreatePlayerTextDraw(playerid, 525.0, 189.0, "Lihat");
+    PlayerTextDrawFont(playerid, TD_DokumenBtnLihat[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DokumenBtnLihat[playerid], 0.17, 1.05);
+    PlayerTextDrawColor(playerid, TD_DokumenBtnLihat[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DokumenBtnLihat[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DokumenBtnLihat[playerid], COLOR_SIM_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_DokumenBtnLihat[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_DokumenBtnLihat[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DokumenBtnLihat[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DokumenBtnLihat[playerid], true);
 
     // 7. Action Button: Tunjukkan (Center X: 525.0, Y: 195.0)
-    TD_SimBtnTunjukkan[playerid] = CreatePlayerTextDraw(playerid, 525.0, 195.0, "Tunjukkan");
-    PlayerTextDrawFont(playerid, TD_SimBtnTunjukkan[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SimBtnTunjukkan[playerid], 0.17, 1.05);
-    PlayerTextDrawColor(playerid, TD_SimBtnTunjukkan[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SimBtnTunjukkan[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_SimBtnTunjukkan[playerid], COLOR_SIM_PURPLE);
-    PlayerTextDrawTextSize(playerid, TD_SimBtnTunjukkan[playerid], 15.0, 170.0);
-    PlayerTextDrawAlignment(playerid, TD_SimBtnTunjukkan[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SimBtnTunjukkan[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SimBtnTunjukkan[playerid], true);
+    TD_DokumenBtnTunjukkan[playerid] = CreatePlayerTextDraw(playerid, 525.0, 212.0, "Tunjukkan");
+    PlayerTextDrawFont(playerid, TD_DokumenBtnTunjukkan[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DokumenBtnTunjukkan[playerid], 0.17, 1.05);
+    PlayerTextDrawColor(playerid, TD_DokumenBtnTunjukkan[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DokumenBtnTunjukkan[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DokumenBtnTunjukkan[playerid], COLOR_SIM_PURPLE);
+    PlayerTextDrawTextSize(playerid, TD_DokumenBtnTunjukkan[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_DokumenBtnTunjukkan[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DokumenBtnTunjukkan[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DokumenBtnTunjukkan[playerid], true);
 
     // 8. Action Button: Batal (Center X: 525.0, Y: 218.0)
-    TD_SimBtnBatal[playerid] = CreatePlayerTextDraw(playerid, 525.0, 218.0, "Batal");
-    PlayerTextDrawFont(playerid, TD_SimBtnBatal[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SimBtnBatal[playerid], 0.17, 1.05);
-    PlayerTextDrawColor(playerid, TD_SimBtnBatal[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SimBtnBatal[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_SimBtnBatal[playerid], COLOR_SIM_RED);
-    PlayerTextDrawTextSize(playerid, TD_SimBtnBatal[playerid], 15.0, 170.0);
-    PlayerTextDrawAlignment(playerid, TD_SimBtnBatal[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SimBtnBatal[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SimBtnBatal[playerid], true);
+    TD_DokumenBtnBatal[playerid] = CreatePlayerTextDraw(playerid, 525.0, 235.0, "Batal");
+    PlayerTextDrawFont(playerid, TD_DokumenBtnBatal[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DokumenBtnBatal[playerid], 0.17, 1.05);
+    PlayerTextDrawColor(playerid, TD_DokumenBtnBatal[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DokumenBtnBatal[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DokumenBtnBatal[playerid], COLOR_SIM_RED);
+    PlayerTextDrawTextSize(playerid, TD_DokumenBtnBatal[playerid], 15.0, 170.0);
+    PlayerTextDrawAlignment(playerid, TD_DokumenBtnBatal[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DokumenBtnBatal[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DokumenBtnBatal[playerid], true);
 
     // 9. Navigation Row: Naik (Center X: 481.0, Y: 242.0) & Turun (Center X: 569.0, Y: 242.0)
-    TD_SimBtnNaik[playerid] = CreatePlayerTextDraw(playerid, 481.0, 242.0, "Naik");
-    PlayerTextDrawFont(playerid, TD_SimBtnNaik[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SimBtnNaik[playerid], 0.16, 0.95);
-    PlayerTextDrawColor(playerid, TD_SimBtnNaik[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SimBtnNaik[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_SimBtnNaik[playerid], COLOR_SIM_SLATE);
-    PlayerTextDrawTextSize(playerid, TD_SimBtnNaik[playerid], 14.0, 82.0);
-    PlayerTextDrawAlignment(playerid, TD_SimBtnNaik[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SimBtnNaik[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SimBtnNaik[playerid], true);
+    TD_DokumenBtnNaik[playerid] = CreatePlayerTextDraw(playerid, 481.0, 259.0, "Naik");
+    PlayerTextDrawFont(playerid, TD_DokumenBtnNaik[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DokumenBtnNaik[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_DokumenBtnNaik[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DokumenBtnNaik[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DokumenBtnNaik[playerid], COLOR_SIM_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_DokumenBtnNaik[playerid], 14.0, 82.0);
+    PlayerTextDrawAlignment(playerid, TD_DokumenBtnNaik[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DokumenBtnNaik[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DokumenBtnNaik[playerid], true);
 
-    TD_SimBtnTurun[playerid] = CreatePlayerTextDraw(playerid, 569.0, 242.0, "Turun");
-    PlayerTextDrawFont(playerid, TD_SimBtnTurun[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SimBtnTurun[playerid], 0.16, 0.95);
-    PlayerTextDrawColor(playerid, TD_SimBtnTurun[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SimBtnTurun[playerid], true);
-    PlayerTextDrawBoxColor(playerid, TD_SimBtnTurun[playerid], COLOR_SIM_SLATE);
-    PlayerTextDrawTextSize(playerid, TD_SimBtnTurun[playerid], 14.0, 82.0);
-    PlayerTextDrawAlignment(playerid, TD_SimBtnTurun[playerid], 2);
-    PlayerTextDrawSetOutline(playerid, TD_SimBtnTurun[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SimBtnTurun[playerid], true);
+    TD_DokumenBtnTurun[playerid] = CreatePlayerTextDraw(playerid, 569.0, 259.0, "Turun");
+    PlayerTextDrawFont(playerid, TD_DokumenBtnTurun[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_DokumenBtnTurun[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_DokumenBtnTurun[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_DokumenBtnTurun[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_DokumenBtnTurun[playerid], COLOR_SIM_SLATE);
+    PlayerTextDrawTextSize(playerid, TD_DokumenBtnTurun[playerid], 14.0, 82.0);
+    PlayerTextDrawAlignment(playerid, TD_DokumenBtnTurun[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_DokumenBtnTurun[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_DokumenBtnTurun[playerid], true);
 }
 
-stock UpdateSimUI(playerid) {
-    if (!gPlayerData[playerid][p_InSimUI]) return;
+stock UpdateDokumenUI(playerid) {
+    if (!gPlayerData[playerid][p_InDokumenUI]) return;
 
-    new const simNames[3][] = {
+    new const dokumenNames[4][] = {
         "SIM A",
         "SIM B",
-        "SIM C"
+        "SIM C",
+        "KTP"
     };
 
-    for (new i = 0; i < 3; i++) {
+    for (new i = 0; i < 4; i++) {
         new label[32];
-        if (gPlayerData[playerid][p_SelectedSimIndex] == i) {
-            format(label, sizeof(label), "> %s", simNames[i]);
-            PlayerTextDrawSetString(playerid, TD_SimSlot[playerid][i], label);
-            PlayerTextDrawBoxColor(playerid, TD_SimSlot[playerid][i], COLOR_SIM_PURPLE);
+        if (gPlayerData[playerid][p_SelectedDokumenIndex] == i) {
+            format(label, sizeof(label), "> %s", dokumenNames[i]);
+            PlayerTextDrawSetString(playerid, TD_DokumenSlot[playerid][i], label);
+            PlayerTextDrawBoxColor(playerid, TD_DokumenSlot[playerid][i], COLOR_SIM_PURPLE);
         } else {
-            format(label, sizeof(label), "%s", simNames[i]);
-            PlayerTextDrawSetString(playerid, TD_SimSlot[playerid][i], label);
-            PlayerTextDrawBoxColor(playerid, TD_SimSlot[playerid][i], COLOR_SIM_EMPTY);
+            format(label, sizeof(label), "%s", dokumenNames[i]);
+            PlayerTextDrawSetString(playerid, TD_DokumenSlot[playerid][i], label);
+            PlayerTextDrawBoxColor(playerid, TD_DokumenSlot[playerid][i], COLOR_SIM_EMPTY);
         }
-        PlayerTextDrawShow(playerid, TD_SimSlot[playerid][i]);
+        PlayerTextDrawShow(playerid, TD_DokumenSlot[playerid][i]);
     }
 }
 
-stock ShowSimPanelUI(playerid) {
+stock ShowDokumenPanelUI(playerid) {
     if (!CheckSpawned(playerid)) return 0;
 
     // Sembunyikan HUD pojok kanan atas sementara waktu (seperti /inv)
@@ -400,40 +401,40 @@ stock ShowSimPanelUI(playerid) {
         DestroyPlayerSIMCardTextDraws(playerid);
     }
 
-    CreatePlayerSimMenuTextDraws(playerid);
+    CreatePlayerDokumenMenuTextDraws(playerid);
 
-    gPlayerData[playerid][p_InSimUI] = true;
-    if (gPlayerData[playerid][p_SelectedSimIndex] < 0 || gPlayerData[playerid][p_SelectedSimIndex] > 2) {
-        gPlayerData[playerid][p_SelectedSimIndex] = 0;
+    gPlayerData[playerid][p_InDokumenUI] = true;
+    if (gPlayerData[playerid][p_SelectedDokumenIndex] < 0 || gPlayerData[playerid][p_SelectedDokumenIndex] > 3) {
+        gPlayerData[playerid][p_SelectedDokumenIndex] = 0;
     }
 
     // Show Elements
-    PlayerTextDrawShow(playerid, TD_SimMainBox[playerid]);
-    PlayerTextDrawShow(playerid, TD_SimTopBar[playerid]);
-    PlayerTextDrawShow(playerid, TD_SimCloseBtn[playerid]);
-    PlayerTextDrawShow(playerid, TD_SimHeader[playerid]);
+    PlayerTextDrawShow(playerid, TD_DokumenMainBox[playerid]);
+    PlayerTextDrawShow(playerid, TD_DokumenTopBar[playerid]);
+    PlayerTextDrawShow(playerid, TD_DokumenCloseBtn[playerid]);
+    PlayerTextDrawShow(playerid, TD_DokumenHeader[playerid]);
 
-    UpdateSimUI(playerid);
+    UpdateDokumenUI(playerid);
 
-    PlayerTextDrawShow(playerid, TD_SimBtnLihat[playerid]);
-    PlayerTextDrawShow(playerid, TD_SimBtnTunjukkan[playerid]);
-    PlayerTextDrawShow(playerid, TD_SimBtnBatal[playerid]);
-    PlayerTextDrawShow(playerid, TD_SimBtnNaik[playerid]);
-    PlayerTextDrawShow(playerid, TD_SimBtnTurun[playerid]);
+    PlayerTextDrawShow(playerid, TD_DokumenBtnLihat[playerid]);
+    PlayerTextDrawShow(playerid, TD_DokumenBtnTunjukkan[playerid]);
+    PlayerTextDrawShow(playerid, TD_DokumenBtnBatal[playerid]);
+    PlayerTextDrawShow(playerid, TD_DokumenBtnNaik[playerid]);
+    PlayerTextDrawShow(playerid, TD_DokumenBtnTurun[playerid]);
 
     SelectTextDraw(playerid, COLOR_SIM_PURPLE);
     PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
     return 1;
 }
 
-stock CloseSimPanelUI(playerid, bool:cancelSelect = true) {
-    if (!gPlayerData[playerid][p_InSimUI]) return;
+stock CloseDokumenPanelUI(playerid, bool:cancelSelect = true) {
+    if (!gPlayerData[playerid][p_InDokumenUI]) return;
 
-    gPlayerData[playerid][p_InSimUI] = false;
+    gPlayerData[playerid][p_InDokumenUI] = false;
     if (cancelSelect) {
         CancelSelectTextDraw(playerid);
     }
-    DestroyPlayerSimMenuTextDraws(playerid);
+    DestroyPlayerDokumenMenuTextDraws(playerid);
     PlayerPlaySound(playerid, 1084, 0.0, 0.0, 0.0);
 
     // Kembalikan & segarkan HUD jika tidak ada UI layar kanan lain yang aktif
@@ -456,7 +457,7 @@ stock HidePlayerSIMCard(viewerid) {
     PlayerPlaySound(viewerid, 1084, 0.0, 0.0, 0.0);
 
     // Kembalikan & segarkan HUD jika tidak ada UI layar kanan lain yang aktif
-    if (!gPlayerData[viewerid][p_InSimUI] && !gPlayerData[viewerid][p_InInventoryUI] && !gShowingKTP[viewerid]) {
+    if (!gPlayerData[viewerid][p_InDokumenUI] && !gPlayerData[viewerid][p_InInventoryUI] && !gShowingKTP[viewerid]) {
         CreatePlayerMoneyHUD(viewerid);
         UpdatePlayerMoneyHUD(viewerid);
         ShowPlayerMoneyHUD(viewerid);
@@ -798,7 +799,7 @@ stock bool:PlayerHasSpecificSIM(playerid, simIndex) {
     return false;
 }
 
-stock HandleSimUIClick(playerid, PlayerText:playertextid) {
+stock HandleDokumenUIClick(playerid, PlayerText:playertextid) {
     // 1. Cek Interaksi Kartu SIM Fisik Terbuka
     if (gShowingSIMCard[playerid]) {
         if (playertextid == TD_SIMCard_Close[playerid]) {
@@ -808,93 +809,121 @@ stock HandleSimUIClick(playerid, PlayerText:playertextid) {
         return 1;
     }
 
-    if (!gPlayerData[playerid][p_InSimUI]) return 0;
+    if (!gPlayerData[playerid][p_InDokumenUI]) return 0;
 
     // 2. Tombol Close [X] atau Batal Menu
-    if (playertextid == TD_SimCloseBtn[playerid] || playertextid == TD_SimBtnBatal[playerid]) {
-        CloseSimPanelUI(playerid, true);
+    if (playertextid == TD_DokumenCloseBtn[playerid] || playertextid == TD_DokumenBtnBatal[playerid]) {
+        CloseDokumenPanelUI(playerid, true);
         return 1;
     }
 
     // 3. Tombol Navigasi Naik
-    if (playertextid == TD_SimBtnNaik[playerid]) {
-        gPlayerData[playerid][p_SelectedSimIndex]--;
-        if (gPlayerData[playerid][p_SelectedSimIndex] < 0) {
-            gPlayerData[playerid][p_SelectedSimIndex] = 2;
+    if (playertextid == TD_DokumenBtnNaik[playerid]) {
+        gPlayerData[playerid][p_SelectedDokumenIndex]--;
+        if (gPlayerData[playerid][p_SelectedDokumenIndex] < 0) {
+            gPlayerData[playerid][p_SelectedDokumenIndex] = 3;
         }
-        UpdateSimUI(playerid);
+        UpdateDokumenUI(playerid);
         PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
         return 1;
     }
 
     // 4. Tombol Navigasi Turun
-    if (playertextid == TD_SimBtnTurun[playerid]) {
-        gPlayerData[playerid][p_SelectedSimIndex]++;
-        if (gPlayerData[playerid][p_SelectedSimIndex] > 2) {
-            gPlayerData[playerid][p_SelectedSimIndex] = 0;
+    if (playertextid == TD_DokumenBtnTurun[playerid]) {
+        gPlayerData[playerid][p_SelectedDokumenIndex]++;
+        if (gPlayerData[playerid][p_SelectedDokumenIndex] > 3) {
+            gPlayerData[playerid][p_SelectedDokumenIndex] = 0;
         }
-        UpdateSimUI(playerid);
+        UpdateDokumenUI(playerid);
         PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
         return 1;
     }
 
     // 5. Klik Langsung ke Slot SIM A, B, atau C
-    for (new s = 0; s < 3; s++) {
-        if (playertextid == TD_SimSlot[playerid][s]) {
-            gPlayerData[playerid][p_SelectedSimIndex] = s;
-            UpdateSimUI(playerid);
+    for (new s = 0; s < 4; s++) {
+        if (playertextid == TD_DokumenSlot[playerid][s]) {
+            gPlayerData[playerid][p_SelectedDokumenIndex] = s;
+            UpdateDokumenUI(playerid);
             PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
             return 1;
         }
     }
 
     // 6. Tombol [ Lihat ] (Tampilkan Kartu SIM Fisik Digital tanpa menutup SelectTextDraw)
-    if (playertextid == TD_SimBtnLihat[playerid]) {
-        new idx = gPlayerData[playerid][p_SelectedSimIndex];
-        new const simNames[3][] = {"SIM A", "SIM B", "SIM C"};
+    if (playertextid == TD_DokumenBtnLihat[playerid]) {
+        new idx = gPlayerData[playerid][p_SelectedDokumenIndex];
+        new const dokumenNames[4][] = {"SIM A", "SIM B", "SIM C", "KTP"};
 
-        if (!PlayerHasSpecificSIM(playerid, idx)) {
-            new errMsg[128];
-            format(errMsg, sizeof(errMsg), "  [SIM] Anda belum memiliki lisensi %s! Silakan buat di Kantor Satpas DMV San Fierro.", simNames[idx]);
-            SendClientMessage(playerid, COL_RED, errMsg);
-            PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+        if (idx == 3) {
+            if (!gPlayerData[playerid][p_HasKTP]) {
+                SendClientMessage(playerid, COL_RED, "  [DOKUMEN] Anda belum memiliki e-KTP terdaftar di Balai Kota!");
+                PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+                return 1;
+            }
+            if (!Inventory_HasItem(playerid, ITEM_KTP)) {
+                SendClientMessage(playerid, COL_RED, "  [DOKUMEN] Anda tidak membawa fisik kartu e-KTP di kantong/tas Anda!");
+                PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+                return 1;
+            }
+            CloseDokumenPanelUI(playerid, false);
+            ShowPlayerKTPCard(playerid, playerid);
+            return 1;
+        } else {
+            if (!PlayerHasSpecificSIM(playerid, idx)) {
+                new errMsg[128];
+                format(errMsg, sizeof(errMsg), "  [DOKUMEN] Anda belum memiliki lisensi %s! Silakan buat di Kantor Satpas DMV San Fierro.", dokumenNames[idx]);
+                SendClientMessage(playerid, COL_RED, errMsg);
+                PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+                return 1;
+            }
+            CloseDokumenPanelUI(playerid, false);
+            ShowPlayerSIMCard(playerid, playerid, idx);
             return 1;
         }
-
-        CloseSimPanelUI(playerid, false);
-        ShowPlayerSIMCard(playerid, playerid, idx);
-        return 1;
     }
 
     // 7. Tombol [ Tunjukkan ] (Membuka dialog input target ID)
-    if (playertextid == TD_SimBtnTunjukkan[playerid]) {
-        new idx = gPlayerData[playerid][p_SelectedSimIndex];
-        new const simNames[3][] = {"SIM A", "SIM B", "SIM C"};
+    if (playertextid == TD_DokumenBtnTunjukkan[playerid]) {
+        new idx = gPlayerData[playerid][p_SelectedDokumenIndex];
+        new const dokumenNames[4][] = {"SIM A", "SIM B", "SIM C", "KTP"};
 
-        if (!PlayerHasSpecificSIM(playerid, idx)) {
-            new errMsg[128];
-            format(errMsg, sizeof(errMsg), "  [SIM] Anda belum memiliki lisensi %s untuk diperlihatkan!", simNames[idx]);
-            SendClientMessage(playerid, COL_RED, errMsg);
-            PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
-            return 1;
+        if (idx == 3) {
+            if (!gPlayerData[playerid][p_HasKTP]) {
+                SendClientMessage(playerid, COL_RED, "  [DOKUMEN] Anda belum memiliki e-KTP terdaftar di Balai Kota!");
+                PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+                return 1;
+            }
+            if (!Inventory_HasItem(playerid, ITEM_KTP)) {
+                SendClientMessage(playerid, COL_RED, "  [DOKUMEN] Anda tidak membawa fisik kartu e-KTP di kantong/tas Anda!");
+                PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+                return 1;
+            }
+        } else {
+            if (!PlayerHasSpecificSIM(playerid, idx)) {
+                new errMsg[128];
+                format(errMsg, sizeof(errMsg), "  [DOKUMEN] Anda belum memiliki lisensi %s untuk diperlihatkan!", dokumenNames[idx]);
+                SendClientMessage(playerid, COL_RED, errMsg);
+                PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+                return 1;
+            }
         }
 
         new prompt[256];
         format(prompt, sizeof(prompt),
             "{FFFFFF}Anda akan memperlihatkan {00EEFF}%s{FFFFFF} Anda.\n\n" \
-            "{FFFFFF}Masukkan {FFFF00}Player ID{FFFFFF} pemain terdekat yang ingin Anda perlihatkan SIM:",
-            simNames[idx]);
+            "{FFFFFF}Masukkan {FFFF00}Player ID{FFFFFF} pemain terdekat yang ingin Anda perlihatkan dokumen:",
+            dokumenNames[idx]);
 
-        ShowPlayerDialog(playerid, DLG_SIM_SHOW_TARGET, DIALOG_STYLE_INPUT,
-            "{5814EE}Tunjukkan Surat Izin Mengemudi", prompt, "Tunjukkan", "Batal");
+        ShowPlayerDialog(playerid, DLG_DOKUMEN_SHOW_TARGET, DIALOG_STYLE_INPUT,
+            "{5814EE}Tunjukkan Dokumen", prompt, "Tunjukkan", "Batal");
         return 1;
     }
 
     return 0;
 }
 
-stock HandleSimUIDialog(playerid, dialogid, response, const inputtext[]) {
-    if (dialogid == DLG_SIM_SHOW_TARGET) {
+stock HandleDokumenUIDialog(playerid, dialogid, response, const inputtext[]) {
+    if (dialogid == DLG_DOKUMEN_SHOW_TARGET) {
         if (!response) return 1;
 
         new targetid = strval(inputtext);
@@ -905,8 +934,8 @@ stock HandleSimUIDialog(playerid, dialogid, response, const inputtext[]) {
         }
 
         if (targetid == playerid) {
-            new idx = gPlayerData[playerid][p_SelectedSimIndex];
-            CloseSimPanelUI(playerid, false);
+            new idx = gPlayerData[playerid][p_SelectedDokumenIndex];
+            CloseDokumenPanelUI(playerid, false);
             ShowPlayerSIMCard(playerid, playerid, idx);
             return 1;
         }
@@ -919,25 +948,30 @@ stock HandleSimUIDialog(playerid, dialogid, response, const inputtext[]) {
             return 1;
         }
 
-        new idx = gPlayerData[playerid][p_SelectedSimIndex];
-        new const simNames[3][] = {"SIM A", "SIM B", "SIM C"};
+        new idx = gPlayerData[playerid][p_SelectedDokumenIndex];
+        new const dokumenNames[4][] = {"SIM A", "SIM B", "SIM C", "KTP"};
 
-        // Tampilkan kartu SIM ke targetid dan pengirim
-        CloseSimPanelUI(playerid, false);
-        ShowPlayerSIMCard(targetid, playerid, idx);
-        ShowPlayerSIMCard(playerid, playerid, idx);
+        CloseDokumenPanelUI(playerid, false);
+        
+        if (idx == 3) {
+            ShowPlayerKTPCard(targetid, playerid);
+            ShowPlayerKTPCard(playerid, playerid);
+        } else {
+            ShowPlayerSIMCard(targetid, playerid, idx);
+            ShowPlayerSIMCard(playerid, playerid, idx);
+        }
 
         new myName[48], targetName[48], rpMsg[160], notifMsg[144];
         GetCharName(playerid, myName);
         GetCharName(targetid, targetName);
 
-        format(rpMsg, sizeof(rpMsg), "%s memperlihatkan kartu fisik %s miliknya kepada %s.", myName, simNames[idx], targetName);
-        DoProximityRaw(playerid, rpMsg, DIST_RP, COL_PURPLE);
+        format(rpMsg, sizeof(rpMsg), "%s memperlihatkan kartu fisik %s miliknya kepada %s.", myName, dokumenNames[idx], targetName);
+        DoProximitySay(playerid, rpMsg, DIST_RP, COL_PURPLE, false);
 
-        format(notifMsg, sizeof(notifMsg), "  [SIM] Anda telah memperlihatkan {00EEFF}%s{FFFFFF} Anda kepada {FFFF00}%s{FFFFFF}.", simNames[idx], targetName);
+        format(notifMsg, sizeof(notifMsg), "  [DOKUMEN] Anda telah memperlihatkan {00EEFF}%s{FFFFFF} Anda kepada {FFFF00}%s{FFFFFF}.", dokumenNames[idx], targetName);
         SendClientMessage(playerid, COL_GREEN, notifMsg);
 
-        format(notifMsg, sizeof(notifMsg), "  [SIM] {FFFF00}%s{FFFFFF} memperlihatkan kartu {00EEFF}%s{FFFFFF} miliknya kepada Anda.", myName, simNames[idx]);
+        format(notifMsg, sizeof(notifMsg), "  [DOKUMEN] {FFFF00}%s{FFFFFF} memperlihatkan kartu {00EEFF}%s{FFFFFF} miliknya kepada Anda.", myName, dokumenNames[idx]);
         SendClientMessage(targetid, COL_GREEN, notifMsg);
 
         PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
@@ -948,7 +982,7 @@ stock HandleSimUIDialog(playerid, dialogid, response, const inputtext[]) {
 }
 
 // Perintah /sim untuk membuka Panel UI SIM di sisi kanan layar
-CMD:sim(playerid, params[]) {
+CMD:dokumen(playerid, params[]) {
     #pragma unused params
     if (!CheckSpawned(playerid)) return 1;
     if (gShowingSIMCard[playerid]) {
@@ -957,6 +991,6 @@ CMD:sim(playerid, params[]) {
     if (gShowingKTP[playerid]) {
         HidePlayerKTPCard(playerid);
     }
-    ShowSimPanelUI(playerid);
+    ShowDokumenPanelUI(playerid);
     return 1;
 }

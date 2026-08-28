@@ -46,7 +46,29 @@ DEFAULT_ITEMS = [
     (11, "KTP (Kartu Identitas)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 50000),
     (12, "Surat Izin Mengemudi (SIM A)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 50000),
     (13, "Surat Izin Mengemudi (SIM B)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 100000),
-    (14, "Surat Izin Mengemudi (SIM C)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 25000)
+    (14, "Surat Izin Mengemudi (SIM C)", "Dokumen", 0.0, 0.0, 0.0, 0, "", "", 25000),
+    (15, "Bijih Besi (Iron Ore)", "Bahan Mentah", 0.0, 0.0, 0.0, 0, "", "", 15000),
+    (16, "Besi Bekas (Scrap Metal)", "Bahan Mentah", 0.0, 0.0, 0.0, 0, "", "", 10000),
+    (17, "Belerang (Sulfur)", "Bahan Mentah", 0.0, 0.0, 0.0, 0, "", "", 20000),
+    (18, "Bubuk Arang (Charcoal)", "Bahan Mentah", 0.0, 0.0, 0.0, 0, "", "", 8000),
+    (19, "Bijih Tembaga (Copper Ore)", "Bahan Mentah", 0.0, 0.0, 0.0, 0, "", "", 18000),
+    (20, "Batang Baja (Steel Bar)", "Bahan Olahan", 0.0, 0.0, 0.0, 0, "", "", 55000),
+    (21, "Lempeng Kuningan (Brass Plate)", "Bahan Olahan", 0.0, 0.0, 0.0, 0, "", "", 65000),
+    (22, "Bubuk Mesiu (Gunpowder)", "Bahan Olahan", 0.0, 0.0, 0.0, 0, "", "", 50000),
+    (23, "Laras & Slide Senjata", "Komponen", 0.0, 0.0, 0.0, 0, "", "", 180000),
+    (24, "Pelatuk & Mekanikal Senjata", "Komponen", 0.0, 0.0, 0.0, 0, "", "", 140000),
+    (25, "Magasin Kosong", "Komponen", 0.0, 0.0, 0.0, 0, "", "", 80000),
+    (26, "Peluru 9mm", "Amunisi", 0.0, 0.0, 0.0, 0, "", "", 2500),
+    (27, "Peluru .50 AE", "Amunisi", 0.0, 0.0, 0.0, 0, "", "", 5700),
+    (28, "Peluru 12 Gauge", "Amunisi", 0.0, 0.0, 0.0, 0, "", "", 7000),
+    (29, "Peluru 7.62mm", "Amunisi", 0.0, 0.0, 0.0, 0, "", "", 4200),
+    (30, "Rompi Kevlar (Body Armor)", "Perlengkapan", 0.0, 0.0, 0.0, 0, "", "", 450000),
+    (31, "Beliung Tambang (Pickaxe)", "Peralatan", 0.0, 0.0, 0.0, 0, "", "", 75000),
+    (32, "Kotak Perkakas (Toolbox)", "Peralatan", 0.0, 0.0, 0.0, 0, "", "", 120000),
+    (33, "Pistol 9mm (Colt 45)", "Senjata", 0.0, 0.0, 0.0, 0, "", "", 500000),
+    (34, "Desert Eagle (.50 AE)", "Senjata", 0.0, 0.0, 0.0, 0, "", "", 850000),
+    (35, "Shotgun (Pump-Action)", "Senjata", 0.0, 0.0, 0.0, 0, "", "", 1200000),
+    (36, "AK-47 Assault Rifle", "Senjata", 0.0, 0.0, 0.0, 0, "", "", 2000000)
 ]
 
 # 2. Default Master Jobs

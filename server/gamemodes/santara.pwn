@@ -24,7 +24,6 @@
 //    Modul UI & TextDraws                                     
 #include "modules/ui/hud_money.inc"
 #include "modules/ui/ktp_card.inc"
-#include "modules/ui/sim_ui.inc"
 #include "modules/ui/char_create_ui.inc"
 #include "modules/ui/char_select_ui.inc"
 #include "modules/ui/spawn_selector.inc"
@@ -37,12 +36,18 @@
 #include "modules/systems/character.inc"
 #include "modules/systems/account.inc"
 #include "modules/systems/buildings.inc"
+#include "modules/systems/twentyfour_seven.inc"
 #include "modules/systems/driving_school.inc"
 #include "modules/systems/ownership.inc"
 #include "modules/ui/speedometer.inc"
 #include "modules/systems/inventory.inc"
 #include "modules/ui/inventory_ui.inc"
 #include "modules/ui/trunk_ui.inc"
+#include "modules/ui/dokumen_ui.inc"
+#include "modules/systems/armor_visual.inc"
+#include "modules/systems/mining.inc"
+#include "modules/systems/smelting.inc"
+#include "modules/systems/crafting.inc"
 
 //    Modul Perintah (Commands)                                
 #include "modules/commands/cmd_general.inc"
@@ -116,6 +121,7 @@ public OnGameModeInit() {
     Dealership_LoadDataFromDB();
     InitVoiceSystem();
     InitBuildings();
+    InitTwentyFourSeven();
 
     //    Coutt and Schutz Auto Showroom (Los Santos)
     Create3DTextLabel("{00EEFF}[ COUTT AND SCHUTZ SHOWROOM ]\n{FFFFFF}Koleksi Mobil Sport, Sedan, SUV dan Motor\n{FFFF00}Tekan [ H ] atau [ F ] untuk Beli",
@@ -126,6 +132,11 @@ public OnGameModeInit() {
     InitPublicGarages();
     InitInsuranceCenter();
     SyncVehiclesOnServerStart();
+
+    //    Inisialisasi Rantai Pasok (Tambang, Smelter, Crafting)
+    InitMiningSystem();
+    InitSmelterSystem();
+    InitCraftingSystem();
 
     gPlayTimeTimer = SetTimer("Timer_PlayTime", 60000, true);
     print("[SantaraBaru] Gamemode siap dimainkan!");
@@ -218,8 +229,8 @@ public OnPlayerDisconnect(playerid, reason) {
     if (gPlayerData[playerid][p_InDrivingTest]) {
         CancelDrivingTest(playerid, "Pemain terputus dari server");
     }
-    CloseSimPanelUI(playerid);
-    DestroyPlayerSimTextDraws(playerid);
+    CloseDokumenPanelUI(playerid);
+    DestroyPlayerDokumenTextDraws(playerid);
     CloseDealership(playerid);
     CloseGarageUI(playerid);
     HideInventoryUI(playerid);
@@ -233,6 +244,7 @@ public OnPlayerDisconnect(playerid, reason) {
     DestroyPlayerSpawnTextDraws(playerid);
     DestroyPlayerSkinTextDraws(playerid);
     DestroyPlayerKTPTextDraws(playerid);
+    RemovePlayerArmorVisual(playerid);
     ResetPlayerData(playerid);
     return 1;
 }
@@ -271,9 +283,11 @@ public OnPlayerSpawn(playerid) {
         TogglePlayerControllable(playerid, true);
         SetCameraBehindPlayer(playerid);
         Inventory_LoadPlayerItems(playerid);
+        SyncPlayerWeaponsFromInventory(playerid);
         CreatePlayerMoneyHUD(playerid);
         UpdatePlayerMoneyHUD(playerid);
         ShowPlayerMoneyHUD(playerid);
+        UpdatePlayerArmorVisual(playerid);
 
         if (gVoiceEnabled) {
             SetupVoiceStream(playerid);
@@ -285,6 +299,14 @@ public OnPlayerSpawn(playerid) {
         SetupPlayerMapIcons(playerid);
 
         SendClientMessage(playerid, COL_GREEN, "  Selamat datang! Ketik {00EEFF}/help{00CC66} untuk melihat perintah atau {00EEFF}/gps{00CC66} untuk peta.");
+    }
+    return 1;
+}
+
+public OnPlayerWeaponShot(playerid, WEAPON:weaponid, BULLET_HIT_TYPE:hittype, hitid, Float:fX, Float:fY, Float:fZ) {
+    #pragma unused hittype, hitid, fX, fY, fZ
+    if (!HandlePlayerWeaponShot(playerid, _:weaponid)) {
+        return 0;
     }
     return 1;
 }
@@ -302,13 +324,16 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
     if (HandleCharacterDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleInventoryDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleTrunkDialog(playerid, dialogid, response, inputtext)) return 1;
-    if (HandleSimUIDialog(playerid, dialogid, response, inputtext)) return 1;
+    if (HandleDokumenUIDialog(playerid, dialogid, response, inputtext)) return 1;
     if (HandleDrivingSchoolDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleDealershipDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleVehicleMenuDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleInsuranceDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleGPSDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleBurgerShotDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
+    if (HandleTwentyFourSevenDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
+    if (HandleSmelterDialog(playerid, dialogid, response, listitem)) return 1;
+    if (HandleCraftingDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleAdminTeleportDialog(playerid, dialogid, response, listitem)) return 1;
     return 1;
 }
@@ -517,8 +542,8 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
     }
 
     //    8. INTERACTIVE TEXTDRAW SIM PANEL & CARD UI
-    if (gShowingSIMCard[playerid] || gPlayerData[playerid][p_InSimUI]) {
-        if (HandleSimUIClick(playerid, playertextid)) return 1;
+    if (gShowingSIMCard[playerid] || gPlayerData[playerid][p_InDokumenUI]) {
+        if (HandleDokumenUIClick(playerid, playertextid)) return 1;
     }
 
     //    9. TOUCHPAD KONTROL KENDARAAN (Clickable TextDraw)
@@ -594,8 +619,8 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
             HideTrunkUI(playerid);
             return 1;
         }
-        if (gPlayerData[playerid][p_InSimUI]) {
-            CloseSimPanelUI(playerid);
+        if (gPlayerData[playerid][p_InDokumenUI]) {
+            CloseDokumenPanelUI(playerid);
             return 1;
         }
     }
@@ -618,6 +643,7 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
 public OnPlayerDeath(playerid, killerid, reason) {
     #pragma unused killerid, reason
     HideSpeedometer(playerid);
+    RemovePlayerArmorVisual(playerid);
     if (gPlayerData[playerid][p_InDrivingTest]) {
         CancelDrivingTest(playerid, "Pemain pingsan / mati saat ujian");
     }
@@ -679,7 +705,8 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
         }
     }
 
-    // 4. Interaksi Gedung Masuk / Keluar & Loket KTP (Murni Tombol F / ENTER)
+    // 4. Interaksi Supermarket 24-7 & Gedung Masuk / Keluar / Loket KTP
+    if (HandleTwentyFourSevenKeys(playerid, newkeys)) return 1;
     return HandleBuildingKeys(playerid, newkeys, oldkeys);
 }
 
@@ -717,5 +744,17 @@ public OnPlayerEnterRaceCheckpoint(playerid) {
         PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
         SendClientMessage(playerid, COL_GREEN, "  [GPS] Anda telah sampai di lokasi tujuan navigasi.");
     }
+    return 1;
+}
+
+public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart) {
+    #pragma unused issuerid, amount, weaponid, bodypart
+    UpdatePlayerArmorVisual(playerid);
+    return 1;
+}
+
+public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart) {
+    #pragma unused playerid, amount, weaponid, bodypart
+    UpdatePlayerArmorVisual(damagedid);
     return 1;
 }

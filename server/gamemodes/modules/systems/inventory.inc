@@ -153,6 +153,9 @@ stock Inventory_AddItem(playerid, itemid, amount) {
     }
 
     Inventory_LoadPlayerItems(playerid);
+    if ((itemid >= ITEM_AMMO_9MM && itemid <= ITEM_AMMO_RIFLE) || (itemid >= ITEM_WEAPON_COLT45 && itemid <= ITEM_WEAPON_AK47)) {
+        SyncPlayerWeaponsFromInventory(playerid);
+    }
     return 1;
 }
 
@@ -177,6 +180,107 @@ stock Inventory_RemoveItem(playerid, itemid, amount) {
     }
 
     Inventory_LoadPlayerItems(playerid);
+    if ((itemid >= ITEM_AMMO_9MM && itemid <= ITEM_AMMO_RIFLE) || (itemid >= ITEM_WEAPON_COLT45 && itemid <= ITEM_WEAPON_AK47)) {
+        SyncPlayerWeaponsFromInventory(playerid);
+    }
+    return 1;
+}
+
+stock SyncPlayerWeaponsFromInventory(playerid) {
+    if (!gPlayerData[playerid][p_LoggedIn] || !gPlayerData[playerid][p_Spawned]) return 0;
+
+    // Kunci skill pistol ke level Gangster (500) agar selalu 1 senjata (Single Wield, bukan Akimbo/Dual Pistol)
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL, 500);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SAWNOFF_SHOTGUN, 500);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_MICRO_UZI, 500);
+
+    // Bersihkan seluruh senjata dari tangan terlebih dahulu
+    ResetPlayerWeapons(playerid);
+
+    // 1. Pistol 9mm (Colt 45 - Weapon ID 22)
+    if (Inventory_HasItem(playerid, ITEM_WEAPON_COLT45)) {
+        new ammo = Inventory_GetItemCount(playerid, ITEM_AMMO_9MM);
+        GivePlayerWeapon(playerid, 22, (ammo > 0) ? ammo : 1);
+        SetPlayerAmmo(playerid, 22, (ammo > 0) ? ammo : 1);
+    }
+
+    // 2. Desert Eagle (.50 AE - Weapon ID 24)
+    if (Inventory_HasItem(playerid, ITEM_WEAPON_DEAGLE)) {
+        new ammo = Inventory_GetItemCount(playerid, ITEM_AMMO_DEAGLE);
+        GivePlayerWeapon(playerid, 24, (ammo > 0) ? ammo : 1);
+        SetPlayerAmmo(playerid, 24, (ammo > 0) ? ammo : 1);
+    }
+
+    // 3. Shotgun (Pump-Action - Weapon ID 25)
+    if (Inventory_HasItem(playerid, ITEM_WEAPON_SHOTGUN)) {
+        new ammo = Inventory_GetItemCount(playerid, ITEM_AMMO_SHOTGUN);
+        GivePlayerWeapon(playerid, 25, (ammo > 0) ? ammo : 1);
+        SetPlayerAmmo(playerid, 25, (ammo > 0) ? ammo : 1);
+    }
+
+    // 4. AK-47 (Assault Rifle - Weapon ID 30)
+    if (Inventory_HasItem(playerid, ITEM_WEAPON_AK47)) {
+        new ammo = Inventory_GetItemCount(playerid, ITEM_AMMO_RIFLE);
+        GivePlayerWeapon(playerid, 30, (ammo > 0) ? ammo : 1);
+        SetPlayerAmmo(playerid, 30, (ammo > 0) ? ammo : 1);
+    }
+    return 1;
+}
+
+stock HandlePlayerWeaponShot(playerid, weaponid) {
+    new weaponItemID = 0, ammoItemID = 0;
+    if (weaponid == 22) { weaponItemID = ITEM_WEAPON_COLT45; ammoItemID = ITEM_AMMO_9MM; }
+    else if (weaponid == 24) { weaponItemID = ITEM_WEAPON_DEAGLE; ammoItemID = ITEM_AMMO_DEAGLE; }
+    else if (weaponid == 25) { weaponItemID = ITEM_WEAPON_SHOTGUN; ammoItemID = ITEM_AMMO_SHOTGUN; }
+    else if (weaponid == 30) { weaponItemID = ITEM_WEAPON_AK47; ammoItemID = ITEM_AMMO_RIFLE; }
+
+    // Jika bukan senjata craftable bertipe peluru di atas, biarkan menembak normal
+    if (ammoItemID == 0) return 1;
+
+    // Jika pemain tidak memiliki item fisik senjata di dalam tas, lucuti senjata dan tolak tembakan
+    if (!Inventory_HasItem(playerid, weaponItemID)) {
+        ResetPlayerWeapons(playerid);
+        SendClientMessage(playerid, COL_RED, "  [Error] Anda tidak memiliki fisik senjata ini di dalam tas!");
+        return 0;
+    }
+
+    // Cari slot amunisi di memory RAM pemain
+    new ammoSlot = -1;
+    for (new i = 0; i < gPlayerData[playerid][p_InvItemCount]; i++) {
+        if (gPlayerData[playerid][p_InvSlotItemID][i] == ammoItemID) {
+            ammoSlot = i;
+            break;
+        }
+    }
+
+    // KASUS 1: Peluru di tas sudah 0 / tidak ada
+    if (ammoSlot == -1 || gPlayerData[playerid][p_InvSlotAmount][ammoSlot] <= 0) {
+        SetPlayerAmmo(playerid, weaponid, 1); // Jaga senjata tetap terlihat di tangan
+        GameTextForPlayer(playerid, "~r~*KLIK* (Peluru Habis)", 1500, 3);
+        PlayerPlaySound(playerid, 1085, 0.0, 0.0, 0.0);
+        return 0; // Batalkan tembakan (tidak ada proyektil/damage)
+    }
+
+    // KASUS 2: Peluru masih ada di tas -> Kurangi 1 butir secara instan di RAM tanpa reset senjata!
+    gPlayerData[playerid][p_InvSlotAmount][ammoSlot] -= 1;
+    new remainingAmmo = gPlayerData[playerid][p_InvSlotAmount][ammoSlot];
+
+    new query[128];
+    if (remainingAmmo <= 0) {
+        format(query, sizeof(query), "DELETE FROM `inventory` WHERE `char_id`=%d AND `item_id`=%d",
+            gPlayerData[playerid][p_CharID], ammoItemID);
+        DB_FreeResultSet(DB_ExecuteQuery(gDB, query));
+        Inventory_LoadPlayerItems(playerid);
+
+        SetPlayerAmmo(playerid, weaponid, 1); // Tahan senjata tetap di tangan
+        SendClientMessage(playerid, COL_RED, "  [!] Amunisi senjata Anda telah habis (0 butir)!");
+    } else {
+        format(query, sizeof(query), "UPDATE `inventory` SET `amount`=%d WHERE `char_id`=%d AND `item_id`=%d",
+            remainingAmmo, gPlayerData[playerid][p_CharID], ammoItemID);
+        DB_FreeResultSet(DB_ExecuteQuery(gDB, query));
+    }
+
+    // Biarkan GTA SA menembak dengan lancar & natural tanpa interupsi animasi!
     return 1;
 }
 
@@ -231,7 +335,7 @@ stock UseInventoryItem(playerid, itemid) {
         DoProximityRaw(playerid, rpMsg, DIST_RP, COL_PURPLE);
 
         new msg[128];
-        format(msg, sizeof(msg), "  [Minum] Anda meminum {00EEFF}%s{FFFFFF}. Haus: {33CCFF}+%.0f%%{FFFFFF}.",
+        format(msg, sizeof(msg), "  [Minum] Anda meminum {00EEFF}%s{FFFFFF}. Haus: {2ECC71}+%.0f%%{FFFFFF}.",
             gItemRegistry[itemIdx][item_Name], gItemRegistry[itemIdx][item_ThirstVal]);
         SendClientMessage(playerid, COL_GREEN, msg);
 
@@ -239,35 +343,33 @@ stock UseInventoryItem(playerid, itemid) {
         return 1;
     }
 
-    // 3. MEDIS (Murni Menambah Darah / HP)
-    if (itemid == ITEM_BANDAGE || itemid == ITEM_MEDKIT || itemid == ITEM_FIRST_AID) {
-        new Float:curHp;
-        GetPlayerHealth(playerid, curHp);
-
-        if (curHp >= 100.0) {
-            SendClientMessage(playerid, COL_YELLOW, "  [Medis] Kondisi darah (HP) Anda sudah maksimal (100%)!");
+    // 3. MEDIS / OBAT-OBATAN (Pemulihan Darah HP)
+    if (itemid >= ITEM_BANDAGE && itemid <= ITEM_FIRST_AID) {
+        new Float:hp;
+        GetPlayerHealth(playerid, hp);
+        if (hp >= 100.0) {
+            SendClientMessage(playerid, COL_RED, "  [Medis] Kondisi kesehatan Anda saat ini sudah maksimal (100% HP)!");
             return 1;
         }
 
         if (gItemRegistry[itemIdx][item_IsFullHeal]) {
             SetPlayerHealth(playerid, 100.0);
-            SendClientMessage(playerid, COL_GREEN, "  [Medis] Anda menggunakan {00EEFF}First Aid Kit{00CC66}. Darah (HP) Anda pulih SEPENUHNYA (100%)!");
         } else {
-            new Float:newHp = curHp + gItemRegistry[itemIdx][item_HealthVal];
+            new Float:newHp = hp + gItemRegistry[itemIdx][item_HealthVal];
             if (newHp > 100.0) newHp = 100.0;
             SetPlayerHealth(playerid, newHp);
-
-            new msg[128];
-            format(msg, sizeof(msg), "  [Medis] Anda menggunakan {00EEFF}%s{00CC66}. Darah (HP): {2ECC71}+%.0f HP{00CC66} (Total: %.0f HP).",
-                gItemRegistry[itemIdx][item_Name], gItemRegistry[itemIdx][item_HealthVal], newHp);
-            SendClientMessage(playerid, COL_GREEN, msg);
         }
 
-        UpdatePlayerMoneyHUD(playerid);
-        PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+        ApplyAnimation(playerid, "MISC", "bitchslap", 4.1, false, false, false, false, 0, 1);
+        PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
 
-        format(rpMsg, sizeof(rpMsg), "%s melakukan pertolongan medis pertama menggunakan %s.", charname, gItemRegistry[itemIdx][item_Name]);
+        format(rpMsg, sizeof(rpMsg), "%s mengobati luka menggunakan %s.", charname, gItemRegistry[itemIdx][item_Name]);
         DoProximityRaw(playerid, rpMsg, DIST_RP, COL_PURPLE);
+
+        new msg[128];
+        format(msg, sizeof(msg), "  [Medis] Anda menggunakan {00EEFF}%s{FFFFFF}. Darah HP dipulihkan {2ECC71}+%.0f HP{FFFFFF}.",
+            gItemRegistry[itemIdx][item_Name], gItemRegistry[itemIdx][item_HealthVal]);
+        SendClientMessage(playerid, COL_GREEN, msg);
 
         Inventory_RemoveItem(playerid, itemid, 1);
         return 1;
@@ -316,6 +418,63 @@ stock UseInventoryItem(playerid, itemid) {
     // 8. PONSEL
     if (itemid == ITEM_PHONE) {
         SendClientMessage(playerid, COL_CYAN, "  [Ponsel] Layar smartphone menyala. (Sistem jaringan telepon aktif).");
+        return 1;
+    }
+
+    // 9. ROMPI KEVLAR (BODY ARMOR 100% & 3D ATTACHMENT)
+    if (itemid == ITEM_KEVLAR_VEST) {
+        new Float:armour;
+        GetPlayerArmour(playerid, armour);
+        if (armour >= 100.0) {
+            SendClientMessage(playerid, COL_RED, "  [Rompi] Armor pelindung tubuh Anda sudah penuh (100%)!");
+            return 1;
+        }
+        SetPlayerArmour(playerid, 100.0);
+        UpdatePlayerArmorVisual(playerid);
+        Inventory_RemoveItem(playerid, itemid, 1);
+        PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
+
+        SendClientMessage(playerid, COL_GREEN, "  [Rompi] Anda mengenakan {00EEFF}Rompi Kevlar (Body Armor){FFFFFF}. Armor terisi {2ECC71}100%{FFFFFF}!");
+        format(rpMsg, sizeof(rpMsg), "* %s mengencangkan tali rompi anti-peluru taktis ke badannya.", charname);
+        DoProximitySay(playerid, rpMsg, DIST_RP, COL_PURPLE, false);
+        return 1;
+    }
+
+    // 10. SENJATA API JADI (Colt 45, Deagle, Shotgun, AK-47)
+    if (itemid == ITEM_WEAPON_COLT45 || itemid == ITEM_WEAPON_DEAGLE || itemid == ITEM_WEAPON_SHOTGUN || itemid == ITEM_WEAPON_AK47) {
+        SyncPlayerWeaponsFromInventory(playerid);
+        PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
+
+        new itName[32];
+        GetItemNameByID(itemid, itName, sizeof(itName));
+        new msg[144];
+        format(msg, sizeof(msg), "  [Senjata] Anda menggenggam {00EEFF}%s{FFFFFF} di tangan.", itName);
+        SendClientMessage(playerid, COL_GREEN, msg);
+
+        format(rpMsg, sizeof(rpMsg), "* %s mengeluarkan dan menggenggam %s di tangannya.", charname, itName);
+        DoProximitySay(playerid, rpMsg, DIST_RP, COL_PURPLE, false);
+        return 1;
+    }
+
+    // 11. AMUNISI BUTIRAN (Peluru 9mm, .50 AE, 12 Gauge, 7.62mm)
+    if (itemid == ITEM_AMMO_9MM || itemid == ITEM_AMMO_DEAGLE || itemid == ITEM_AMMO_SHOTGUN || itemid == ITEM_AMMO_RIFLE) {
+        SyncPlayerWeaponsFromInventory(playerid);
+        new itName[32], count = Inventory_GetItemCount(playerid, itemid);
+        GetItemNameByID(itemid, itName, sizeof(itName));
+        new msg[144];
+        format(msg, sizeof(msg), "  [Amunisi] Total stok {00EEFF}%s{FFFFFF}: {2ECC71}%d butir{FFFFFF}. (Otomatis terbaca ke senjata Anda).", itName, count);
+        SendClientMessage(playerid, COL_GREEN, msg);
+        return 1;
+    }
+
+    // 12. ALAT KERJA / TOOLS
+    if (itemid == ITEM_PICKAXE) {
+        SendClientMessage(playerid, COL_CYAN, "  [Peralatan] Beliung Tambang. Gunakan di area Tambang Batu Hunter Quarry LV (/tambang).");
+        return 1;
+    }
+
+    if (itemid == ITEM_TOOLBOX) {
+        SendClientMessage(playerid, COL_CYAN, "  [Peralatan] Kotak Perkakas (Toolbox). Gunakan saat berada di Meja Kerja Perakitan (/craft).");
         return 1;
     }
 
@@ -767,47 +926,5 @@ CMD:give(playerid, params[]) {
 
     PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
     PlayerPlaySound(targetid, 1058, 0.0, 0.0, 0.0);
-    return 1;
-}
-
-CMD:giveitem(playerid, params[]) {
-    if (!IsAdmin(playerid, 1)) return 1;
-
-    new targetid, itemName[32], amount;
-    if (sscanf(params, "us[32]I(1)", targetid, itemName, amount)) {
-        SendClientMessage(playerid, COL_ORANGE, "  [Admin] Gunakan: /giveitem [Player ID / Nama] [Nama Barang / ID] [Jumlah]");
-        SendClientMessage(playerid, COL_GREY,   "  * Contoh: /giveitem 0 Burger 5 atau /giveitem 0 FirstAid 2");
-        return 1;
-    }
-
-    if (!IsPlayerConnected(targetid) || !gPlayerData[targetid][p_LoggedIn] || !gPlayerData[targetid][p_Spawned]) {
-        SendClientMessage(playerid, COL_RED, "  [Error] Pemain target tidak ditemukan atau sedang offline.");
-        return 1;
-    }
-
-    new itId = GetItemIDByName(itemName);
-    if (itId <= 0) {
-        itId = strval(itemName);
-        if (GetItemRegistryIndex(itId) == -1) {
-            SendClientMessage(playerid, COL_RED, "  [Error] Nama atau ID barang tidak valid!");
-            return 1;
-        }
-    }
-
-    if (amount <= 0) amount = 1;
-
-    Inventory_AddItem(targetid, itId, amount);
-
-    new itName[32], tName[48], aName[48];
-    GetItemNameByID(itId, itName, sizeof(itName));
-    GetCharName(targetid, tName);
-    GetCharName(playerid, aName);
-
-    new msg[144];
-    format(msg, sizeof(msg), "  [Admin] Anda memberikan %dx %s kepada %s.", amount, itName, tName);
-    SendClientMessage(playerid, COL_GREEN, msg);
-
-    format(msg, sizeof(msg), "  [Admin] Admin %s memberikan %dx %s ke dalam tas Anda.", aName, amount, itName);
-    SendClientMessage(targetid, COL_GREEN, msg);
     return 1;
 }

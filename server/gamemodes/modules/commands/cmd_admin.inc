@@ -32,6 +32,8 @@ CMD:ahelp(playerid, params[]) {
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/a {FFFFFF}[pesan]            {A0AEC0}- Chat internal sesama admin");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/givemoney {FFFFFF}[id] [jml] {A0AEC0}- Beri / tambah uang ke karakter pemain");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/setmoney {FFFFFF}[id] [jml]  {A0AEC0}- Atur saldo uang karakter pemain");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/giveitem {FFFFFF}[id] [item] [jml]{A0AEC0}- Beri item/senjata/peluru secara cuma-cuma");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/itemlist                 {A0AEC0}- Buka katalog seluruh ID master item game");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/vehlist {FFFFFF}[id/target]  {A0AEC0}- Lihat daftar DB ID & kendaraan milik pemain");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/delveh {FFFFFF}[db_id/here]  {A0AEC0}- Hapus kendaraan dari kepemilikan pemain & DB");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/goto {FFFFFF}[id]            {A0AEC0}- Teleport langsung ke lokasi pemain");
@@ -186,6 +188,76 @@ CMD:setmoney(playerid, params[]) {
 
     format(msgTarget, sizeof(msgTarget), "  [Admin] Administrator %s telah mengatur saldo dompet Anda menjadi %s.", adminName, amtFmt);
     SendClientMessage(targetid, COL_GREEN, msgTarget);
+    return 1;
+}
+
+CMD:giveitem(playerid, params[]) {
+    if (!IsAdmin(playerid, 1)) {
+        SendClientMessage(playerid, COL_RED, "  [Error] Anda tidak memiliki izin untuk menggunakan perintah administrator!");
+        return 1;
+    }
+
+    new targetid, itemid, amount;
+    if (sscanf(params, "uiI(1)", targetid, itemid, amount)) {
+        SendClientMessage(playerid, COL_ORANGE, "  [Petunjuk] Gunakan: /giveitem [Player ID / Nama] [Item ID (1-36)] [Jumlah]");
+        SendClientMessage(playerid, COL_GREY,   "  * Ketik /itemlist untuk melihat daftar seluruh ID barang.");
+        SendClientMessage(playerid, COL_GREY,   "  * Contoh: /giveitem 0 33 1 (Beri 1 Pistol ke ID 0) atau /giveitem 0 26 100 (Beri 100 Peluru 9mm)");
+        return 1;
+    }
+
+    if (!IsPlayerConnected(targetid) || !gPlayerData[targetid][p_LoggedIn] || !gPlayerData[targetid][p_Spawned]) {
+        SendClientMessage(playerid, COL_RED, "  [Error] Pemain target tidak ditemukan atau belum login!");
+        return 1;
+    }
+
+    if (amount <= 0) {
+        SendClientMessage(playerid, COL_RED, "  [Error] Jumlah barang minimal 1!");
+        return 1;
+    }
+
+    new itemIdx = GetItemRegistryIndex(itemid);
+    if (itemIdx == -1) {
+        SendClientMessage(playerid, COL_RED, "  [Error] ID Barang tidak valid! Gunakan ID 1 s/d 36 (Ketik /itemlist).");
+        return 1;
+    }
+
+    new itName[32], targetName[48], adminName[MAX_PLAYER_NAME + 1];
+    GetItemNameByID(itemid, itName, sizeof(itName));
+    GetCharName(targetid, targetName);
+    GetPlayerName(playerid, adminName, sizeof(adminName));
+
+    Inventory_AddItem(targetid, itemid, amount);
+    SyncPlayerWeaponsFromInventory(targetid);
+    PlayerPlaySound(targetid, 1058, 0.0, 0.0, 0.0);
+
+    new msgAdmin[144], msgTarget[144];
+    format(msgAdmin, sizeof(msgAdmin), "  [Admin Give] Anda memberikan {00EEFF}%dx %s (ID: %d){FFFFFF} kepada {FFFF00}%s{FFFFFF}.", amount, itName, itemid, targetName);
+    SendClientMessage(playerid, COL_GREEN, msgAdmin);
+
+    format(msgTarget, sizeof(msgTarget), "  [Admin Give] Administrator {00EEFF}%s{FFFFFF} memberikan Anda {2ECC71}%dx %s{FFFFFF}.", adminName, amount, itName);
+    SendClientMessage(targetid, COL_GREEN, msgTarget);
+    return 1;
+}
+
+CMD:itemlist(playerid, params[]) {
+    #pragma unused params
+    if (!IsAdmin(playerid, 1)) {
+        SendClientMessage(playerid, COL_RED, "  [Error] Anda tidak memiliki izin untuk menggunakan perintah administrator!");
+        return 1;
+    }
+
+    new dialogStr[2048];
+    format(dialogStr, sizeof(dialogStr), "ID\tNama Barang\tKategori\n");
+
+    for (new i = 0; i < gTotalRegisteredItems; i++) {
+        new line[96];
+        format(line, sizeof(line), "{00EEFF}%d\t{FFFFFF}%s\t{A0AEC0}%s\n",
+            gItemRegistry[i][item_ID], gItemRegistry[i][item_Name], gItemRegistry[i][item_Category]);
+        strcat(dialogStr, line);
+    }
+
+    ShowPlayerDialog(playerid, 9924, DIALOG_STYLE_TABLIST_HEADERS,
+        "{E69958}Daftar Master Item Game (ID Barang)", dialogStr, "Tutup", "");
     return 1;
 }
 
@@ -696,7 +768,7 @@ stock AdminTeleportToPos(playerid, Float:x, Float:y, Float:z, Float:a = 0.0, int
 stock ShowAdminTeleportMenu(playerid) {
     if (!IsAdmin(playerid, 1)) return 0;
 
-    new menuStr[768];
+    new menuStr[1200];
     format(menuStr, sizeof(menuStr),
         "Lokasi Fasilitas GPS\tWilayah & Keterangan\n" \
         "{33CCFF}[Balai Kota] Eksterior\t{FFFFFF}Pershing Square, Los Santos\n" \
@@ -704,9 +776,14 @@ stock ShowAdminTeleportMenu(playerid) {
         "{5814EE}[Sekolah Mengemudi] Satpas DMV\t{FFFFFF}Garcia / Doherty, San Fierro\n" \
         "{FFA500}[Burger Shot] 10 Cabang Eksterior\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
         "{FFA500}[Burger Shot] Interior Kasir & Dapur\t{FFFFFF}Interior Restoran Burger Shot (Int: 10)\n" \
+        "{2ECC71}[Supermarket] 5 Cabang Eksterior\t{FFFFFF}LS, SF, Whetstone, FC, LV\n" \
+        "{2ECC71}[Supermarket] Interior Kasir (Int: 17)\t{FFFFFF}Interior Toko Supermarket (VW: 201)\n" \
         "{00EEFF}[Showroom] Coutt & Schutz\t{FFFFFF}Rodeo / Market, Los Santos\n" \
         "{2ECC71}[Kantor Asuransi] 3 Kota\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
-        "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos");
+        "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos\n" \
+        "{FFFF00}[Tambang Batuan] Hunter Quarry\t{FFFFFF}Hunter Quarry, Las Venturas\n" \
+        "{FF6600}[Peleburan] Smelter Pabrik\t{FFFFFF}Ocean Docks, Los Santos\n" \
+        "{FF0055}[Meja Rakit] Gunsmith Workshop\t{FFFFFF}Flint County Secret Hideout");
 
     ShowPlayerDialog(playerid, DLG_ADMIN_TELEPORT, DIALOG_STYLE_TABLIST_HEADERS,
         "{E69958}Admin Teleport - Titik Fasilitas GPS", menuStr, "Teleport", "Tutup");
@@ -740,10 +817,23 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
             case 4: { // Burger Shot Interior Kasir & Dapur (Default Cabang Marina LS VW: 101)
                 AdminTeleportToPos(playerid, BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z, 0.0, BURGER_SHOT_INT_ID, BURGER_SHOT_VW_BASE, "Interior Kasir Restoran Burger Shot (VW: 101)");
             }
-            case 5: { // Coutt and Schutz Showroom
+            case 5: { // Supermarket 5 Cabang Eksterior
+                new tfsListStr[768];
+                format(tfsListStr, sizeof(tfsListStr), "Nama Cabang Supermarket\tKota / Wilayah\n");
+                for (new i = 0; i < TWENTYFOUR_SEVEN_COUNT; i++) {
+                    format(tfsListStr, sizeof(tfsListStr), "%s{FFFFFF}%s\t{2ECC71}%s\n",
+                        tfsListStr, gTwentyFourSeven[i][tfs_Name], gTwentyFourSeven[i][tfs_City]);
+                }
+                ShowPlayerDialog(playerid, DLG_ADMIN_TP_247, DIALOG_STYLE_TABLIST_HEADERS,
+                    "{2ECC71}Pilih Teleport Cabang Supermarket", tfsListStr, "Teleport", "Kembali");
+            }
+            case 6: { // Supermarket Interior Kasir (Default VW: 201)
+                AdminTeleportToPos(playerid, TWENTYFOUR_SEVEN_CASH_X, TWENTYFOUR_SEVEN_CASH_Y, TWENTYFOUR_SEVEN_CASH_Z, 0.0, TWENTYFOUR_SEVEN_INT_ID, TWENTYFOUR_SEVEN_VW_BASE, "Interior Kasir Supermarket (VW: 201)");
+            }
+            case 7: { // Coutt and Schutz Showroom
                 AdminTeleportToPos(playerid, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 90.0, 0, 0, "Coutt and Schutz Auto Showroom (Los Santos)");
             }
-            case 6: { // Kantor Asuransi
+            case 8: { // Kantor Asuransi
                 new insListStr[512];
                 format(insListStr, sizeof(insListStr), "Cabang Asuransi\tKota / Wilayah\n");
                 for (new i = 0; i < INSURANCE_BRANCH_COUNT; i++) {
@@ -753,10 +843,31 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_ADMIN_TP_INSURANCE, DIALOG_STYLE_TABLIST_HEADERS,
                     "{2ECC71}Pilih Teleport Cabang Asuransi", insListStr, "Teleport", "Kembali");
             }
-            case 7: { // Los Santos Parking Lot
+            case 9: { // Los Santos Parking Lot
                 AdminTeleportToPos(playerid, gPublicGarages[0][g_MarkerX], gPublicGarages[0][g_MarkerY], gPublicGarages[0][g_MarkerZ], 0.0, 0, 0, "Los Santos Parking Lot (Downtown Los Santos)");
             }
+            case 10: { // Tambang Batu Hunter Quarry
+                AdminTeleportToPos(playerid, 595.6880, 868.5670, -42.8469, 0.0, 0, 0, "Tambang Batuan (Hunter Quarry LV)");
+            }
+            case 11: { // Smelter Pabrik
+                AdminTeleportToPos(playerid, SMELTER_TABLE1_X, SMELTER_TABLE1_Y, SMELTER_TABLE1_Z, SMELTER_TABLE1_A, 0, 0, "Tungku Peleburan / Smelter (Ocean Docks LS)");
+            }
+            case 12: { // Meja Rakit Senjata
+                AdminTeleportToPos(playerid, CRAFT_BENCH_X, CRAFT_BENCH_Y, CRAFT_BENCH_Z, CRAFT_BENCH_A, 0, 0, "Meja Perakitan Senjata / Gunsmith (Flint County Hideout)");
+            }
         }
+        return 1;
+    }
+
+    if (dialogid == DLG_ADMIN_TP_247) {
+        if (!response) {
+            return ShowAdminTeleportMenu(playerid);
+        }
+        if (listitem < 0 || listitem >= TWENTYFOUR_SEVEN_COUNT) return 1;
+
+        new locName[96];
+        format(locName, sizeof(locName), "%s (%s)", gTwentyFourSeven[listitem][tfs_Name], gTwentyFourSeven[listitem][tfs_City]);
+        AdminTeleportToPos(playerid, gTwentyFourSeven[listitem][tfs_X], gTwentyFourSeven[listitem][tfs_Y], gTwentyFourSeven[listitem][tfs_Z], gTwentyFourSeven[listitem][tfs_A], 0, 0, locName);
         return 1;
     }
 

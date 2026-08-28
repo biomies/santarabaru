@@ -146,13 +146,32 @@ stock HandleBuildingKeys(playerid, KEY:newkeys, KEY:oldkeys) {
         // Interaksi Loket Pembuatan e-KTP di Balai Kota
         if (IsPlayerInRangeOfPoint(playerid, 2.5, KTP_DESK_X, KTP_DESK_Y, KTP_DESK_Z) && GetPlayerInterior(playerid) == KTP_DESK_INT_ID) {
             new emptyParam[1];
-            cmd_ktp(playerid, emptyParam);
+            cmd_buatktp(playerid, emptyParam);
             return 1;
         }
 
         // Interaksi Loket Satpas DMV Driving School (San Fierro)
         if (IsPlayerInRangeOfPoint(playerid, 3.0, DMV_DESK_X, DMV_DESK_Y, DMV_DESK_Z) && GetPlayerInterior(playerid) == 0) {
             ShowDMVDialog(playerid);
+            PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
+            return 1;
+        }
+
+        // Interaksi Meja Kerja Rakit Senjata (Flint County Hideout)
+        if (IsPlayerInRangeOfPoint(playerid, 2.5, CRAFT_BENCH_X, CRAFT_BENCH_Y, CRAFT_BENCH_Z) && GetPlayerInterior(playerid) == 0) {
+            ShowCraftingMainMenu(playerid);
+            PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
+            return 1;
+        }
+
+        // Interaksi Menambang Batu di Hunter Quarry (Tekan F di dekat batu aktif)
+        if (GetPlayerInterior(playerid) == 0 && TryStartMining(playerid)) {
+            return 1;
+        }
+
+        // Interaksi Meja Smelter / Tungku Peleburan (Ocean Docks LS)
+        if (GetPlayerInterior(playerid) == 0 && IsPlayerNearSmelter(playerid)) {
+            ShowSmelterDialog(playerid);
             PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
             return 1;
         }
@@ -301,7 +320,7 @@ stock HandleBurgerShotDialog(playerid, dialogid, response, listitem, const input
     return 0;
 }
 
-// Perintah Membuka Menu Beli Kasir Burger Shot
+// Perintah Membuka Menu Beli Kasir Burger Shot & Supermarket
 CMD:buy(playerid, params[]) {
     #pragma unused params
     if (!CheckSpawned(playerid)) return 1;
@@ -310,6 +329,14 @@ CMD:buy(playerid, params[]) {
         PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
         return 1;
     }
-    SendClientMessage(playerid, COL_RED, "  [Error] Anda harus berada di depan kasir restoran untuk memesan makanan / minuman!");
+    if (GetPlayerInterior(playerid) == TWENTYFOUR_SEVEN_INT_ID) {
+        if (IsPlayerInRangeOfPoint(playerid, 3.5, TWENTYFOUR_SEVEN_CASH1_X, TWENTYFOUR_SEVEN_CASH1_Y, TWENTYFOUR_SEVEN_CASH1_Z) ||
+            IsPlayerInRangeOfPoint(playerid, 3.5, TWENTYFOUR_SEVEN_CASH2_X, TWENTYFOUR_SEVEN_CASH2_Y, TWENTYFOUR_SEVEN_CASH2_Z)) {
+            ShowTwentyFourSevenMenu(playerid);
+            PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
+            return 1;
+        }
+    }
+    SendClientMessage(playerid, COL_RED, "  [Error] Anda harus berada di depan kasir restoran / supermarket untuk berbelanja!");
     return 1;
 }

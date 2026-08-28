@@ -983,15 +983,19 @@ stock SetupPlayerMapIcons(playerid) {
 stock ShowGPSMenu(playerid) {
     if (!CheckSpawned(playerid)) return 0;
 
-    new menuStr[600];
+    new menuStr[1024];
     format(menuStr, sizeof(menuStr),
         "Lokasi Fasilitas Publik\tWilayah & Keterangan\n" \
         "{33CCFF}[Balai Kota] Loket e-KTP\t{FFFFFF}Pershing Square, Los Santos\n" \
         "{5814EE}[Sekolah Mengemudi] Satpas DMV\t{FFFFFF}Garcia / Doherty, San Fierro\n" \
         "{FFA500}[Restoran] Burger Shot\t{FFFFFF}10 Cabang Restoran San Andreas\n" \
+        "{2ECC71}[Supermarket] Toko Kelontong\t{FFFFFF}5 Cabang Supermarket San Andreas\n" \
         "{00EEFF}[Showroom] Coutt & Schutz\t{FFFFFF}Rodeo / Market, Los Santos\n" \
         "{2ECC71}[Kantor Asuransi] 3 Kota\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
-        "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos");
+        "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos\n" \
+        "{FFFF00}[Tambang Batuan] Hunter Quarry\t{FFFFFF}Hunter Quarry, Las Venturas\n" \
+        "{FF6600}[Peleburan] Smelter Pabrik\t{FFFFFF}Ocean Docks, Los Santos\n" \
+        "{FF0055}[Meja Rakit] Gunsmith Workshop\t{FFFFFF}Flint County Secret Hideout");
 
     ShowPlayerDialog(playerid, DLG_GPS_MENU, DIALOG_STYLE_TABLIST_HEADERS,
         "{E69958}Navigasi GPS Kota SantaraBaru", menuStr, "Navigasi", "Tutup");
@@ -1025,13 +1029,23 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_GPS_BURGER_SHOT, DIALOG_STYLE_TABLIST_HEADERS,
                     "{FFA500}Pilih Cabang Restoran Burger Shot", bsListStr, "Navigasi", "Kembali");
             }
-            case 3: { // Coutt & Schutz Showroom
+            case 3: { // Supermarket (Pilih 5 Cabang Kota)
+                new tfsListStr[768];
+                format(tfsListStr, sizeof(tfsListStr), "Nama Cabang Supermarket\tKota / Wilayah\n");
+                for (new i = 0; i < TWENTYFOUR_SEVEN_COUNT; i++) {
+                    format(tfsListStr, sizeof(tfsListStr), "%s{FFFFFF}%s\t{2ECC71}%s\n",
+                        tfsListStr, gTwentyFourSeven[i][tfs_Name], gTwentyFourSeven[i][tfs_City]);
+                }
+                ShowPlayerDialog(playerid, DLG_GPS_247, DIALOG_STYLE_TABLIST_HEADERS,
+                    "{2ECC71}Pilih Cabang Supermarket", tfsListStr, "Navigasi", "Kembali");
+            }
+            case 4: { // Coutt & Schutz Showroom
                 SetGPSWaypoint(playerid, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {00EEFF}Coutt and Schutz Auto Showroom (Los Santos).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
-            case 4: { // Kantor Asuransi (Pilih Cabang Kota)
+            case 5: { // Kantor Asuransi (Pilih Cabang Kota)
                 new insListStr[512];
                 format(insListStr, sizeof(insListStr), "Cabang Asuransi\tKota / Wilayah\n");
                 for (new i = 0; i < INSURANCE_BRANCH_COUNT; i++) {
@@ -1041,13 +1055,48 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_GPS_INSURANCE, DIALOG_STYLE_TABLIST_HEADERS,
                     "{2ECC71}Pilih Kantor Cabang Asuransi", insListStr, "Navigasi", "Kembali");
             }
-            case 5: { // Langsung Navigasi ke Los Santos Parking Lot
+            case 6: { // Langsung Navigasi ke Los Santos Parking Lot
                 SetGPSWaypoint(playerid, gPublicGarages[0][g_MarkerX], gPublicGarages[0][g_MarkerY], gPublicGarages[0][g_MarkerZ], 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {F1C40F}Los Santos Parking Lot (Downtown Los Santos).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
+            case 7: { // Tambang Batu Hunter Quarry
+                SetGPSWaypoint(playerid, 595.6880, 868.5670, -42.8469, 4.0);
+                PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {FFFF00}Tambang Batuan (Hunter Quarry, Las Venturas).");
+                SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
+            }
+            case 8: { // Smelter Pabrik
+                SetGPSWaypoint(playerid, SMELTER_TABLE1_X, SMELTER_TABLE1_Y, SMELTER_TABLE1_Z, 4.0);
+                PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {FF6600}Tungku Peleburan / Smelter (Ocean Docks, Los Santos).");
+                SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
+            }
+            case 9: { // Meja Rakit Senjata
+                SetGPSWaypoint(playerid, CRAFT_BENCH_X, CRAFT_BENCH_Y, CRAFT_BENCH_Z, 4.0);
+                PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {FF0055}Meja Perakitan Senjata / Gunsmith (Flint County Hideout).");
+                SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
+            }
         }
+        return 1;
+    }
+
+    if (dialogid == DLG_GPS_247) {
+        if (!response) {
+            return ShowGPSMenu(playerid);
+        }
+        if (listitem < 0 || listitem >= TWENTYFOUR_SEVEN_COUNT) return 1;
+
+        SetGPSWaypoint(playerid, gTwentyFourSeven[listitem][tfs_X], gTwentyFourSeven[listitem][tfs_Y], gTwentyFourSeven[listitem][tfs_Z], 4.0);
+        PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+
+        new msg[144];
+        format(msg, sizeof(msg), "  [GPS] Menandai rute menuju: {2ECC71}%s {FFFFFF}(%s).",
+            gTwentyFourSeven[listitem][tfs_Name], gTwentyFourSeven[listitem][tfs_City]);
+        SendClientMessage(playerid, COL_GREEN, msg);
+        SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
         return 1;
     }
 
