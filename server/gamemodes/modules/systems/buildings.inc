@@ -143,10 +143,16 @@ stock HandleBuildingKeys(playerid, KEY:newkeys, KEY:oldkeys) {
             return 1;
         }
 
-        // Interaksi Loket Pembuatan e-KTP di Balai Kota
-        if (IsPlayerInRangeOfPoint(playerid, 2.5, KTP_DESK_X, KTP_DESK_Y, KTP_DESK_Z) && GetPlayerInterior(playerid) == KTP_DESK_INT_ID) {
+        // Interaksi Loket Pembuatan e-KTP di Balai Kota (Radius 1.6m agar tidak tumpang tindih)
+        if (IsPlayerInRangeOfPoint(playerid, 1.6, KTP_DESK_X, KTP_DESK_Y, KTP_DESK_Z) && GetPlayerInterior(playerid) == KTP_DESK_INT_ID) {
             new emptyParam[1];
             cmd_buatktp(playerid, emptyParam);
+            return 1;
+        }
+
+        // Interaksi Loket Pusat Tenaga Kerja / Job Center di Balai Kota (Radius 1.6m)
+        if (IsPlayerInRangeOfPoint(playerid, 1.6, JOBCENTER_X, JOBCENTER_Y, JOBCENTER_Z) && GetPlayerInterior(playerid) == JOBCENTER_INT_ID) {
+            ShowJobCenterMenu(playerid);
             return 1;
         }
 

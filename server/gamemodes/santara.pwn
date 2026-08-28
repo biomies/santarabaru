@@ -48,6 +48,7 @@
 #include "modules/systems/mining.inc"
 #include "modules/systems/smelting.inc"
 #include "modules/systems/crafting.inc"
+#include "modules/systems/jobcenter.inc"
 
 //    Modul Perintah (Commands)                                
 #include "modules/commands/cmd_general.inc"
@@ -133,10 +134,11 @@ public OnGameModeInit() {
     InitInsuranceCenter();
     SyncVehiclesOnServerStart();
 
-    //    Inisialisasi Rantai Pasok (Tambang, Smelter, Crafting)
+    //    Inisialisasi Rantai Pasok (Tambang, Smelter, Crafting, Job Center)
     InitMiningSystem();
     InitSmelterSystem();
     InitCraftingSystem();
+    InitJobCenterSystem();
 
     gPlayTimeTimer = SetTimer("Timer_PlayTime", 60000, true);
     print("[SantaraBaru] Gamemode siap dimainkan!");
@@ -358,6 +360,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
     if (HandleTwentyFourSevenDialog(playerid, dialogid, response, listitem, inputtext)) return 1;
     if (HandleSmelterDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleCraftingDialog(playerid, dialogid, response, listitem)) return 1;
+    if (HandleJobCenterDialog(playerid, dialogid, response, listitem)) return 1;
     if (HandleAdminTeleportDialog(playerid, dialogid, response, listitem)) return 1;
     return 1;
 }

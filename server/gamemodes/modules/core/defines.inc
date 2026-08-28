@@ -71,6 +71,7 @@
 #define DLG_SMELTER_MAIN        90
 #define DLG_CRAFT_MAIN          91
 #define DLG_CRAFT_CATEGORY      92
+#define DLG_JOBCENTER_MAIN      95
 
 // UI Color Palette untuk Panel SIM TextDraw
 #define COLOR_SIM_BG            0x1E1E28F0
@@ -317,6 +318,14 @@
 #define KTP_DESK_Y          173.5707
 #define KTP_DESK_Z          1008.3828
 #define KTP_DESK_A          81.5142
+
+//    Lokasi Pusat Tenaga Kerja / Job Center (Balai Kota Interior)
+#define JOBCENTER_INT_ID    3
+#define JOBCENTER_VW_ID     0
+#define JOBCENTER_X         361.1137
+#define JOBCENTER_Y         171.3065
+#define JOBCENTER_Z         1008.3828
+#define JOBCENTER_A         60.2671
 
 // Warna chat
 #define COL_WHITE           0xFFFFFFFF

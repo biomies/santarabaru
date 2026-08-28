@@ -74,16 +74,7 @@ DEFAULT_ITEMS = [
 # 2. Default Master Jobs
 DEFAULT_JOBS = [
     (0, "Pengangguran", 0),
-    (1, "Supir Taksi", 150000),
-    (2, "Mekanik", 200000),
-    (3, "Kurir Paket", 175000),
-    (4, "Supir Truk", 250000),
-    (5, "Petani", 160000),
-    (6, "Dokter / Medis", 300000),
-    (7, "Polisi", 350000),
-    (8, "Pedagang / Kasir", 140000),
-    (9, "Pemadam Kebakaran", 280000),
-    (10, "Pengacara / Advokat", 400000)
+    (1, "Penambang", 0)
 ]
 
 # 3. Default Dealership Vehicles (105 Vehicles)

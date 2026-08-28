@@ -170,6 +170,26 @@ CMD:whoami(playerid, params[]) {
     return 1;
 }
 
+CMD:job(playerid, params[]) {
+    #pragma unused params
+    if (!CheckSpawned(playerid)) return 1;
+    if (IsPlayerAtJobCenter(playerid)) {
+        ShowJobCenterMenu(playerid);
+    } else {
+        SendClientMessage(playerid, COL_RED, "  [Job Center] Anda harus berada di loket Job Center (Balai Kota Los Santos)!");
+        SendClientMessage(playerid, COL_YELLOW, "  > Gunakan {FFFFFF}/gps{FFFF00} -> Balai Kota & Job Center untuk navigasi.");
+    }
+    return 1;
+}
+
+CMD:jobcenter(playerid, params[]) {
+    return cmd_job(playerid, params);
+}
+
+CMD:joinjob(playerid, params[]) {
+    return cmd_job(playerid, params);
+}
+
 CMD:q(playerid, params[]) {
     #pragma unused params
     Kick(playerid);

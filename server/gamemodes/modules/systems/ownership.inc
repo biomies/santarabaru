@@ -986,16 +986,20 @@ stock ShowGPSMenu(playerid) {
     new menuStr[1024];
     format(menuStr, sizeof(menuStr),
         "Lokasi Fasilitas Publik\tWilayah & Keterangan\n" \
-        "{33CCFF}[Balai Kota] Loket e-KTP\t{FFFFFF}Pershing Square, Los Santos\n" \
+        "{33CCFF}[Balai Kota & Job Center] Loket Kota\t{FFFFFF}Pershing Square, Los Santos\n" \
         "{5814EE}[Sekolah Mengemudi] Satpas DMV\t{FFFFFF}Garcia / Doherty, San Fierro\n" \
         "{FFA500}[Restoran] Burger Shot\t{FFFFFF}10 Cabang Restoran San Andreas\n" \
         "{2ECC71}[Supermarket] Toko Kelontong\t{FFFFFF}5 Cabang Supermarket San Andreas\n" \
         "{00EEFF}[Showroom] Coutt & Schutz\t{FFFFFF}Rodeo / Market, Los Santos\n" \
         "{2ECC71}[Kantor Asuransi] 3 Kota\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
-        "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos\n" \
-        "{FFFF00}[Tambang Batuan] Hunter Quarry\t{FFFFFF}Hunter Quarry, Las Venturas\n" \
-        "{FF6600}[Peleburan] Smelter Pabrik\t{FFFFFF}Ocean Docks, Los Santos\n" \
-        "{FF0055}[Meja Rakit] Gunsmith Workshop\t{FFFFFF}Flint County Secret Hideout");
+        "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos\n");
+
+    // Hanya Penambang (Job 1) yang dapat melihat lokasi Tambang & Smelter
+    if (gPlayerData[playerid][p_Job] == 1) {
+        format(menuStr, sizeof(menuStr), "%s" \
+            "{FFFF00}[Tambang Batuan] Hunter Quarry\t{FFFFFF}Hunter Quarry, Las Venturas (Pekerjaan)\n" \
+            "{FF6600}[Peleburan] Smelter Pabrik\t{FFFFFF}Ocean Docks, Los Santos (Pekerjaan)\n", menuStr);
+    }
 
     ShowPlayerDialog(playerid, DLG_GPS_MENU, DIALOG_STYLE_TABLIST_HEADERS,
         "{E69958}Navigasi GPS Kota SantaraBaru", menuStr, "Navigasi", "Tutup");
@@ -1007,11 +1011,12 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
         if (!response) return 1;
 
         switch (listitem) {
-            case 0: { // Balai Kota
+            case 0: { // Balai Kota & Job Center
                 SetGPSWaypoint(playerid, CITYHALL_EXT_X, CITYHALL_EXT_Y, CITYHALL_EXT_Z, 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
-                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {33CCFF}Balai Kota Los Santos (Pershing Square).");
-                SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
+                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {33CCFF}Balai Kota & Job Center (Pershing Square, Los Santos).");
+                SendClientMessage(playerid, COL_YELLOW, "  > Masuk ke dalam Balai Kota untuk loket e-KTP dan Pusat Tenaga Kerja (Job Center).");
+                SendClientMessage(playerid, COL_YELLOW, "  > Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
             case 1: { // Satpas DMV Driving School (San Fierro)
                 SetGPSWaypoint(playerid, DMV_DESK_X, DMV_DESK_Y, DMV_DESK_Z, 4.0);
@@ -1061,22 +1066,18 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {F1C40F}Los Santos Parking Lot (Downtown Los Santos).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
-            case 7: { // Tambang Batu Hunter Quarry
+            case 7: { // Tambang Batu Hunter Quarry (Khusus Penambang)
+                if (gPlayerData[playerid][p_Job] != 1) return 1;
                 SetGPSWaypoint(playerid, 595.6880, 868.5670, -42.8469, 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
-                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {FFFF00}Tambang Batuan (Hunter Quarry, Las Venturas).");
+                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {FFFF00}Tambang Batuan & Mineral (Hunter Quarry, Las Venturas).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
-            case 8: { // Smelter Pabrik
+            case 8: { // Smelter Pabrik (Khusus Penambang)
+                if (gPlayerData[playerid][p_Job] != 1) return 1;
                 SetGPSWaypoint(playerid, SMELTER_TABLE1_X, SMELTER_TABLE1_Y, SMELTER_TABLE1_Z, 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {FF6600}Tungku Peleburan / Smelter (Ocean Docks, Los Santos).");
-                SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
-            }
-            case 9: { // Meja Rakit Senjata
-                SetGPSWaypoint(playerid, CRAFT_BENCH_X, CRAFT_BENCH_Y, CRAFT_BENCH_Z, 4.0);
-                PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
-                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {FF0055}Meja Perakitan Senjata / Gunsmith (Flint County Hideout).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
         }
