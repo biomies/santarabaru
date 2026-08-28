@@ -71,6 +71,8 @@ enum E_PLAYER_DATA {
     //    Status Kebutuhan Hidup & Vitalitas   
     Float:p_Hunger,             // 0.0 - 100.0%
     Float:p_Thirst,             // 0.0 - 100.0%
+    Float:p_Health,             // Darah / HP (0.0 - 100.0)
+    Float:p_Armour,             // Pelindung Tubuh / Armor (0.0 - 100.0)
     //    Status Sesi Inventory Pemain   
     bool:p_InInventoryUI,
     p_InvCurrentPage,
@@ -117,7 +119,10 @@ enum E_PLAYER_DATA {
     //    Status Panel UI SIM (Right Sidebar)
     bool:p_InDokumenUI,
     p_SelectedDokumenIndex,         // 0: SIM A, 1: SIM B, 2: SIM C
-    p_ViewingSimTarget
+    p_ViewingSimTarget,
+    //    Status Senjata Aktif & Visual Attachment
+    p_LastHoldingWeapon,
+    Float:p_LastArmour
 }
 
 new gPlayerData[MAX_PLAYERS][E_PLAYER_DATA];
@@ -163,6 +168,8 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_Cash]           = 500;
     gPlayerData[playerid][p_Hunger]         = 100.0;
     gPlayerData[playerid][p_Thirst]         = 100.0;
+    gPlayerData[playerid][p_Health]         = 100.0;
+    gPlayerData[playerid][p_Armour]         = 0.0;
     gPlayerData[playerid][p_Registered]     = false;
     gPlayerData[playerid][p_LoggedIn]       = false;
     gPlayerData[playerid][p_Spawned]        = false;
@@ -223,4 +230,6 @@ stock ResetPlayerData(playerid) {
     gPlayerData[playerid][p_SelectedTrunkItemID] = 0;
     gPlayerData[playerid][p_AdminLevel]     = 0;
     gPlayerData[playerid][p_AdminDuty]      = false;
+    gPlayerData[playerid][p_LastHoldingWeapon] = -1;
+    gPlayerData[playerid][p_LastArmour]     = -1.0;
 }

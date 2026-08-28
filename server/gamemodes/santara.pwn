@@ -244,7 +244,7 @@ public OnPlayerDisconnect(playerid, reason) {
     DestroyPlayerSpawnTextDraws(playerid);
     DestroyPlayerSkinTextDraws(playerid);
     DestroyPlayerKTPTextDraws(playerid);
-    RemovePlayerArmorVisual(playerid);
+    RemovePlayerAllVisualAttachments(playerid);
     ResetPlayerData(playerid);
     return 1;
 }
@@ -266,6 +266,7 @@ public OnPlayerRequestClass(playerid, classid) {
 
 public OnPlayerSpawn(playerid) {
     gPlayerData[playerid][p_Spawned] = true;
+    gPlayerData[playerid][p_LastHoldingWeapon] = -1;
 
     SetPlayerInterior(playerid, 0);
     SetPlayerVirtualWorld(playerid, 0);
@@ -282,12 +283,15 @@ public OnPlayerSpawn(playerid) {
         CancelSelectTextDraw(playerid);
         TogglePlayerControllable(playerid, true);
         SetCameraBehindPlayer(playerid);
+        SetPlayerHealth(playerid, gPlayerData[playerid][p_Health]);
+        SetPlayerArmour(playerid, gPlayerData[playerid][p_Armour]);
         Inventory_LoadPlayerItems(playerid);
         SyncPlayerWeaponsFromInventory(playerid);
         CreatePlayerMoneyHUD(playerid);
         UpdatePlayerMoneyHUD(playerid);
         ShowPlayerMoneyHUD(playerid);
         UpdatePlayerArmorVisual(playerid);
+        UpdatePlayerWeaponHolsterVisual(playerid);
 
         if (gVoiceEnabled) {
             SetupVoiceStream(playerid);
@@ -299,6 +303,26 @@ public OnPlayerSpawn(playerid) {
         SetupPlayerMapIcons(playerid);
 
         SendClientMessage(playerid, COL_GREEN, "  Selamat datang! Ketik {00EEFF}/help{00CC66} untuk melihat perintah atau {00EEFF}/gps{00CC66} untuk peta.");
+    }
+    return 1;
+}
+
+public OnPlayerUpdate(playerid) {
+    if (!gPlayerData[playerid][p_LoggedIn] || !gPlayerData[playerid][p_Spawned]) return 1;
+
+    // 1. Deteksi perubahan nilai Armor untuk visual Rompi Kevlar 3D di badan
+    new Float:curArm;
+    GetPlayerArmour(playerid, curArm);
+    if (curArm != gPlayerData[playerid][p_LastArmour]) {
+        gPlayerData[playerid][p_LastArmour] = curArm;
+        UpdatePlayerArmorVisual(playerid);
+    }
+
+    // 2. Deteksi pergantian senjata di tangan untuk visual sarung pistol & laras panjang di tubuh
+    new curWep = GetPlayerWeapon(playerid);
+    if (curWep != gPlayerData[playerid][p_LastHoldingWeapon]) {
+        gPlayerData[playerid][p_LastHoldingWeapon] = curWep;
+        UpdatePlayerWeaponHolsterVisual(playerid);
     }
     return 1;
 }
@@ -643,7 +667,9 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
 public OnPlayerDeath(playerid, killerid, reason) {
     #pragma unused killerid, reason
     HideSpeedometer(playerid);
-    RemovePlayerArmorVisual(playerid);
+    RemovePlayerAllVisualAttachments(playerid);
+    gPlayerData[playerid][p_Health] = 100.0;
+    gPlayerData[playerid][p_Armour] = 0.0;
     if (gPlayerData[playerid][p_InDrivingTest]) {
         CancelDrivingTest(playerid, "Pemain pingsan / mati saat ujian");
     }

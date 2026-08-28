@@ -190,8 +190,12 @@ stock HandleCraftingDialog(playerid, dialogid, response, listitem) {
                 format(rpMsg, sizeof(rpMsg), "* %s menekuk pelat kuningan dan memasang per pegas baja magasin amunisi.", charname);
             }
         }
-        else if (cat == 2) { // Senjata Api (Tier Eksklusif)
+        else if (cat == 2) { // Senjata Api (Tier Eksklusif - Maksimal 1 Pistol & 1 Laras Panjang)
             if (listitem == 0) { // Colt 45 (2 Laras, 2 Pelatuk, 1 Mag, 12 Baja, 8 Kuningan)
+                if (Inventory_HasPistol(playerid)) {
+                    SendClientMessage(playerid, COL_RED, "  [CRAFT] Anda sudah membawa 1 senjata jenis pistol (Maksimal 1 Pistol)!");
+                    return 1;
+                }
                 if (Inventory_GetItemCount(playerid, ITEM_BARREL_SLIDE) < 2 || Inventory_GetItemCount(playerid, ITEM_TRIGGER_MECH) < 2 || Inventory_GetItemCount(playerid, ITEM_EMPTY_MAG) < 1 || Inventory_GetItemCount(playerid, ITEM_STEEL_BAR) < 12 || Inventory_GetItemCount(playerid, ITEM_BRASS_PLATE) < 8) {
                     SendClientMessage(playerid, COL_RED, "  [CRAFT] Bahan tidak cukup (2 Laras, 2 Pelatuk, 1 Mag, 12 Baja, 8 Kuningan)!");
                     return 1;
@@ -206,6 +210,10 @@ stock HandleCraftingDialog(playerid, dialogid, response, listitem) {
                 SendClientMessage(playerid, COL_GREEN, "  [CRAFT] Sukses merakit {00EEFF}1x Pistol 9mm (Colt 45){FFFFFF} (tersimpan di tas)!");
                 format(rpMsg, sizeof(rpMsg), "* %s menyatukan seluruh komponen laras presisi, pelatuk, dan bodi pistol 9mm.", charname);
             } else if (listitem == 1) { // Shotgun (3 Laras, 3 Pelatuk, 24 Baja, 14 Kuningan)
+                if (Inventory_HasLongWeapon(playerid)) {
+                    SendClientMessage(playerid, COL_RED, "  [CRAFT] Anda sudah membawa 1 senjata laras panjang (Maksimal 1 Laras Panjang)!");
+                    return 1;
+                }
                 if (Inventory_GetItemCount(playerid, ITEM_BARREL_SLIDE) < 3 || Inventory_GetItemCount(playerid, ITEM_TRIGGER_MECH) < 3 || Inventory_GetItemCount(playerid, ITEM_STEEL_BAR) < 24 || Inventory_GetItemCount(playerid, ITEM_BRASS_PLATE) < 14) {
                     SendClientMessage(playerid, COL_RED, "  [CRAFT] Bahan tidak cukup (3 Laras, 3 Pelatuk, 24 Baja, 14 Kuningan)!");
                     return 1;
@@ -219,6 +227,10 @@ stock HandleCraftingDialog(playerid, dialogid, response, listitem) {
                 SendClientMessage(playerid, COL_GREEN, "  [CRAFT] Sukses merakit {00EEFF}1x Pump-Action Shotgun{FFFFFF} (tersimpan di tas)!");
                 format(rpMsg, sizeof(rpMsg), "* %s merakit tabung pompa, breech baja, dan laras panjang senapan shotgun.", charname);
             } else if (listitem == 2) { // AK-47 (4 Laras, 3 Pelatuk, 2 Mag, 26 Baja, 18 Kuningan)
+                if (Inventory_HasLongWeapon(playerid)) {
+                    SendClientMessage(playerid, COL_RED, "  [CRAFT] Anda sudah membawa 1 senjata laras panjang (Maksimal 1 Laras Panjang)!");
+                    return 1;
+                }
                 if (Inventory_GetItemCount(playerid, ITEM_BARREL_SLIDE) < 4 || Inventory_GetItemCount(playerid, ITEM_TRIGGER_MECH) < 3 || Inventory_GetItemCount(playerid, ITEM_EMPTY_MAG) < 2 || Inventory_GetItemCount(playerid, ITEM_STEEL_BAR) < 26 || Inventory_GetItemCount(playerid, ITEM_BRASS_PLATE) < 18) {
                     SendClientMessage(playerid, COL_RED, "  [CRAFT] Bahan tidak cukup (4 Laras, 3 Pelatuk, 2 Mag, 26 Baja, 18 Kuningan)!");
                     return 1;
@@ -233,6 +245,10 @@ stock HandleCraftingDialog(playerid, dialogid, response, listitem) {
                 SendClientMessage(playerid, COL_GREEN, "  [CRAFT] Sukses merakit {00EEFF}1x AK-47 Assault Rifle{FFFFFF} (tersimpan di tas)!");
                 format(rpMsg, sizeof(rpMsg), "* %s merakit receiver baja berat dan mekanisme otomatis senapan serbu AK-47.", charname);
             } else if (listitem == 3) { // Desert Eagle (4 Laras, 4 Pelatuk, 2 Mag, 32 Baja, 22 Kuningan)
+                if (Inventory_HasPistol(playerid)) {
+                    SendClientMessage(playerid, COL_RED, "  [CRAFT] Anda sudah membawa 1 senjata jenis pistol (Maksimal 1 Pistol)!");
+                    return 1;
+                }
                 if (Inventory_GetItemCount(playerid, ITEM_BARREL_SLIDE) < 4 || Inventory_GetItemCount(playerid, ITEM_TRIGGER_MECH) < 4 || Inventory_GetItemCount(playerid, ITEM_EMPTY_MAG) < 2 || Inventory_GetItemCount(playerid, ITEM_STEEL_BAR) < 32 || Inventory_GetItemCount(playerid, ITEM_BRASS_PLATE) < 22) {
                     SendClientMessage(playerid, COL_RED, "  [CRAFT] Bahan tidak cukup (4 Laras, 4 Pelatuk, 2 Mag, 32 Baja, 22 Kuningan)!");
                     return 1;

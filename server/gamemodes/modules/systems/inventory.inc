@@ -134,9 +134,34 @@ stock Inventory_LoadPlayerItems(playerid) {
     return gPlayerData[playerid][p_InvItemCount];
 }
 
+stock bool:Inventory_HasPistol(playerid) {
+    return (Inventory_HasItem(playerid, ITEM_WEAPON_COLT45) || Inventory_HasItem(playerid, ITEM_WEAPON_DEAGLE));
+}
+
+stock bool:Inventory_HasLongWeapon(playerid) {
+    return (Inventory_HasItem(playerid, ITEM_WEAPON_SHOTGUN) || Inventory_HasItem(playerid, ITEM_WEAPON_AK47));
+}
+
+stock bool:Inventory_CanAddWeapon(playerid, itemid) {
+    if (itemid == ITEM_WEAPON_COLT45 || itemid == ITEM_WEAPON_DEAGLE) {
+        if (Inventory_HasPistol(playerid)) return false;
+    }
+    if (itemid == ITEM_WEAPON_SHOTGUN || itemid == ITEM_WEAPON_AK47) {
+        if (Inventory_HasLongWeapon(playerid)) return false;
+    }
+    return true;
+}
+
 stock Inventory_AddItem(playerid, itemid, amount) {
     if (!gPlayerData[playerid][p_LoggedIn] || gPlayerData[playerid][p_CharID] <= 0) return 0;
     if (amount <= 0 || GetItemRegistryIndex(itemid) == -1) return 0;
+
+    // Batasi senjata: Maksimal 1 Pistol dan 1 Senjata Laras Panjang per karakter
+    if (itemid >= ITEM_WEAPON_COLT45 && itemid <= ITEM_WEAPON_AK47) {
+        if (!Inventory_CanAddWeapon(playerid, itemid)) {
+            return 0;
+        }
+    }
 
     new currentAmt = Inventory_GetItemCount(playerid, itemid);
     new query[256];
@@ -224,6 +249,9 @@ stock SyncPlayerWeaponsFromInventory(playerid) {
         GivePlayerWeapon(playerid, 30, (ammo > 0) ? ammo : 1);
         SetPlayerAmmo(playerid, 30, (ammo > 0) ? ammo : 1);
     }
+
+    // Perbarui visual sarung pistol di pinggang karakter
+    UpdatePlayerWeaponHolsterVisual(playerid);
     return 1;
 }
 
@@ -696,6 +724,18 @@ stock HandleInventoryDialog(playerid, dialogid, response, listitem, inputtext[])
         if (!IsPlayerInRangeOfPoint(playerid, 4.0, tx, ty, tz)) {
             SendClientMessage(playerid, COL_RED, "  [Error] Pemain penerima berada terlalu jauh dari Anda (maks 4m)!");
             return 1;
+        }
+
+        if (itId >= ITEM_WEAPON_COLT45 && itId <= ITEM_WEAPON_AK47) {
+            if (!Inventory_CanAddWeapon(targetId, itId)) {
+                if (itId == ITEM_WEAPON_COLT45 || itId == ITEM_WEAPON_DEAGLE) {
+                    SendClientMessage(playerid, COL_RED, "  [Error] Pemain tujuan sudah membawa 1 senjata jenis pistol (Maksimal 1 Pistol)!");
+                } else {
+                    SendClientMessage(playerid, COL_RED, "  [Error] Pemain tujuan sudah membawa 1 senjata laras panjang (Maksimal 1 Laras Panjang)!");
+                }
+                OpenInventoryMenu(playerid);
+                return 1;
+            }
         }
 
         Inventory_RemoveItem(playerid, itId, qty);

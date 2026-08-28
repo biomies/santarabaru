@@ -642,6 +642,18 @@ stock HandleTrunkDialog(playerid, dialogid, response, inputtext[]) {
             return 1;
         }
 
+        if (itId >= ITEM_WEAPON_COLT45 && itId <= ITEM_WEAPON_AK47) {
+            if (!Inventory_CanAddWeapon(playerid, itId)) {
+                if (itId == ITEM_WEAPON_COLT45 || itId == ITEM_WEAPON_DEAGLE) {
+                    SendClientMessage(playerid, COL_RED, "  [Bagasi] Anda sudah membawa 1 senjata jenis pistol di tas (Maksimal 1 Pistol)!");
+                } else {
+                    SendClientMessage(playerid, COL_RED, "  [Bagasi] Anda sudah membawa 1 senjata laras panjang di tas (Maksimal 1 Laras Panjang)!");
+                }
+                if (gPlayerData[playerid][p_InTrunkUI]) UpdateTrunkUI(playerid);
+                return 1;
+            }
+        }
+
         Trunk_RemoveItem(vehDbId, itId, qty);
         Inventory_AddItem(playerid, itId, qty);
 
