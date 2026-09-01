@@ -17,7 +17,7 @@ stock InitJobCenterSystem() {
     gJobCenterLabel = Create3DTextLabel(
         "{00EEFF}[ PUSAT TENAGA KERJA / JOB CENTER ]\n" \
         "{FFFFFF}Daftar Lowongan Pekerjaan Resmi Kota\n" \
-        "{FFFF00}Tekan [ F / ENTER ] atau ketik {00EEFF}/job",
+        "{FFFF00}Tekan [ H ] atau ketik {00EEFF}/job",
         COL_CYAN,
         JOBCENTER_X, JOBCENTER_Y, JOBCENTER_Z + 0.6,
         15.0, JOBCENTER_VW_ID, 1

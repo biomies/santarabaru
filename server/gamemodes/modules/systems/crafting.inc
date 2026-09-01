@@ -17,7 +17,7 @@ stock InitCraftingSystem() {
     CreatePickup(1239, 1, CRAFT_BENCH_X, CRAFT_BENCH_Y, CRAFT_BENCH_Z, 0);
 
     gCraftingLabel = Create3DTextLabel(
-        "{FF0055}[ MEJA KERJA RAHASIA / GUNSMITH WORKBENCH ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} atau gunakan {00EEFF}/craft{FFFFFF}\n{AAAAAA}(Wajib membawa Kotak Perkakas / Toolbox di tas)",
+        "{FF0055}[ MEJA KERJA RAHASIA / GUNSMITH WORKBENCH ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} atau gunakan {00EEFF}/craft{FFFFFF}\n{AAAAAA}(Wajib membawa Kotak Perkakas / Toolbox di tas)",
         0xFFFFFFFF,
         CRAFT_BENCH_X, CRAFT_BENCH_Y, CRAFT_BENCH_Z + 0.6,
         15.0, 0, 0

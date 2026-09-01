@@ -10,35 +10,50 @@
 CMD:help(playerid, params[]) {
     #pragma unused params
     if (!gPlayerData[playerid][p_LoggedIn]) return 1;
-    SendClientMessage(playerid, COL_WHITE, "  [ {E69958}PANDUAN PERINTAH ROLEPLAY {FFFFFF}]");
+    SendClientMessage(playerid, COL_CYAN,  "================== [ PANDUAN PERINTAH ROLEPLAY ] ==================");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Tombol Pintas Aksi Utama:");
+    SendClientMessage(playerid, COL_WHITE, "     {FFFF00}[ H ]         {A0AEC0}- Interaksi universal (Gedung, Loket KTP, Job, DMV, Kasir, Pom Bensin, dll)");
+    SendClientMessage(playerid, COL_WHITE, "     {FFFF00}[ C ] /cursor {A0AEC0}- Masuk ke mode kursor mouse untuk klik tombol HUD / UI");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Tutorial Mengisi Bensin di Pom Bensin:");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}1. {FFFFFF}Parkirkan kendaraan dekat dispenser & matikan mesin ({FFFF00}/engine{FFFFFF} atau tombol HUD).");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}2. {FFFFFF}Turun dari mobil, dekati dispenser bensin lalu tekan {FFFF00}[ H ]{FFFFFF} atau {FFFF00}/isibensin{FFFFFF}.");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}3. {FFFFFF}Gunakan tombol {00EEFF}[ + ] / [ - ]{FFFFFF} atau {00EEFF}[ Full ]{FFFFFF} untuk memilih liter, lalu klik {5814EE}[ Isi ]{FFFFFF}.");
     SendClientMessage(playerid, COL_WHITE, "  > {E69958}Komunikasi Suara & Teks RP:");
     SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/s {FFFFFF}[pesan]   {A0AEC0}- Bicara lokal biasa (Radius 20m)");
     SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/sh {FFFFFF}[pesan]  {A0AEC0}- Berteriak kencang (Radius 40m)");
     SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/w {FFFFFF}[pesan]   {A0AEC0}- Berbisik pelan (Radius 5m)");
-    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/ooc {FFFFFF}[pesan] {A0AEC0}- Chat Out-of-Character global");
-    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Aksi & Situasi Roleplay:");
+    SendClientMessage(playerid, COL_WHITE, "     {F1C40F}/b {FFFFFF}[pesan]   {A0AEC0}- Chat OOC lokal (/ooc untuk global)");
     SendClientMessage(playerid, COL_WHITE, "     {C56CF0}/me {FFFFFF}[aksi]   {A0AEC0}- Deskripsi tindakan karakter");
-    SendClientMessage(playerid, COL_WHITE, "     {00D2FF}/do {FFFFFF}[kondisi]{A0AEC0}- Deskripsi situasi sekitar");
-    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Kependudukan & Identitas:");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/ktp           {A0AEC0}- Buka KTP sendiri / buat di Balai Kota");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/ktp {FFFFFF}[id]      {A0AEC0}- Perlihatkan KTP ke pemain terdekat");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/whoami        {A0AEC0}- Ringkasan identitas & status karakter");
-    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Kendaraan & Garasi Kota:");
+    SendClientMessage(playerid, COL_WHITE, "     {00D2FF}/do {FFFFFF}[kondisi]{A0AEC0}- Deskripsi situasi lingkungan sekitar");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Identitas, Dokumen & Tas:");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/dokumen       {A0AEC0}- Buka dompet dokumen (e-KTP, SIM A/B/C) & perlihatkan");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/buatktp       {A0AEC0}- Buat / cetak e-KTP di Loket Balai Kota");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/whoami        {A0AEC0}- Ringkasan biodata karakter & status");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/trunk /bagasi {A0AEC0}- Buka bagasi mobil untuk simpan/ambil barang");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Kendaraan & Fasilitas:");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/v             {A0AEC0}- Menu manajemen kendaraan & GPS tracker");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/garasi        {A0AEC0}- Buka Live 3D Garasi Kota (simpan / ambil mobil)");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/asuransi      {A0AEC0}- Klaim kendaraan hancur di Kantor Asuransi");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/dealer        {A0AEC0}- Buka Coutt & Schutz Auto Showroom");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/engine        {A0AEC0}- Nyalakan / matikan mesin kendaraan");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/lock          {A0AEC0}- Kunci / buka pintu kendaraan");
-    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Karakter & Gedung:");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}[ F / ENTER ]  {A0AEC0}- Masuk / keluar gedung & interaksi loket");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/char          {A0AEC0}- Pilih / ganti karakter aktif");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/skin          {A0AEC0}- Buka Live 3D ganti pakaian");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/asuransi      {A0AEC0}- Klaim kendaraan rusak/hancur di Kantor Asuransi");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/dealer        {A0AEC0}- Buka Showroom Coutt & Schutz");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/seatbelt /sb  {A0AEC0}- Pasang / lepas sabuk pengaman");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/isibensin     {A0AEC0}- Buka menu pengisian bensin di Pom Bensin");
+    SendClientMessage(playerid, COL_WHITE, "  > {E69958}Navigasi & Umum:");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/gps           {A0AEC0}- Buka Legenda Peta & Navigasi Rute Fasilitas");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/cp            {A0AEC0}- Matikan tanda checkpoint GPS aktif");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/getpos        {A0AEC0}- Ambil data koordinat posisi");
-    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/voice         {A0AEC0}- Cek status Voice Chat 3D");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/cp            {A0AEC0}- Matikan tanda waypoint GPS aktif");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/job /jobcenter{A0AEC0}- Buka lowongan kerja di Balai Kota");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/craft         {A0AEC0}- Buka meja perakitan senjata di hideout");
+    SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/cursor        {A0AEC0}- Aktifkan kursor mouse untuk klik TextDraw UI");
     SendClientMessage(playerid, COL_WHITE, "     {2ECC71}/q             {A0AEC0}- Keluar dari server");
+    SendClientMessage(playerid, COL_CYAN,  "====================================================================");
+    return 1;
+}
+
+CMD:cursor(playerid, params[]) {
+    #pragma unused params
+    if (!CheckSpawned(playerid)) return 1;
+    SelectTextDraw(playerid, 0x00EEFFFF);
+    PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
+    SendClientMessage(playerid, COL_GREEN, "  [Kursor] Mode kursor mouse aktif. Tekan ESC untuk menutup kursor.");
     return 1;
 }
 
@@ -194,4 +209,30 @@ CMD:q(playerid, params[]) {
     #pragma unused params
     Kick(playerid);
     return 1;
+}
+
+stock DoPlayerRefuel(playerid) {
+    return OpenRefuelUI(playerid);
+}
+
+CMD:fillfuel(playerid, params[]) {
+    #pragma unused params
+    DoPlayerRefuel(playerid);
+    return 1;
+}
+
+CMD:isibensin(playerid, params[]) {
+    #pragma unused params
+    DoPlayerRefuel(playerid);
+    return 1;
+}
+
+CMD:seatbelt(playerid, params[]) {
+    #pragma unused params
+    TogglePlayerVehicleSeatbelt(playerid);
+    return 1;
+}
+
+CMD:sb(playerid, params[]) {
+    return cmd_seatbelt(playerid, params);
 }

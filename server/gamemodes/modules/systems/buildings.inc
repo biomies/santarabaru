@@ -36,7 +36,7 @@ stock InitBuildings() {
     // ─── 1. Balai Kota Los Santos (Pershing Square) ───
     CreatePickup(1239, 1, CITYHALL_EXT_X, CITYHALL_EXT_Y, CITYHALL_EXT_Z, 0);
     Create3DTextLabel(
-        "{33CCFF}[ BALAI KOTA LOS SANTOS ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} untuk masuk",
+        "{33CCFF}[ BALAI KOTA LOS SANTOS ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} untuk masuk",
         0xFFFFFFFF,
         CITYHALL_EXT_X, CITYHALL_EXT_Y, CITYHALL_EXT_Z + 0.5,
         15.0, 0, false
@@ -45,7 +45,7 @@ stock InitBuildings() {
     // Pintu Keluar Balai Kota (Interior Planning Dept)
     CreatePickup(1318, 1, CITYHALL_INT_X, CITYHALL_INT_Y, CITYHALL_INT_Z, 0);
     Create3DTextLabel(
-        "{33CCFF}[ PINTU KELUAR ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} untuk keluar",
+        "{33CCFF}[ PINTU KELUAR ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} untuk keluar",
         0xFFFFFFFF,
         CITYHALL_INT_X, CITYHALL_INT_Y, CITYHALL_INT_Z + 0.5,
         12.0, 0, false
@@ -54,7 +54,7 @@ stock InitBuildings() {
     // Loket Catatan Sipil & e-KTP Balai Kota
     CreatePickup(1239, 1, KTP_DESK_X, KTP_DESK_Y, KTP_DESK_Z, 0);
     Create3DTextLabel(
-        "{33CCFF}[ LOKET CATATAN SIPIL & E-KTP ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} atau ketik {FFFF00}/ktp{FFFFFF}\n{AAAAAA}Untuk membuat / menerbitkan e-KTP Anda",
+        "{33CCFF}[ LOKET CATATAN SIPIL & E-KTP ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} atau ketik {FFFF00}/buatktp{FFFFFF}\n{AAAAAA}Untuk membuat / menerbitkan e-KTP Anda",
         0xFFFFFFFF,
         KTP_DESK_X, KTP_DESK_Y, KTP_DESK_Z + 0.5,
         10.0, 0, false
@@ -66,7 +66,7 @@ stock InitBuildings() {
 
         new labelText[160];
         format(labelText, sizeof(labelText),
-            "{FFA500}[ RESTORAN BURGER SHOT ]\n{FFFFFF}%s (%s)\n{FFFF00}Tekan [ F / ENTER ] untuk masuk",
+            "{FFA500}[ RESTORAN BURGER SHOT ]\n{FFFFFF}%s (%s)\n{FFFF00}Tekan [ H ] untuk masuk",
             gBurgerShots[i][bs_Name], gBurgerShots[i][bs_City]);
 
         Create3DTextLabel(labelText, 0xFFFFFFFF,
@@ -78,7 +78,7 @@ stock InitBuildings() {
     // Pintu Keluar Interior Burger Shot (VW -1 agar berlaku untuk semua dimensi cabang)
     CreatePickup(1318, 1, BURGER_SHOT_INT_X, BURGER_SHOT_INT_Y, BURGER_SHOT_INT_Z, -1);
     Create3DTextLabel(
-        "{FFA500}[ PINTU KELUAR ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} untuk keluar ke kota",
+        "{FFA500}[ PINTU KELUAR ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} untuk keluar ke kota",
         0xFFFFFFFF,
         BURGER_SHOT_INT_X, BURGER_SHOT_INT_Y, BURGER_SHOT_INT_Z + 0.5,
         12.0, -1, false
@@ -87,7 +87,7 @@ stock InitBuildings() {
     // Kasir & Loket Pemesanan Makanan / Minuman (VW -1 agar berlaku untuk semua dimensi cabang)
     CreatePickup(1239, 1, BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z, -1);
     Create3DTextLabel(
-        "{FFA500}[ KASIR BURGER SHOT ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} atau ketik {FFFF00}/buy{FFFFFF}\n{AAAAAA}Untuk memesan makanan & minuman",
+        "{FFA500}[ KASIR BURGER SHOT ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} atau ketik {FFFF00}/buy{FFFFFF}\n{AAAAAA}Untuk memesan makanan & minuman",
         0xFFFFFFFF,
         BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z + 0.5,
         10.0, -1, false
@@ -120,8 +120,8 @@ stock HandleBuildingKeys(playerid, KEY:newkeys, KEY:oldkeys) {
     if (!gPlayerData[playerid][p_LoggedIn] || !gPlayerData[playerid][p_Spawned]) return 1;
     if (IsPlayerInAnyVehicle(playerid)) return 1;
 
-    // Deteksi jika pemain menekan tombol F / ENTER (KEY_SECONDARY_ATTACK)
-    if (newkeys & KEY_SECONDARY_ATTACK) {
+    // Deteksi jika pemain menekan tombol H (KEY_CTRL_BACK) atau F / ENTER (KEY_SECONDARY_ATTACK)
+    if ((newkeys & KEY_CTRL_BACK) || (newkeys & KEY_SECONDARY_ATTACK)) {
         // ─── 1. Balai Kota Masuk & Keluar ───
         if (IsPlayerInRangeOfPoint(playerid, 2.5, CITYHALL_EXT_X, CITYHALL_EXT_Y, CITYHALL_EXT_Z) && GetPlayerInterior(playerid) == 0) {
             SetPlayerInterior(playerid, CITYHALL_INT_ID);

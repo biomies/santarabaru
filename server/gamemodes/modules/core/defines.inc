@@ -38,11 +38,13 @@
 #define DLG_GPS_INSURANCE       42
 #define DLG_GPS_BURGER_SHOT     43
 #define DLG_GPS_247             44
+#define DLG_GPS_GAS_STATION     45
 #define DLG_ADMIN_TELEPORT      50
 #define DLG_ADMIN_TP_INSURANCE  51
 #define DLG_ADMIN_TP_GARAGE     52
 #define DLG_ADMIN_TP_BURGER_SHOT 53
 #define DLG_ADMIN_TP_247        54
+#define DLG_ADMIN_TP_GAS_STATION 55
 
 // Inventory & Item Dialogs
 #define DLG_INV_MAIN            60
@@ -142,6 +144,129 @@
 #define CRAFT_BENCH_Y           -1637.0214
 #define CRAFT_BENCH_Z           76.3671
 #define CRAFT_BENCH_A           107.1094
+
+// ============================================================
+//  Koordinat Pom Bensin (Gas Stations)
+// ============================================================
+enum E_GAS_STATION {
+    gs_Name[64],
+    Float:gs_X,
+    Float:gs_Y,
+    Float:gs_Z
+};
+
+new const gGasStations[][E_GAS_STATION] = {
+    // Flint County
+    {"Flint Intersection Gas Station", -90.2, -1169.4, 2.4},
+    // San Fierro
+    {"Juniper Hollow Gas Station, San Fierro", -2408.7, 976.2, 45.2},
+    // Las Venturas
+    {"Come-A-Lot Gas Station, Las Venturas", 2115.4, 920.1, 10.8},
+    {"Julius Thruway North Gas Station, LV", 1596.2, 2199.8, 10.8}
+};
+#define MAX_GAS_STATIONS (sizeof(gGasStations))
+
+// Titik Dispenser Pom / Tangki Pengisian Bensin
+enum E_FUEL_PUMP {
+    Float:fp_X,
+    Float:fp_Y,
+    Float:fp_Z
+};
+
+new const gFuelPumps[][E_FUEL_PUMP] = {
+    // Idlewood Gas Station (tangki1 - tangki8)
+    {1942.8265, -1767.1629, 13.3828},
+    {1942.8984, -1771.3872, 13.3828},
+    {1942.6756, -1774.1885, 13.3828},
+    {1942.9613, -1778.5849, 13.3828},
+    {1940.2662, -1778.4846, 13.3828},
+    {1940.5788, -1774.2008, 13.3828},
+    {1940.3822, -1771.0925, 13.3828},
+    {1940.5921, -1767.3498, 13.3828},
+
+    // Flint Intersection (tangki9 - tangki12)
+    {-93.2643, -1161.5599, 2.2217},
+    {-91.0316, -1162.3957, 2.2491},
+    {-86.2047, -1164.5446, 2.2366},
+    {-84.2428, -1165.6151, 2.2397},
+
+    // Doherty Gas Station (tangki13 - tangki28)
+    {-1678.3383, 402.0085, 7.1796},
+    {-1674.2669, 405.7527, 7.1796},
+    {-1668.6002, 411.6022, 7.1796},
+    {-1664.5936, 415.8706, 7.1796},
+    {-1666.4274, 418.1445, 7.1796},
+    {-1671.0621, 413.3896, 7.1796},
+    {-1676.1293, 408.2176, 7.1796},
+    {-1680.5645, 404.1178, 7.1796},
+    {-1684.8944, 408.5599, 7.1796},
+    {-1680.8145, 412.9151, 7.1796},
+    {-1675.6666, 417.8793, 7.1796},
+    {-1671.2846, 422.5403, 7.1796},
+    {-1673.1501, 424.7570, 7.1796},
+    {-1677.7843, 420.0374, 7.1796},
+    {-1683.0493, 414.3297, 7.1796},
+    {-1686.8847, 410.1979, 7.1796},
+
+    // Come-A-Lot Las Venturas (tangki29 - tangki40)
+    {2108.6240, 924.2965, 10.8203},
+    {2115.1711, 923.9681, 10.8203},
+    {2120.7324, 923.7891, 10.8203},
+    {2120.7958, 926.6746, 10.8203},
+    {2114.9040, 926.7042, 10.8203},
+    {2108.9116, 926.9218, 10.8203},
+    {2120.8703, 916.1760, 10.8203},
+    {2115.1413, 916.0952, 10.8203},
+    {2109.3596, 915.9287, 10.8203},
+    {2109.2504, 913.1273, 10.8203},
+    {2115.1230, 913.1756, 10.8203},
+    {2120.7846, 913.3820, 10.8203},
+
+    // Julius Thruway North Las Venturas (tangki41 - tangki51)
+    {1590.0989, 2203.4379, 10.8203},
+    {1596.2375, 2203.3417, 10.8203},
+    {1602.0463, 2203.2426, 10.8203},
+    {1602.0588, 2205.5891, 10.8203},
+    {1590.3211, 2205.6677, 10.8203},
+    {1590.2838, 2194.9084, 10.8203},
+    {1596.3613, 2194.9106, 10.8203},
+    {1602.0925, 2195.0097, 10.8203},
+    {1601.8291, 2192.4287, 10.8203},
+    {1596.1467, 2192.4704, 10.8203},
+    {1590.1176, 2192.1242, 10.8203},
+
+    // Emerald Isle Las Venturas (tangki52 - tangki63)
+    {2195.3395, 2470.1889, 10.8203},
+    {2195.3718, 2474.8845, 10.8203},
+    {2195.5593, 2480.5407, 10.8203},
+    {2198.1713, 2480.3820, 10.8203},
+    {2198.3735, 2474.5808, 10.8203},
+    {2198.4990, 2470.2219, 10.8203},
+    {2206.4426, 2470.1982, 10.8203},
+    {2206.1567, 2474.9521, 10.8203},
+    {2206.1765, 2480.4147, 10.8203},
+    {2209.1484, 2480.3789, 10.8203},
+    {2209.2490, 2474.7807, 10.8203},
+    {2209.4062, 2470.3454, 10.8203},
+
+    // Juniper Hollow San Fierro
+    {-2408.7, 976.2, 45.2}
+};
+#define MAX_FUEL_PUMPS (sizeof(gFuelPumps))
+
+stock bool:IsPlayerNearFuelPump(playerid) {
+    for (new p = 0; p < MAX_FUEL_PUMPS; p++) {
+        if (IsPlayerInRangeOfPoint(playerid, 3.5, gFuelPumps[p][fp_X], gFuelPumps[p][fp_Y], gFuelPumps[p][fp_Z])) {
+            return true;
+        }
+    }
+    for (new g = 0; g < MAX_GAS_STATIONS; g++) {
+        if (IsPlayerInRangeOfPoint(playerid, 10.0, gGasStations[g][gs_X], gGasStations[g][gs_Y], gGasStations[g][gs_Z])) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // ============================================================
 //  Koordinat 4 Meja Peleburan / Smelter (Ocean Docks LS)

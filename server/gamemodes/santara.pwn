@@ -40,6 +40,7 @@
 #include "modules/systems/driving_school.inc"
 #include "modules/systems/ownership.inc"
 #include "modules/ui/speedometer.inc"
+#include "modules/ui/refuel_ui.inc"
 #include "modules/systems/inventory.inc"
 #include "modules/ui/inventory_ui.inc"
 #include "modules/ui/trunk_ui.inc"
@@ -125,9 +126,15 @@ public OnGameModeInit() {
     InitTwentyFourSeven();
 
     //    Coutt and Schutz Auto Showroom (Los Santos)
-    Create3DTextLabel("{00EEFF}[ COUTT AND SCHUTZ SHOWROOM ]\n{FFFFFF}Koleksi Mobil Sport, Sedan, SUV dan Motor\n{FFFF00}Tekan [ H ] atau [ F ] untuk Beli",
+    Create3DTextLabel("{00EEFF}[ COUTT AND SCHUTZ SHOWROOM ]\n{FFFFFF}Koleksi Mobil Sport, Sedan, SUV dan Motor\n{FFFF00}Tekan [ H ] untuk Beli Kendaraan",
         0xFFFFFFFF, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z + 0.8, 20.0, 0, true);
     CreatePickup(1274, 1, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 0);
+
+    //    Inisialisasi 3D Text Label Pom Bensin
+    for (new gs = 0; gs < MAX_GAS_STATIONS; gs++) {
+        Create3DTextLabel("{F1C40F}[ POM BENSIN ]\n{FFFFFF}Harga: {2ECC71}Rp 15.950{FFFFFF} / Liter\n{FFFF00}Dekati dispenser & Tekan [ H ] untuk Isi Bensin",
+            0xFFFFFFFF, gGasStations[gs][gs_X], gGasStations[gs][gs_Y], gGasStations[gs][gs_Z] + 0.8, 20.0, 0, true);
+    }
 
     //    Inisialisasi Jaringan Garasi Publik & Kantor Asuransi
     InitPublicGarages();
@@ -141,6 +148,7 @@ public OnGameModeInit() {
     InitJobCenterSystem();
 
     gPlayTimeTimer = SetTimer("Timer_PlayTime", 60000, true);
+    SetTimer("Timer_VehicleFuel", 1000, true);
     print("[SantaraBaru] Gamemode siap dimainkan!");
     return 1;
 }
@@ -163,6 +171,33 @@ public Timer_AuthFallback(playerid) {
     }
     return 1;
 }
+
+forward Timer_VehicleFuel();
+public Timer_VehicleFuel() {
+    for (new i = 1; i < MAX_VEHICLES; i++) {
+        if (GetVehicleModel(i) > 0) {
+            new engine, lights, alarm, doors, bonnet, boot, objective;
+            GetVehicleParamsEx(i, engine, lights, alarm, doors, bonnet, boot, objective);
+            if (engine == 1) {
+                // Consume 0.05 liter per second
+                gVehicleFuel[i] -= 0.05;
+                if (gVehicleFuel[i] <= 0.0) {
+                    gVehicleFuel[i] = 0.0;
+                    SetVehicleParamsEx(i, 0, lights, alarm, doors, bonnet, boot, objective);
+                    
+                    for (new p = 0; p < MAX_PLAYERS; p++) {
+                        if (IsPlayerConnected(p) && GetPlayerState(p) == PLAYER_STATE_DRIVER && GetPlayerVehicleID(p) == i) {
+                            SendClientMessage(p, 0xFF4040FF, "  [Kendaraan] Mesin mati mendadak karena kehabisan bensin!");
+                            PlayerPlaySound(p, 1084, 0.0, 0.0, 0.0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return 1;
+}
+
 
 stock ProceedPlayerAuth(playerid) {
     if (!IsPlayerConnected(playerid)) return 0;
@@ -235,6 +270,7 @@ public OnPlayerDisconnect(playerid, reason) {
     DestroyPlayerDokumenTextDraws(playerid);
     CloseDealership(playerid);
     CloseGarageUI(playerid);
+    CloseRefuelUI(playerid);
     HideInventoryUI(playerid);
     HideTrunkUI(playerid);
     DestroyPlayerTrunkTextDraws(playerid);
@@ -304,6 +340,9 @@ public OnPlayerSpawn(playerid) {
         // Pasang Map Icons Legenda Peta (Balai Kota, Rodeo Dealer, Asuransi, & 10 Garasi Kota)
         SetupPlayerMapIcons(playerid);
 
+        // Munculkan kendaraan pribadi pemain yang terparkir di luar
+        LoadPlayerOutsideVehicles(playerid);
+
         SendClientMessage(playerid, COL_GREEN, "  Selamat datang! Ketik {00EEFF}/help{00CC66} untuk melihat perintah atau {00EEFF}/gps{00CC66} untuk peta.");
     }
     return 1;
@@ -366,6 +405,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
 }
 
 public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
+    //    REFUEL / ISI BENSIN UI
+    if (gPlayerInRefuelUI[playerid]) {
+        if (HandleRefuelUIClick(playerid, playertextid)) return 1;
+    }
+
     //    0. CUSTOM CHARACTER CREATION FORM MODAL
     if (gPlayerData[playerid][p_InCharForm]) {
         if (HandleCharCreationClick(playerid, playertextid)) return 1;
@@ -585,6 +629,16 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
             CancelSelectTextDraw(playerid);
             return 1;
         }
+        if (playertextid == TD_SpeedBtnLight[playerid]) {
+            TogglePlayerVehicleLight(playerid);
+            CancelSelectTextDraw(playerid);
+            return 1;
+        }
+        if (playertextid == TD_SpeedBtnSeatbelt[playerid]) {
+            TogglePlayerVehicleSeatbelt(playerid);
+            CancelSelectTextDraw(playerid);
+            return 1;
+        }
     }
 
     return 0;
@@ -592,6 +646,10 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
 
 public OnPlayerClickTextDraw(playerid, Text:clickedid) {
     if (clickedid == Text:INVALID_TEXT_DRAW) {
+        if (gPlayerInRefuelUI[playerid]) {
+            CloseRefuelUI(playerid);
+            return 1;
+        }
         if (gShowingKTP[playerid]) {
             HidePlayerKTPCard(playerid);
             return 1;
@@ -656,8 +714,11 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid) {
 
 public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate) {
     if (newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER) {
+        gPlayerData[playerid][p_Seatbelt] = false;
+        gPlayerData[playerid][p_LastSpeed] = 0.0;
         ShowSpeedometer(playerid);
     } else if (oldstate == PLAYER_STATE_DRIVER || oldstate == PLAYER_STATE_PASSENGER) {
+        gPlayerData[playerid][p_Seatbelt] = false;
         HideSpeedometer(playerid);
     }
 
@@ -697,8 +758,14 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
         }
     }
 
-    // 2. Interaksi Showroom & Asuransi (Tombol H atau F / ENTER saat berjalan kaki)
+    // 2. Interaksi Showroom, Asuransi & Pom Bensin (Tombol H atau F / ENTER saat berjalan kaki)
     if ((newkeys & KEY_CTRL_BACK) || (newkeys & KEY_SECONDARY_ATTACK)) {
+        // Cek Pom Bensin / Tangki Dispenser Bensin
+        if (!IsPlayerInAnyVehicle(playerid) && IsPlayerNearFuelPump(playerid)) {
+            DoPlayerRefuel(playerid);
+            return 1;
+        }
+
         // Cek Rodeo Luxury Dealership
         if (IsPlayerInRangeOfPoint(playerid, 3.5, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z)) {
             OpenDealership(playerid);
@@ -712,21 +779,8 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys) {
         }
     }
 
-    // 2. Tombol Cepat Y (Nyalakan / Matikan Mesin) & N (Kunci / Buka Pintu)
-    if (newkeys & KEY_YES) {
-        if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER) {
-            TogglePlayerVehicleEngine(playerid);
-            return 1;
-        }
-    }
-
-    if (newkeys & KEY_NO) {
-        TogglePlayerVehicleLock(playerid);
-        return 1;
-    }
-
-    // 3. Tombol ALT di Kendaraan (KEY_ACTION / KEY_FIRE / KEY_WALK) - Masuk ke Mode Kursor
-    if ((newkeys & KEY_ACTION) || (newkeys & KEY_FIRE) || (newkeys & KEY_WALK)) {
+    // 2. Tombol C di Kendaraan (KEY_CROUCH) - Masuk ke Mode Kursor
+    if (newkeys & KEY_CROUCH) {
         if (gPlayerInVehicleHUD[playerid] || IsPlayerInAnyVehicle(playerid)) {
             SelectTextDraw(playerid, 0x00EEFFFF);
             PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);

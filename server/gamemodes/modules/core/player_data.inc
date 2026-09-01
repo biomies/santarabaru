@@ -48,6 +48,9 @@ enum E_PLAYER_DATA {
     //    Status Download Custom Asset   
     bool:p_FinishedDownload,
     bool:p_AuthLoaded,
+    //    Kendaraan & Speedometer   
+    bool:p_Seatbelt,
+    Float:p_LastSpeed,
     //    Status Dealership & Kendaraan Pribadi   
     bool:p_InDealership,
     p_DealerCat,

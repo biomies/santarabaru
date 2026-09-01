@@ -35,7 +35,7 @@ stock InitDrivingSchool() {
     // Marker Loket Pendaftaran Satpas DMV di Doherty / Garcia SF
     CreatePickup(1239, 1, DMV_DESK_X, DMV_DESK_Y, DMV_DESK_Z, 0);
     Create3DTextLabel(
-        "{00EEFF}[ SATPAS DMV - SEKOLAH MENGEMUDI ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} atau ketik {FFFF00}/buatsim{FFFFFF}\n{AAAAAA}Pendaftaran & Ujian Praktik SIM (A, B, C)",
+        "{00EEFF}[ SATPAS DMV - SEKOLAH MENGEMUDI ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} atau ketik {FFFF00}/buatsim{FFFFFF}\n{AAAAAA}Pendaftaran & Ujian Praktik SIM (A, B, C)",
         0xFFFFFFFF,
         DMV_DESK_X, DMV_DESK_Y, DMV_DESK_Z + 0.5,
         15.0, 0, false

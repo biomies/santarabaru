@@ -44,7 +44,7 @@ stock InitTwentyFourSeven() {
 
         new labelText[160];
         format(labelText, sizeof(labelText),
-            "{2ECC71}[ SUPERMARKET ]\n{FFFFFF}%s (%s)\n{FFFF00}Tekan [ F / ENTER ] untuk masuk",
+            "{2ECC71}[ SUPERMARKET ]\n{FFFFFF}%s (%s)\n{FFFF00}Tekan [ H ] untuk masuk",
             gTwentyFourSeven[i][tfs_Name], gTwentyFourSeven[i][tfs_City]);
 
         Create3DTextLabel(labelText, 0xFFFFFFFF,
@@ -55,7 +55,7 @@ stock InitTwentyFourSeven() {
     // 2. Pintu Keluar Interior Supermarket (Interior ID 17, VW -1 agar berlaku untuk semua cabang)
     CreatePickup(1318, 1, TWENTYFOUR_SEVEN_INT_X, TWENTYFOUR_SEVEN_INT_Y, TWENTYFOUR_SEVEN_INT_Z, -1);
     Create3DTextLabel(
-        "{2ECC71}[ PINTU KELUAR ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} untuk keluar ke kota",
+        "{2ECC71}[ PINTU KELUAR ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} untuk keluar ke kota",
         0xFFFFFFFF,
         TWENTYFOUR_SEVEN_INT_X, TWENTYFOUR_SEVEN_INT_Y, TWENTYFOUR_SEVEN_INT_Z + 0.5,
         12.0, -1, false
@@ -64,7 +64,7 @@ stock InitTwentyFourSeven() {
     // 3. Kasir 1 & Kasir 2 Supermarket (Interior ID 17, VW -1)
     CreatePickup(1239, 1, TWENTYFOUR_SEVEN_CASH1_X, TWENTYFOUR_SEVEN_CASH1_Y, TWENTYFOUR_SEVEN_CASH1_Z, -1);
     Create3DTextLabel(
-        "{2ECC71}[ KASIR SUPERMARKET 1 ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} atau ketik {FFFF00}/buy{FFFFFF}\n{AAAAAA}Untuk membeli perkakas & kebutuhan",
+        "{2ECC71}[ KASIR SUPERMARKET 1 ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} atau ketik {FFFF00}/buy{FFFFFF}\n{AAAAAA}Untuk membeli perkakas & kebutuhan",
         0xFFFFFFFF,
         TWENTYFOUR_SEVEN_CASH1_X, TWENTYFOUR_SEVEN_CASH1_Y, TWENTYFOUR_SEVEN_CASH1_Z + 0.5,
         10.0, -1, false
@@ -72,7 +72,7 @@ stock InitTwentyFourSeven() {
 
     CreatePickup(1239, 1, TWENTYFOUR_SEVEN_CASH2_X, TWENTYFOUR_SEVEN_CASH2_Y, TWENTYFOUR_SEVEN_CASH2_Z, -1);
     Create3DTextLabel(
-        "{2ECC71}[ KASIR SUPERMARKET 2 ]\n{FFFFFF}Tekan {FFFF00}[ F / ENTER ]{FFFFFF} atau ketik {FFFF00}/buy{FFFFFF}\n{AAAAAA}Untuk membeli perkakas & kebutuhan",
+        "{2ECC71}[ KASIR SUPERMARKET 2 ]\n{FFFFFF}Tekan {FFFF00}[ H ]{FFFFFF} atau ketik {FFFF00}/buy{FFFFFF}\n{AAAAAA}Untuk membeli perkakas & kebutuhan",
         0xFFFFFFFF,
         TWENTYFOUR_SEVEN_CASH2_X, TWENTYFOUR_SEVEN_CASH2_Y, TWENTYFOUR_SEVEN_CASH2_Z + 0.5,
         10.0, -1, false
@@ -183,7 +183,7 @@ stock HandleTwentyFourSevenDialog(playerid, dialogid, response, listitem, const 
 }
 
 stock HandleTwentyFourSevenKeys(playerid, KEY:newkeys) {
-    if (newkeys & KEY_SECONDARY_ATTACK) {
+    if ((newkeys & KEY_CTRL_BACK) || (newkeys & KEY_SECONDARY_ATTACK)) {
         // 1. Masuk ke salah satu 5 Cabang Supermarket dari Eksterior
         if (GetPlayerInterior(playerid) == 0) {
             for (new i = 0; i < TWENTYFOUR_SEVEN_COUNT; i++) {

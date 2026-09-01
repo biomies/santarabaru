@@ -10,6 +10,8 @@
 forward TogglePlayerVehicleEngine(playerid);
 forward TogglePlayerVehicleLock(playerid);
 
+new Float:gVehicleFuel[MAX_VEHICLES] = {50.0, ...};
+
 //    1. Database Nama Kendaraan GTA SA (Model 400 - 611)     
 stock const gVehicleModelNames[][32] = {
     "Landstalker", "Bravura", "Buffalo", "Linerunner", "Perennial", "Sentinel", "Dumper", "Firetruck",
@@ -79,7 +81,7 @@ new const gPublicGarages[][E_PUBLIC_GARAGE] = {
 };
 #define PUBLIC_GARAGE_COUNT (sizeof(gPublicGarages))
 
-public GetGarageInfo(garageId, name[], city[], &Float:camX, &Float:camY, &Float:camZ, &Float:lookX, &Float:lookY, &Float:lookZ, &Float:spX, &Float:spY, &Float:spZ, &Float:spA) {
+stock GetGarageInfo(garageId, name[], city[], &Float:camX, &Float:camY, &Float:camZ, &Float:lookX, &Float:lookY, &Float:lookZ, &Float:spX, &Float:spY, &Float:spZ, &Float:spA) {
     if (garageId < 0 || garageId >= PUBLIC_GARAGE_COUNT) garageId = 0;
     format(name, 48, "%s", gPublicGarages[garageId][g_Name]);
     format(city, 24, "%s", gPublicGarages[garageId][g_City]);
@@ -209,14 +211,15 @@ stock DestroyPlayerActiveVehicle(playerid) {
             new dbId = gPlayerData[playerid][p_ActiveVehDBID][v];
             if (dbId > 0) {
                 new Float:vx, Float:vy, Float:vz, Float:va, Float:vhp;
+                new Float:vfuel = gVehicleFuel[vehId];
                 GetVehiclePos(vehId, vx, vy, vz);
                 GetVehicleZAngle(vehId, va);
                 GetVehicleHealth(vehId, vhp);
 
                 new q[256];
                 format(q, sizeof(q),
-                    "UPDATE `player_vehicles` SET `x`=%f, `y`=%f, `z`=%f, `angle`=%f, `health`=%f WHERE `id`=%d",
-                    vx, vy, vz, va, vhp, dbId);
+                    "UPDATE `player_vehicles` SET `x`=%f, `y`=%f, `z`=%f, `angle`=%f, `health`=%f, `fuel`=%f WHERE `id`=%d",
+                    vx, vy, vz, va, vhp, vfuel, dbId);
                 DB_FreeResultSet(DB_ExecuteQuery(gDB, q));
             }
             DestroyVehicle(vehId);
@@ -224,6 +227,74 @@ stock DestroyPlayerActiveVehicle(playerid) {
             gPlayerData[playerid][p_ActiveVehDBID][v] = 0;
         }
     }
+}
+
+stock LoadPlayerOutsideVehicles(playerid) {
+    if (!gPlayerData[playerid][p_LoggedIn] || !gPlayerData[playerid][p_Spawned]) return 0;
+    if (gPlayerData[playerid][p_CharID] <= 0) return 0;
+
+    new query[256];
+    format(query, sizeof(query),
+        "SELECT * FROM `player_vehicles` WHERE `char_id`=%d AND `status`=%d LIMIT %d",
+        gPlayerData[playerid][p_CharID], VEH_STATUS_OUTSIDE, MAX_PLAYER_SPAWNED_VEHICLES);
+
+    new DBResult:res = DB_ExecuteQuery(gDB, query);
+    if (!res) return 0;
+
+    new count = DB_GetRowCount(res);
+    if (count <= 0) {
+        DB_FreeResultSet(res);
+        return 0;
+    }
+
+    new spawnedCount = 0;
+    for (new i = 0; i < count && i < MAX_PLAYER_SPAWNED_VEHICLES; i++) {
+        new dbId        = DB_GetFieldIntByName(res, "id");
+        new modelid     = DB_GetFieldIntByName(res, "model_id");
+        new color1      = DB_GetFieldIntByName(res, "color1");
+        new color2      = DB_GetFieldIntByName(res, "color2");
+        new locked      = DB_GetFieldIntByName(res, "locked");
+        new Float:vx    = DB_GetFieldFloatByName(res, "x");
+        new Float:vy    = DB_GetFieldFloatByName(res, "y");
+        new Float:vz    = DB_GetFieldFloatByName(res, "z");
+        new Float:va    = DB_GetFieldFloatByName(res, "angle");
+        new Float:vhp   = DB_GetFieldFloatByName(res, "health");
+        new Float:vfuel = DB_GetFieldFloatByName(res, "fuel");
+        new plate[16];
+        DB_GetFieldStringByName(res, "plate", plate, sizeof(plate));
+
+        // Hindari spawn di koordinat 0.0 jika belum pernah disimpan
+        if (vx == 0.0 && vy == 0.0 && vz == 0.0) {
+            vx = 539.5; vy = -1273.0; vz = 17.24; va = 180.0;
+        }
+
+        if (GetPlayerActiveVehSlotByDBID(playerid, dbId) == -1) {
+            new slot = GetPlayerEmptyVehSlot(playerid);
+            if (slot != -1) {
+                new vehId = CreateVehicle(modelid, vx, vy, vz, va, color1, color2, -1);
+                if (vehId != INVALID_VEHICLE_ID) {
+                    SetVehicleNumberPlate(vehId, plate);
+                    SetVehicleToRespawn(vehId);
+                    SetVehiclePos(vehId, vx, vy, vz);
+                    SetVehicleZAngle(vehId, va);
+                    SetVehicleHealth(vehId, (vhp < 300.0) ? 300.0 : vhp);
+                    SetVehicleParamsEx(vehId, 0, 0, 0, locked, 0, 0, 0);
+                    gVehicleFuel[vehId] = (vfuel <= 0.0) ? 50.0 : vfuel;
+
+                    gPlayerData[playerid][p_ActiveVehID][slot] = vehId;
+                    gPlayerData[playerid][p_ActiveVehDBID][slot] = dbId;
+                    spawnedCount++;
+                }
+            }
+        }
+        DB_SelectNextRow(res);
+    }
+    DB_FreeResultSet(res);
+
+    if (spawnedCount > 0) {
+        printf("[Kendaraan] Berhasil memunculkan kembali %d kendaraan terparkir di luar untuk Pemain ID %d.", spawnedCount, playerid);
+    }
+    return 1;
 }
 
 stock StoreVehicleInGarage(playerid, garageId) {
@@ -239,12 +310,13 @@ stock StoreVehicleInGarage(playerid, garageId) {
 
     new Float:vhp;
     GetVehicleHealth(curVeh, vhp);
+    new Float:vfuel = gVehicleFuel[curVeh];
 
     // Simpan ke DB dengan status tersimpan di garasi
     new q[256];
     format(q, sizeof(q),
-        "UPDATE `player_vehicles` SET `status`=%d, `garage_id`=%d, `health`=%f WHERE `id`=%d",
-        VEH_STATUS_GARAGE, garageId, vhp, dbId);
+        "UPDATE `player_vehicles` SET `status`=%d, `garage_id`=%d, `health`=%f, `fuel`=%f WHERE `id`=%d",
+        VEH_STATUS_GARAGE, garageId, vhp, vfuel, dbId);
     DB_FreeResultSet(DB_ExecuteQuery(gDB, q));
 
     DestroyVehicle(curVeh);
@@ -301,6 +373,7 @@ public SpawnPlayerVehicleFromGarage(playerid, dbVehId, garageId) {
     new color1  = DB_GetFieldIntByName(res, "color1");
     new color2  = DB_GetFieldIntByName(res, "color2");
     new Float:vhp = DB_GetFieldFloatByName(res, "health");
+    new Float:vfuel = DB_GetFieldFloatByName(res, "fuel");
     new plate[16];
     DB_GetFieldStringByName(res, "plate", plate, sizeof(plate));
     DB_FreeResultSet(res);
@@ -318,6 +391,7 @@ public SpawnPlayerVehicleFromGarage(playerid, dbVehId, garageId) {
         SetVehicleZAngle(vehId, spA);
         SetVehicleHealth(vehId, vhp);
         SetVehicleParamsEx(vehId, 1, 0, 0, 0, 0, 0, 0); // Mesin langsung menyala
+        gVehicleFuel[vehId] = vfuel;
 
         gPlayerData[playerid][p_ActiveVehID][slot] = vehId;
         gPlayerData[playerid][p_ActiveVehDBID][slot] = dbVehId;
@@ -386,8 +460,8 @@ public BuyCurrentDealerVehicle(playerid) {
 
     new qInsert[384];
     format(qInsert, sizeof(qInsert),
-        "INSERT INTO `player_vehicles` (`char_id`, `model_id`, `plate`, `color1`, `color2`, `price`, `x`, `y`, `z`, `angle`, `health`, `locked`, `status`, `garage_id`, `insurance_cost`) " \
-        "VALUES (%d, %d, '%s', %d, %d, %d, %f, %f, %f, %f, 1000.0, 0, %d, 1, 1500000)",
+        "INSERT INTO `player_vehicles` (`char_id`, `model_id`, `plate`, `color1`, `color2`, `price`, `x`, `y`, `z`, `angle`, `health`, `locked`, `status`, `garage_id`, `insurance_cost`, `fuel`) " \
+        "VALUES (%d, %d, '%s', %d, %d, %d, %f, %f, %f, %f, 1000.0, 0, %d, 1, 1500000, 50.0)",
         gPlayerData[playerid][p_CharID], modelid, plate, chosenColor, chosenColor, price,
         DEALER_DELIVER_X, DEALER_DELIVER_Y, DEALER_DELIVER_Z, DEALER_DELIVER_A, vehStatus);
 
@@ -418,6 +492,7 @@ public BuyCurrentDealerVehicle(playerid) {
                 SetVehiclePos(vehId, DEALER_DELIVER_X, DEALER_DELIVER_Y, DEALER_DELIVER_Z);
                 SetVehicleZAngle(vehId, DEALER_DELIVER_A);
                 SetVehicleParamsEx(vehId, 1, 0, 0, 0, 0, 0, 0); // Mesin langsung menyala
+                gVehicleFuel[vehId] = 50.0;
 
                 gPlayerData[playerid][p_ActiveVehID][slot] = vehId;
                 gPlayerData[playerid][p_ActiveVehDBID][slot] = vehDbId;
@@ -758,16 +833,26 @@ stock HandleVehicleMenuDialog(playerid, dialogid, response, listitem) {
             return 1;
         }
 
-        new modelid = DB_GetFieldIntByName(res, "model_id");
-        new vStatus = DB_GetFieldIntByName(res, "status");
-        new gid     = DB_GetFieldIntByName(res, "garage_id");
-        new Float:vx = DB_GetFieldFloatByName(res, "x");
-        new Float:vy = DB_GetFieldFloatByName(res, "y");
-        new Float:vz = DB_GetFieldFloatByName(res, "z");
+        new modelid   = DB_GetFieldIntByName(res, "model_id");
+        new vStatus   = DB_GetFieldIntByName(res, "status");
+        new gid       = DB_GetFieldIntByName(res, "garage_id");
+        new color1    = DB_GetFieldIntByName(res, "color1");
+        new color2    = DB_GetFieldIntByName(res, "color2");
+        new locked    = DB_GetFieldIntByName(res, "locked");
+        new Float:vx  = DB_GetFieldFloatByName(res, "x");
+        new Float:vy  = DB_GetFieldFloatByName(res, "y");
+        new Float:vz  = DB_GetFieldFloatByName(res, "z");
+        new Float:va  = DB_GetFieldFloatByName(res, "angle");
         new Float:vhp = DB_GetFieldFloatByName(res, "health");
+        new Float:vfuel = DB_GetFieldFloatByName(res, "fuel");
         new plate[16];
         DB_GetFieldStringByName(res, "plate", plate, sizeof(plate));
         DB_FreeResultSet(res);
+
+        // Validasi posisi default jika 0.0
+        if (vx == 0.0 && vy == 0.0 && vz == 0.0) {
+            vx = 539.5; vy = -1273.0; vz = 17.24; va = 180.0;
+        }
 
         new vName[32];
         GetModelFullName(modelid, vName, sizeof(vName));
@@ -796,6 +881,24 @@ stock HandleVehicleMenuDialog(playerid, dialogid, response, listitem) {
                     new actSlot = GetPlayerActiveVehSlotByDBID(playerid, dbId);
                     if (actSlot != -1 && gPlayerData[playerid][p_ActiveVehID][actSlot] != INVALID_VEHICLE_ID) {
                         GetVehiclePos(gPlayerData[playerid][p_ActiveVehID][actSlot], vx, vy, vz);
+                    } else {
+                        // Jika belum ada objek fisik kendaraan di server, munculkan kembali
+                        new slot = GetPlayerEmptyVehSlot(playerid);
+                        if (slot != -1) {
+                            new vehId = CreateVehicle(modelid, vx, vy, vz, va, color1, color2, -1);
+                            if (vehId != INVALID_VEHICLE_ID) {
+                                SetVehicleNumberPlate(vehId, plate);
+                                SetVehicleToRespawn(vehId);
+                                SetVehiclePos(vehId, vx, vy, vz);
+                                SetVehicleZAngle(vehId, va);
+                                SetVehicleHealth(vehId, (vhp < 300.0) ? 300.0 : vhp);
+                                SetVehicleParamsEx(vehId, 0, 0, 0, locked, 0, 0, 0);
+                                gVehicleFuel[vehId] = (vfuel <= 0.0) ? 50.0 : vfuel;
+
+                                gPlayerData[playerid][p_ActiveVehID][slot] = vehId;
+                                gPlayerData[playerid][p_ActiveVehDBID][slot] = dbId;
+                            }
+                        }
                     }
                     SetGPSWaypoint(playerid, vx, vy, vz, 4.0);
                     PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
@@ -958,8 +1061,7 @@ stock SetGPSWaypoint(playerid, Float:x, Float:y, Float:z, Float:size = 4.0) {
     DisablePlayerRaceCheckpoint(playerid);
     RemovePlayerMapIcon(playerid, 99);
 
-    // Aktifkan Waypoint Marker (Race Checkpoint dengan penunjuk arah & Dynamic Blip)
-    SetPlayerRaceCheckpoint(playerid, 0, x, y, z, 0.0, 0.0, 0.0, size);
+    // Aktifkan Waypoint Marker (Normal Checkpoint dengan Map Blip)
     SetPlayerCheckpoint(playerid, x, y, z, size);
     SetPlayerMapIcon(playerid, 99, x, y, z, 0, 0x00EEFFFF, MAPICON_GLOBAL);
     gPlayerData[playerid][p_HasActiveCheckpoint] = true;
@@ -968,7 +1070,6 @@ stock SetGPSWaypoint(playerid, Float:x, Float:y, Float:z, Float:size = 4.0) {
 
 stock ClearGPSWaypoint(playerid) {
     DisablePlayerCheckpoint(playerid);
-    DisablePlayerRaceCheckpoint(playerid);
     RemovePlayerMapIcon(playerid, 99);
     gPlayerData[playerid][p_HasActiveCheckpoint] = false;
     return 1;
@@ -983,7 +1084,7 @@ stock SetupPlayerMapIcons(playerid) {
 stock ShowGPSMenu(playerid) {
     if (!CheckSpawned(playerid)) return 0;
 
-    new menuStr[1024];
+    new menuStr[1200];
     format(menuStr, sizeof(menuStr),
         "Lokasi Fasilitas Publik\tWilayah & Keterangan\n" \
         "{33CCFF}[Balai Kota & Job Center] Loket Kota\t{FFFFFF}Pershing Square, Los Santos\n" \
@@ -992,14 +1093,10 @@ stock ShowGPSMenu(playerid) {
         "{2ECC71}[Supermarket] Toko Kelontong\t{FFFFFF}5 Cabang Supermarket San Andreas\n" \
         "{00EEFF}[Showroom] Coutt & Schutz\t{FFFFFF}Rodeo / Market, Los Santos\n" \
         "{2ECC71}[Kantor Asuransi] 3 Kota\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
-        "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos\n");
-
-    // Hanya Penambang (Job 1) yang dapat melihat lokasi Tambang & Smelter
-    if (gPlayerData[playerid][p_Job] == 1) {
-        format(menuStr, sizeof(menuStr), "%s" \
-            "{FFFF00}[Tambang Batuan] Hunter Quarry\t{FFFFFF}Hunter Quarry, Las Venturas (Pekerjaan)\n" \
-            "{FF6600}[Peleburan] Smelter Pabrik\t{FFFFFF}Ocean Docks, Los Santos (Pekerjaan)\n", menuStr);
-    }
+        "{F1C40F}[Parkir Kota] 3 Kota\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
+        "{FF4040}[Pom Bensin] 4 Lokasi Pom Bensin\t{FFFFFF}Flint County, San Fierro, Las Venturas\n" \
+        "{FFFF00}[Tambang Batuan] Hunter Quarry\t{FFFFFF}Hunter Quarry, Las Venturas (Pekerjaan)\n" \
+        "{FF6600}[Peleburan] Smelter Pabrik\t{FFFFFF}Ocean Docks, Los Santos (Pekerjaan)");
 
     ShowPlayerDialog(playerid, DLG_GPS_MENU, DIALOG_STYLE_TABLIST_HEADERS,
         "{E69958}Navigasi GPS Kota SantaraBaru", menuStr, "Navigasi", "Tutup");
@@ -1060,21 +1157,32 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_GPS_INSURANCE, DIALOG_STYLE_TABLIST_HEADERS,
                     "{2ECC71}Pilih Kantor Cabang Asuransi", insListStr, "Navigasi", "Kembali");
             }
-            case 6: { // Langsung Navigasi ke Los Santos Parking Lot
-                SetGPSWaypoint(playerid, gPublicGarages[0][g_MarkerX], gPublicGarages[0][g_MarkerY], gPublicGarages[0][g_MarkerZ], 4.0);
-                PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
-                SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {F1C40F}Los Santos Parking Lot (Downtown Los Santos).");
-                SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
+            case 6: { // Gedung Parkir Kota (3 Kota: LS, SF, LV)
+                new garListStr[512];
+                format(garListStr, sizeof(garListStr), "Nama Gedung Parkir\tKota / Wilayah\n");
+                for (new i = 0; i < PUBLIC_GARAGE_COUNT; i++) {
+                    format(garListStr, sizeof(garListStr), "%s{FFFFFF}%s\t{F1C40F}%s\n",
+                        garListStr, gPublicGarages[i][g_Name], gPublicGarages[i][g_City]);
+                }
+                ShowPlayerDialog(playerid, DLG_GPS_GARAGE, DIALOG_STYLE_TABLIST_HEADERS,
+                    "{F1C40F}Pilih Gedung Parkir Kota", garListStr, "Navigasi", "Kembali");
             }
-            case 7: { // Tambang Batu Hunter Quarry (Khusus Penambang)
-                if (gPlayerData[playerid][p_Job] != 1) return 1;
+            case 7: { // Pom Bensin (4 Lokasi di 3 Wilayah)
+                new gsListStr[768];
+                gsListStr[0] = '\0';
+                for (new i = 0; i < MAX_GAS_STATIONS; i++) {
+                    format(gsListStr, sizeof(gsListStr), "%s{FFFFFF}%s\n", gsListStr, gGasStations[i][gs_Name]);
+                }
+                ShowPlayerDialog(playerid, DLG_GPS_GAS_STATION, DIALOG_STYLE_LIST,
+                    "{FF4040}Pilih Pom Bensin", gsListStr, "Navigasi", "Kembali");
+            }
+            case 8: { // Tambang Batu Hunter Quarry (Las Venturas)
                 SetGPSWaypoint(playerid, 595.6880, 868.5670, -42.8469, 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {FFFF00}Tambang Batuan & Mineral (Hunter Quarry, Las Venturas).");
                 SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
             }
-            case 8: { // Smelter Pabrik (Khusus Penambang)
-                if (gPlayerData[playerid][p_Job] != 1) return 1;
+            case 9: { // Smelter Pabrik (Ocean Docks Los Santos)
                 SetGPSWaypoint(playerid, SMELTER_TABLE1_X, SMELTER_TABLE1_Y, SMELTER_TABLE1_Z, 4.0);
                 PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
                 SendClientMessage(playerid, COL_GREEN, "  [GPS] Menandai rute menuju: {FF6600}Tungku Peleburan / Smelter (Ocean Docks, Los Santos).");
@@ -1151,6 +1259,23 @@ stock HandleGPSDialog(playerid, dialogid, response, listitem) {
         SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
         return 1;
     }
+
+    if (dialogid == DLG_GPS_GAS_STATION) {
+        if (!response) {
+            return ShowGPSMenu(playerid);
+        }
+        if (listitem < 0 || listitem >= MAX_GAS_STATIONS) return 1;
+
+        SetGPSWaypoint(playerid, gGasStations[listitem][gs_X], gGasStations[listitem][gs_Y], gGasStations[listitem][gs_Z], 4.0);
+        PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+
+        new msg[144];
+        format(msg, sizeof(msg), "  [GPS] Menandai rute menuju: {FF4040}%s.", gGasStations[listitem][gs_Name]);
+        SendClientMessage(playerid, COL_GREEN, msg);
+        SendClientMessage(playerid, COL_YELLOW, "  > Ikuti tanda waypoint di radar map. Gunakan {FFFFFF}/cp {FFFF00}untuk mematikan GPS.");
+        return 1;
+    }
+
     return 0;
 }
 

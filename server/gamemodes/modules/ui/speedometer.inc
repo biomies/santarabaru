@@ -4,13 +4,25 @@
 #define _MODULE_SPEEDOMETER_INC
 
 // ============================================================
-//  SantaraBaru Roleplay - Minimalist Center-Bottom Speedometer
-//  Pure Digital Speed + Clickable [ENGINE] and [LOCK] Button Tiles
+//  SantaraBaru Roleplay - Compact Center-Bottom Purple HUD
 // ============================================================
 
-new PlayerText:TD_SpeedNumber[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
+#define COLOR_HUD_PURPLE_ON   0x5814EEFF
+#define COLOR_HUD_BTN_OFF     0x262626EE
+#define COLOR_HUD_MAIN_BG     0x181818EE
+#define COLOR_HUD_FUEL_BAR_BG 0x2E2E2EFF
+
+new PlayerText:TD_SpeedMainBG[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpeedFuelTitle[MAX_PLAYERS] = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_FuelBarBG[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_FuelBar[MAX_PLAYERS]         = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_SpeedBtnEngine[MAX_PLAYERS]  = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpeedBtnLight[MAX_PLAYERS]   = {PlayerText:INVALID_TEXT_DRAW, ...};
 new PlayerText:TD_SpeedBtnLock[MAX_PLAYERS]    = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpeedBtnSeatbelt[MAX_PLAYERS]= {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpeedBoxBG[MAX_PLAYERS]      = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpeedNumber[MAX_PLAYERS]     = {PlayerText:INVALID_TEXT_DRAW, ...};
+new PlayerText:TD_SpeedUnit[MAX_PLAYERS]       = {PlayerText:INVALID_TEXT_DRAW, ...};
 
 new gPlayerSpeedoTimer[MAX_PLAYERS] = {-1, ...};
 new bool:gPlayerInVehicleHUD[MAX_PLAYERS] = {false, ...};
@@ -18,53 +30,128 @@ new bool:gPlayerInVehicleHUD[MAX_PLAYERS] = {false, ...};
 forward Timer_UpdateSpeedometer(playerid);
 
 stock DestroySpeedometerTextDraws(playerid) {
-    if (TD_SpeedNumber[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SpeedNumber[playerid]);
-        TD_SpeedNumber[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-    if (TD_SpeedBtnEngine[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SpeedBtnEngine[playerid]);
-        TD_SpeedBtnEngine[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-    if (TD_SpeedBtnLock[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, TD_SpeedBtnLock[playerid]);
-        TD_SpeedBtnLock[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
+    if (TD_SpeedMainBG[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_SpeedMainBG[playerid]); TD_SpeedMainBG[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_SpeedFuelTitle[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_SpeedFuelTitle[playerid]); TD_SpeedFuelTitle[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_FuelBarBG[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_FuelBarBG[playerid]); TD_FuelBarBG[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_FuelBar[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_FuelBar[playerid]); TD_FuelBar[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_SpeedBtnEngine[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_SpeedBtnEngine[playerid]); TD_SpeedBtnEngine[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_SpeedBtnLight[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_SpeedBtnLight[playerid]); TD_SpeedBtnLight[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_SpeedBtnLock[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_SpeedBtnLock[playerid]); TD_SpeedBtnLock[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_SpeedBtnSeatbelt[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_SpeedBtnSeatbelt[playerid]); TD_SpeedBtnSeatbelt[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_SpeedBoxBG[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_SpeedBoxBG[playerid]); TD_SpeedBoxBG[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_SpeedNumber[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_SpeedNumber[playerid]); TD_SpeedNumber[playerid] = PlayerText:INVALID_TEXT_DRAW; }
+    if (TD_SpeedUnit[playerid] != PlayerText:INVALID_TEXT_DRAW) { PlayerTextDrawDestroy(playerid, TD_SpeedUnit[playerid]); TD_SpeedUnit[playerid] = PlayerText:INVALID_TEXT_DRAW; }
 }
 
 stock CreateSpeedometerTextDraws(playerid) {
     DestroySpeedometerTextDraws(playerid);
 
-    // 1. Angka Kecepatan Digital di Tengah Bawah (Center: X: 320.0, Y: 388.0)
-    TD_SpeedNumber[playerid] = CreatePlayerTextDraw(playerid, 320.0, 388.0, "000 ~w~~h~KM/H");
-    PlayerTextDrawAlignment(playerid, TD_SpeedNumber[playerid], 2); // Center Aligned
-    PlayerTextDrawFont(playerid, TD_SpeedNumber[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpeedNumber[playerid], 0.35, 1.4);
-    PlayerTextDrawColor(playerid, TD_SpeedNumber[playerid], 0x00EEFFFF);
-    PlayerTextDrawSetOutline(playerid, TD_SpeedNumber[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpeedNumber[playerid], 0);
+    // 1. Container Card Background (Compact Center X: 220.0 .. 420.0, Y: 366.0 .. 428.0)
+    TD_SpeedMainBG[playerid] = CreatePlayerTextDraw(playerid, 220.0, 366.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_SpeedMainBG[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpeedMainBG[playerid], COLOR_HUD_MAIN_BG);
+    PlayerTextDrawTextSize(playerid, TD_SpeedMainBG[playerid], 420.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_SpeedMainBG[playerid], 0.0, 6.8);
+    PlayerTextDrawSetSelectable(playerid, TD_SpeedMainBG[playerid], false);
 
-    // 2. Tombol Button Tile ENGINE (Kiri dari Center: X: 246.0 s/d 314.0, Y: 412.0)
-    TD_SpeedBtnEngine[playerid] = CreatePlayerTextDraw(playerid, 246.0, 412.0, "  ENGINE");
+    // 2. "Fuel" Title Text
+    TD_SpeedFuelTitle[playerid] = CreatePlayerTextDraw(playerid, 228.0, 372.0, "Fuel");
+    PlayerTextDrawFont(playerid, TD_SpeedFuelTitle[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_SpeedFuelTitle[playerid], 0.18, 0.95);
+    PlayerTextDrawColor(playerid, TD_SpeedFuelTitle[playerid], 0xFFFFFFFF);
+    PlayerTextDrawSetOutline(playerid, TD_SpeedFuelTitle[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SpeedFuelTitle[playerid], false);
+
+    // 3. Fuel Bar BG (Grey Bar, Width = 138.0)
+    TD_FuelBarBG[playerid] = CreatePlayerTextDraw(playerid, 228.0, 386.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_FuelBarBG[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_FuelBarBG[playerid], COLOR_HUD_FUEL_BAR_BG);
+    PlayerTextDrawTextSize(playerid, TD_FuelBarBG[playerid], 366.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_FuelBarBG[playerid], 0.0, 0.6);
+    PlayerTextDrawSetSelectable(playerid, TD_FuelBarBG[playerid], false);
+
+    // 4. Fuel Bar Fill (Purple Bar)
+    TD_FuelBar[playerid] = CreatePlayerTextDraw(playerid, 228.0, 386.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_FuelBar[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_FuelBar[playerid], COLOR_HUD_PURPLE_ON);
+    PlayerTextDrawTextSize(playerid, TD_FuelBar[playerid], 366.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_FuelBar[playerid], 0.0, 0.6);
+    PlayerTextDrawSetSelectable(playerid, TD_FuelBar[playerid], false);
+
+    // 5. Buttons (Engine, Light, Lock, Seatbelt)
+    // ENGINE (Center X: 244.0)
+    TD_SpeedBtnEngine[playerid] = CreatePlayerTextDraw(playerid, 244.0, 401.0, "Engine");
     PlayerTextDrawFont(playerid, TD_SpeedBtnEngine[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpeedBtnEngine[playerid], 0.22, 1.15);
+    PlayerTextDrawLetterSize(playerid, TD_SpeedBtnEngine[playerid], 0.13, 0.95);
     PlayerTextDrawColor(playerid, TD_SpeedBtnEngine[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SpeedBtnEngine[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SpeedBtnEngine[playerid], 0x2ECC71D0); // Hijau saat ON
-    PlayerTextDrawTextSize(playerid, TD_SpeedBtnEngine[playerid], 314.0, 14.0);
+    PlayerTextDrawUseBox(playerid, TD_SpeedBtnEngine[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpeedBtnEngine[playerid], COLOR_HUD_BTN_OFF);
+    PlayerTextDrawTextSize(playerid, TD_SpeedBtnEngine[playerid], 14.0, 32.5);
+    PlayerTextDrawAlignment(playerid, TD_SpeedBtnEngine[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SpeedBtnEngine[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpeedBtnEngine[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SpeedBtnEngine[playerid], true);
 
-    // 3. Tombol Button Tile LOCK (Kanan dari Center: X: 326.0 s/d 394.0, Y: 412.0)
-    TD_SpeedBtnLock[playerid] = CreatePlayerTextDraw(playerid, 326.0, 412.0, "   LOCK");
+    // LIGHT (Center X: 279.0)
+    TD_SpeedBtnLight[playerid] = CreatePlayerTextDraw(playerid, 279.0, 401.0, "Light");
+    PlayerTextDrawFont(playerid, TD_SpeedBtnLight[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_SpeedBtnLight[playerid], 0.13, 0.95);
+    PlayerTextDrawColor(playerid, TD_SpeedBtnLight[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_SpeedBtnLight[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpeedBtnLight[playerid], COLOR_HUD_BTN_OFF);
+    PlayerTextDrawTextSize(playerid, TD_SpeedBtnLight[playerid], 14.0, 32.5);
+    PlayerTextDrawAlignment(playerid, TD_SpeedBtnLight[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_SpeedBtnLight[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SpeedBtnLight[playerid], true);
+
+    // LOCK (Center X: 314.0)
+    TD_SpeedBtnLock[playerid] = CreatePlayerTextDraw(playerid, 314.0, 401.0, "Lock");
     PlayerTextDrawFont(playerid, TD_SpeedBtnLock[playerid], 2);
-    PlayerTextDrawLetterSize(playerid, TD_SpeedBtnLock[playerid], 0.22, 1.15);
+    PlayerTextDrawLetterSize(playerid, TD_SpeedBtnLock[playerid], 0.13, 0.95);
     PlayerTextDrawColor(playerid, TD_SpeedBtnLock[playerid], 0xFFFFFFFF);
-    PlayerTextDrawUseBox(playerid, TD_SpeedBtnLock[playerid], 1);
-    PlayerTextDrawBoxColor(playerid, TD_SpeedBtnLock[playerid], 0x2C3E50D0); // Gelap saat OFF
-    PlayerTextDrawTextSize(playerid, TD_SpeedBtnLock[playerid], 394.0, 14.0);
+    PlayerTextDrawUseBox(playerid, TD_SpeedBtnLock[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpeedBtnLock[playerid], COLOR_HUD_BTN_OFF);
+    PlayerTextDrawTextSize(playerid, TD_SpeedBtnLock[playerid], 14.0, 32.5);
+    PlayerTextDrawAlignment(playerid, TD_SpeedBtnLock[playerid], 2);
     PlayerTextDrawSetOutline(playerid, TD_SpeedBtnLock[playerid], 1);
-    PlayerTextDrawSetSelectable(playerid, TD_SpeedBtnLock[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SpeedBtnLock[playerid], true);
+
+    // SEATBELT (Center X: 349.0)
+    TD_SpeedBtnSeatbelt[playerid] = CreatePlayerTextDraw(playerid, 349.0, 401.0, "Seatbelt");
+    PlayerTextDrawFont(playerid, TD_SpeedBtnSeatbelt[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_SpeedBtnSeatbelt[playerid], 0.11, 0.95);
+    PlayerTextDrawColor(playerid, TD_SpeedBtnSeatbelt[playerid], 0xFFFFFFFF);
+    PlayerTextDrawUseBox(playerid, TD_SpeedBtnSeatbelt[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpeedBtnSeatbelt[playerid], COLOR_HUD_BTN_OFF);
+    PlayerTextDrawTextSize(playerid, TD_SpeedBtnSeatbelt[playerid], 14.0, 33.0);
+    PlayerTextDrawAlignment(playerid, TD_SpeedBtnSeatbelt[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_SpeedBtnSeatbelt[playerid], 1);
+    PlayerTextDrawSetSelectable(playerid, TD_SpeedBtnSeatbelt[playerid], true);
+
+    // 6. Right Speed Purple Box (Compact X: 372.0 .. 412.0, Y: 372.0 .. 422.0)
+    TD_SpeedBoxBG[playerid] = CreatePlayerTextDraw(playerid, 372.0, 372.0, "_");
+    PlayerTextDrawUseBox(playerid, TD_SpeedBoxBG[playerid], true);
+    PlayerTextDrawBoxColor(playerid, TD_SpeedBoxBG[playerid], COLOR_HUD_PURPLE_ON);
+    PlayerTextDrawTextSize(playerid, TD_SpeedBoxBG[playerid], 412.0, 0.0);
+    PlayerTextDrawLetterSize(playerid, TD_SpeedBoxBG[playerid], 0.0, 5.3);
+    PlayerTextDrawSetSelectable(playerid, TD_SpeedBoxBG[playerid], false);
+
+    // 7. Speed Value Number (Bold White)
+    TD_SpeedNumber[playerid] = CreatePlayerTextDraw(playerid, 392.0, 375.0, "000");
+    PlayerTextDrawFont(playerid, TD_SpeedNumber[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_SpeedNumber[playerid], 0.36, 1.7);
+    PlayerTextDrawColor(playerid, TD_SpeedNumber[playerid], 0xFFFFFFFF);
+    PlayerTextDrawAlignment(playerid, TD_SpeedNumber[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_SpeedNumber[playerid], 0);
+    PlayerTextDrawSetSelectable(playerid, TD_SpeedNumber[playerid], false);
+
+    // 8. Speed Unit "Km/h"
+    TD_SpeedUnit[playerid] = CreatePlayerTextDraw(playerid, 392.0, 400.0, "Km/h");
+    PlayerTextDrawFont(playerid, TD_SpeedUnit[playerid], 2);
+    PlayerTextDrawLetterSize(playerid, TD_SpeedUnit[playerid], 0.16, 0.95);
+    PlayerTextDrawColor(playerid, TD_SpeedUnit[playerid], 0xFFFFFFFF);
+    PlayerTextDrawAlignment(playerid, TD_SpeedUnit[playerid], 2);
+    PlayerTextDrawSetOutline(playerid, TD_SpeedUnit[playerid], 0);
+    PlayerTextDrawSetSelectable(playerid, TD_SpeedUnit[playerid], false);
 }
 
 stock ShowSpeedometer(playerid) {
@@ -72,13 +159,21 @@ stock ShowSpeedometer(playerid) {
     if (!CheckSpawned(playerid)) return 0;
 
     new vehId = GetPlayerVehicleID(playerid);
-    if (vehId == 0) return 0;
+    if (vehId <= 0 || vehId >= MAX_VEHICLES || vehId == INVALID_VEHICLE_ID) return 0;
 
     CreateSpeedometerTextDraws(playerid);
 
-    PlayerTextDrawShow(playerid, TD_SpeedNumber[playerid]);
+    PlayerTextDrawShow(playerid, TD_SpeedMainBG[playerid]);
+    PlayerTextDrawShow(playerid, TD_SpeedFuelTitle[playerid]);
+    PlayerTextDrawShow(playerid, TD_FuelBarBG[playerid]);
+    PlayerTextDrawShow(playerid, TD_FuelBar[playerid]);
     PlayerTextDrawShow(playerid, TD_SpeedBtnEngine[playerid]);
+    PlayerTextDrawShow(playerid, TD_SpeedBtnLight[playerid]);
     PlayerTextDrawShow(playerid, TD_SpeedBtnLock[playerid]);
+    PlayerTextDrawShow(playerid, TD_SpeedBtnSeatbelt[playerid]);
+    PlayerTextDrawShow(playerid, TD_SpeedBoxBG[playerid]);
+    PlayerTextDrawShow(playerid, TD_SpeedNumber[playerid]);
+    PlayerTextDrawShow(playerid, TD_SpeedUnit[playerid]);
 
     gPlayerInVehicleHUD[playerid] = true;
 
@@ -115,7 +210,7 @@ stock UpdateSpeedometer(playerid) {
     }
 
     new vehId = GetPlayerVehicleID(playerid);
-    if (vehId == 0) {
+    if (vehId <= 0 || vehId >= MAX_VEHICLES || vehId == INVALID_VEHICLE_ID) {
         HideSpeedometer(playerid);
         return 0;
     }
@@ -126,27 +221,69 @@ stock UpdateSpeedometer(playerid) {
     new Float:speedVal = floatsqroot(vx * vx + vy * vy + vz * vz) * 180.0;
     new speedInt = floatround(speedVal);
 
-    new speedStr[32];
-    format(speedStr, sizeof(speedStr), "%03d ~w~~h~KM/H", speedInt);
+    new speedStr[16];
+    format(speedStr, sizeof(speedStr), "%03d", speedInt);
     PlayerTextDrawSetString(playerid, TD_SpeedNumber[playerid], speedStr);
 
-    // 2. Status Warna Box Tombol Mesin & Kunci
+    // Deteksi Tabrakan
+    new Float:lastSpeed = gPlayerData[playerid][p_LastSpeed];
+    if (lastSpeed > 80.0 && lastSpeed - speedVal > 80.0) { // Turun tajam 80km/h dalam 150ms (tabrakan ekstrem)
+        new Float:hp;
+        GetPlayerHealth(playerid, hp);
+        if (gPlayerData[playerid][p_Seatbelt]) {
+            // Sabuk pengaman terpasang, kurang damage sedikit
+            SetPlayerHealth(playerid, hp - 10.0);
+            SendClientMessage(playerid, COL_YELLOW, "  [Tabrakan] Sabuk pengaman menahan benturan. Anda terluka ringan!");
+            PlayerPlaySound(playerid, 1056, 0.0, 0.0, 0.0);
+        } else {
+            // Tanpa sabuk pengaman, damage besar
+            SetPlayerHealth(playerid, hp - 50.0);
+            SendClientMessage(playerid, 0xFF4040FF, "  [Tabrakan] Anda menabrak keras tanpa sabuk pengaman!");
+            PlayerPlaySound(playerid, 1056, 0.0, 0.0, 0.0);
+        }
+    }
+    gPlayerData[playerid][p_LastSpeed] = speedVal;
+
+    // 2. Status Warna Box Tombol Mesin, Lampu, Kunci, Seatbelt
     new engine, lights, alarm, doors, bonnet, boot, objective;
     GetVehicleParamsEx(vehId, engine, lights, alarm, doors, bonnet, boot, objective);
 
     if (engine == 1) {
-        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnEngine[playerid], 0x2ECC71E0); // Hijau
+        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnEngine[playerid], COLOR_HUD_PURPLE_ON);
     } else {
-        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnEngine[playerid], 0xE74C3CE0); // Merah
+        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnEngine[playerid], COLOR_HUD_BTN_OFF);
     }
     PlayerTextDrawShow(playerid, TD_SpeedBtnEngine[playerid]);
 
-    if (doors == 1) {
-        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnLock[playerid], 0xF1C40FE0); // Kuning/Amber
+    if (lights == 1) {
+        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnLight[playerid], COLOR_HUD_PURPLE_ON);
     } else {
-        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnLock[playerid], 0x2C3E50D0); // Abu-abu gelap
+        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnLight[playerid], COLOR_HUD_BTN_OFF);
+    }
+    PlayerTextDrawShow(playerid, TD_SpeedBtnLight[playerid]);
+
+    if (doors == 1) {
+        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnLock[playerid], COLOR_HUD_PURPLE_ON);
+    } else {
+        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnLock[playerid], COLOR_HUD_BTN_OFF);
     }
     PlayerTextDrawShow(playerid, TD_SpeedBtnLock[playerid]);
+
+    if (gPlayerData[playerid][p_Seatbelt]) {
+        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnSeatbelt[playerid], COLOR_HUD_PURPLE_ON);
+    } else {
+        PlayerTextDrawBoxColor(playerid, TD_SpeedBtnSeatbelt[playerid], COLOR_HUD_BTN_OFF);
+    }
+    PlayerTextDrawShow(playerid, TD_SpeedBtnSeatbelt[playerid]);
+
+    // 3. Fuel Bar Update (Lebar bar 138.0)
+    new Float:fuel = gVehicleFuel[vehId];
+    if (fuel < 0.0) fuel = 0.0;
+    if (fuel > 50.0) fuel = 50.0;
+    new Float:fuelPercent = fuel / 50.0;
+    new Float:barWidth = 138.0 * fuelPercent;
+    PlayerTextDrawTextSize(playerid, TD_FuelBar[playerid], 228.0 + barWidth, 0.0);
+    PlayerTextDrawShow(playerid, TD_FuelBar[playerid]);
 
     return 1;
 }
@@ -168,7 +305,7 @@ stock TogglePlayerVehicleEngine(playerid) {
     }
 
     new vehId = GetPlayerVehicleID(playerid);
-    if (vehId == 0) return 0;
+    if (vehId <= 0 || vehId >= MAX_VEHICLES || vehId == INVALID_VEHICLE_ID) return 0;
 
     new engine, lights, alarm, doors, bonnet, boot, objective;
     GetVehicleParamsEx(vehId, engine, lights, alarm, doors, bonnet, boot, objective);
@@ -188,28 +325,77 @@ stock TogglePlayerVehicleEngine(playerid) {
     return 1;
 }
 
+stock TogglePlayerVehicleLight(playerid) {
+    if (!CheckSpawned(playerid)) return 0;
+    if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER) {
+        SendClientMessage(playerid, COL_RED, "  [Kendaraan] Anda harus berada di kursi pengemudi untuk menyalakan lampu!");
+        return 0;
+    }
+
+    new vehId = GetPlayerVehicleID(playerid);
+    if (vehId <= 0 || vehId >= MAX_VEHICLES || vehId == INVALID_VEHICLE_ID) return 0;
+
+    new engine, lights, alarm, doors, bonnet, boot, objective;
+    GetVehicleParamsEx(vehId, engine, lights, alarm, doors, bonnet, boot, objective);
+
+    if (lights == 1) {
+        SetVehicleParamsEx(vehId, engine, 0, alarm, doors, bonnet, boot, objective);
+        PlayerPlaySound(playerid, 1084, 0.0, 0.0, 0.0);
+        GameTextForPlayer(playerid, "~r~LAMPU MATI", 1500, 4);
+    } else {
+        SetVehicleParamsEx(vehId, engine, 1, alarm, doors, bonnet, boot, objective);
+        PlayerPlaySound(playerid, 1057, 0.0, 0.0, 0.0);
+        GameTextForPlayer(playerid, "~g~LAMPU NYALA", 1500, 4);
+    }
+    UpdateSpeedometer(playerid);
+    return 1;
+}
+
+stock TogglePlayerVehicleSeatbelt(playerid) {
+    if (!CheckSpawned(playerid)) return 0;
+    new pState = GetPlayerState(playerid);
+    if (pState != PLAYER_STATE_DRIVER && pState != PLAYER_STATE_PASSENGER) {
+        SendClientMessage(playerid, COL_RED, "  [Kendaraan] Anda harus berada di dalam kendaraan!");
+        return 0;
+    }
+
+    gPlayerData[playerid][p_Seatbelt] = !gPlayerData[playerid][p_Seatbelt];
+
+    if (gPlayerData[playerid][p_Seatbelt]) {
+        SendClientMessage(playerid, COL_GREEN, "  [Kendaraan] Sabuk pengaman {00FF00}terpasang{FFFFFF}.");
+        PlayerPlaySound(playerid, 1083, 0.0, 0.0, 0.0);
+    } else {
+        SendClientMessage(playerid, COL_YELLOW, "  [Kendaraan] Sabuk pengaman {FF4040}dilepas{FFFFFF}.");
+        PlayerPlaySound(playerid, 1084, 0.0, 0.0, 0.0);
+    }
+    UpdateSpeedometer(playerid);
+    return 1;
+}
+
 stock TogglePlayerVehicleLock(playerid) {
     if (!CheckSpawned(playerid)) return 0;
 
     // Cek jika pemain di dalam kendaraan
     if (IsPlayerInAnyVehicle(playerid)) {
         new vehId = GetPlayerVehicleID(playerid);
-        new engine, lights, alarm, doors, bonnet, boot, objective;
-        GetVehicleParamsEx(vehId, engine, lights, alarm, doors, bonnet, boot, objective);
+        if (vehId > 0 && vehId < MAX_VEHICLES && vehId != INVALID_VEHICLE_ID) {
+            new engine, lights, alarm, doors, bonnet, boot, objective;
+            GetVehicleParamsEx(vehId, engine, lights, alarm, doors, bonnet, boot, objective);
 
-        if (doors == 1) {
-            SetVehicleParamsEx(vehId, engine, lights, alarm, 0, bonnet, boot, objective);
-            PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
-            SendClientMessage(playerid, COL_GREEN, "  [Kendaraan] Kunci pintu: {FFFFFF}TERBUKA (Unlocked).");
-            GameTextForPlayer(playerid, "~g~PINTU TERBUKA", 1500, 4);
-        } else {
-            SetVehicleParamsEx(vehId, engine, lights, alarm, 1, bonnet, boot, objective);
-            PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
-            SendClientMessage(playerid, COL_YELLOW, "  [Kendaraan] Kunci pintu: {E74C3C}TERKUNCI (Locked).");
-            GameTextForPlayer(playerid, "~r~PINTU TERKUNCI", 1500, 4);
+            if (doors == 1) {
+                SetVehicleParamsEx(vehId, engine, lights, alarm, 0, bonnet, boot, objective);
+                PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
+                SendClientMessage(playerid, COL_GREEN, "  [Kendaraan] Kunci pintu: {FFFFFF}TERBUKA (Unlocked).");
+                GameTextForPlayer(playerid, "~g~PINTU TERBUKA", 1500, 4);
+            } else {
+                SetVehicleParamsEx(vehId, engine, lights, alarm, 1, bonnet, boot, objective);
+                PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
+                SendClientMessage(playerid, COL_YELLOW, "  [Kendaraan] Kunci pintu: {E74C3C}TERKUNCI (Locked).");
+                GameTextForPlayer(playerid, "~r~PINTU TERKUNCI", 1500, 4);
+            }
+            UpdateSpeedometer(playerid);
+            return 1;
         }
-        UpdateSpeedometer(playerid);
-        return 1;
     }
 
     // Jika pemain di luar mobil -> Cari mobil aktif terdekat milik pemain (dalam radius 8.0 meter)

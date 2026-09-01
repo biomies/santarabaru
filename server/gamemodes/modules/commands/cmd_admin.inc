@@ -772,14 +772,12 @@ stock ShowAdminTeleportMenu(playerid) {
     format(menuStr, sizeof(menuStr),
         "Lokasi Fasilitas GPS\tWilayah & Keterangan\n" \
         "{33CCFF}[Balai Kota] Eksterior\t{FFFFFF}Pershing Square, Los Santos\n" \
-        "{33CCFF}[Balai Kota] Interior Loket e-KTP\t{FFFFFF}Planning Department Interior\n" \
         "{5814EE}[Sekolah Mengemudi] Satpas DMV\t{FFFFFF}Garcia / Doherty, San Fierro\n" \
         "{FFA500}[Burger Shot] 10 Cabang Eksterior\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
-        "{FFA500}[Burger Shot] Interior Kasir & Dapur\t{FFFFFF}Interior Restoran Burger Shot (Int: 10)\n" \
         "{2ECC71}[Supermarket] 5 Cabang Eksterior\t{FFFFFF}LS, SF, Whetstone, FC, LV\n" \
-        "{2ECC71}[Supermarket] Interior Kasir (Int: 17)\t{FFFFFF}Interior Toko Supermarket (VW: 201)\n" \
         "{00EEFF}[Showroom] Coutt & Schutz\t{FFFFFF}Rodeo / Market, Los Santos\n" \
         "{2ECC71}[Kantor Asuransi] 3 Kota\t{FFFFFF}Los Santos, San Fierro, Las Venturas\n" \
+        "{F1C40F}[Pom Bensin] 4 Lokasi Pom Bensin\t{FFFFFF}Flint County, San Fierro, Las Venturas\n" \
         "{F1C40F}[Parkir Kota] Los Santos Parking Lot\t{FFFFFF}Downtown Los Santos\n" \
         "{FFFF00}[Tambang Batuan] Hunter Quarry\t{FFFFFF}Hunter Quarry, Las Venturas\n" \
         "{FF6600}[Peleburan] Smelter Pabrik\t{FFFFFF}Ocean Docks, Los Santos\n" \
@@ -798,13 +796,10 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
             case 0: { // Balai Kota Luar
                 AdminTeleportToPos(playerid, CITYHALL_EXT_X, CITYHALL_EXT_Y, CITYHALL_EXT_Z, CITYHALL_EXT_A, 0, 0, "Balai Kota Los Santos (Eksterior)");
             }
-            case 1: { // Loket KTP Interior
-                AdminTeleportToPos(playerid, KTP_DESK_X, KTP_DESK_Y, KTP_DESK_Z, KTP_DESK_A, KTP_DESK_INT_ID, KTP_DESK_VW_ID, "Loket Pembuatan e-KTP (Interior Balai Kota)");
-            }
-            case 2: { // Satpas DMV Driving School (San Fierro)
+            case 1: { // Satpas DMV Driving School (San Fierro)
                 AdminTeleportToPos(playerid, DMV_DESK_X, DMV_DESK_Y, DMV_DESK_Z, DMV_DESK_A, 0, 0, "Satpas DMV Driving School (San Fierro)");
             }
-            case 3: { // Burger Shot 10 Cabang Eksterior
+            case 2: { // Burger Shot 10 Cabang Eksterior
                 new bsListStr[1024];
                 format(bsListStr, sizeof(bsListStr), "Nama Cabang Restoran\tKota / Wilayah\n");
                 for (new i = 0; i < BURGER_SHOT_COUNT; i++) {
@@ -814,10 +809,7 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_ADMIN_TP_BURGER_SHOT, DIALOG_STYLE_TABLIST_HEADERS,
                     "{FFA500}Pilih Teleport Cabang Burger Shot", bsListStr, "Teleport", "Kembali");
             }
-            case 4: { // Burger Shot Interior Kasir & Dapur (Default Cabang Marina LS VW: 101)
-                AdminTeleportToPos(playerid, BURGER_SHOT_COUNTER_X, BURGER_SHOT_COUNTER_Y, BURGER_SHOT_COUNTER_Z, 0.0, BURGER_SHOT_INT_ID, BURGER_SHOT_VW_BASE, "Interior Kasir Restoran Burger Shot (VW: 101)");
-            }
-            case 5: { // Supermarket 5 Cabang Eksterior
+            case 3: { // Supermarket 5 Cabang Eksterior
                 new tfsListStr[768];
                 format(tfsListStr, sizeof(tfsListStr), "Nama Cabang Supermarket\tKota / Wilayah\n");
                 for (new i = 0; i < TWENTYFOUR_SEVEN_COUNT; i++) {
@@ -827,13 +819,10 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_ADMIN_TP_247, DIALOG_STYLE_TABLIST_HEADERS,
                     "{2ECC71}Pilih Teleport Cabang Supermarket", tfsListStr, "Teleport", "Kembali");
             }
-            case 6: { // Supermarket Interior Kasir (Default VW: 201)
-                AdminTeleportToPos(playerid, TWENTYFOUR_SEVEN_CASH_X, TWENTYFOUR_SEVEN_CASH_Y, TWENTYFOUR_SEVEN_CASH_Z, 0.0, TWENTYFOUR_SEVEN_INT_ID, TWENTYFOUR_SEVEN_VW_BASE, "Interior Kasir Supermarket (VW: 201)");
-            }
-            case 7: { // Coutt and Schutz Showroom
+            case 4: { // Coutt and Schutz Showroom
                 AdminTeleportToPos(playerid, DEALER_RODEO_X, DEALER_RODEO_Y, DEALER_RODEO_Z, 90.0, 0, 0, "Coutt and Schutz Auto Showroom (Los Santos)");
             }
-            case 8: { // Kantor Asuransi
+            case 5: { // Kantor Asuransi
                 new insListStr[512];
                 format(insListStr, sizeof(insListStr), "Cabang Asuransi\tKota / Wilayah\n");
                 for (new i = 0; i < INSURANCE_BRANCH_COUNT; i++) {
@@ -843,16 +832,26 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
                 ShowPlayerDialog(playerid, DLG_ADMIN_TP_INSURANCE, DIALOG_STYLE_TABLIST_HEADERS,
                     "{2ECC71}Pilih Teleport Cabang Asuransi", insListStr, "Teleport", "Kembali");
             }
-            case 9: { // Los Santos Parking Lot
+            case 6: { // Pom Bensin 6 Lokasi
+                new gsListStr[768];
+                gsListStr[0] = '\0';
+                for (new i = 0; i < MAX_GAS_STATIONS; i++) {
+                    format(gsListStr, sizeof(gsListStr), "%s{FFFFFF}%s\n",
+                        gsListStr, gGasStations[i][gs_Name]);
+                }
+                ShowPlayerDialog(playerid, DLG_ADMIN_TP_GAS_STATION, DIALOG_STYLE_LIST,
+                    "{F1C40F}Pilih Teleport Pom Bensin", gsListStr, "Teleport", "Kembali");
+            }
+            case 7: { // Los Santos Parking Lot
                 AdminTeleportToPos(playerid, gPublicGarages[0][g_MarkerX], gPublicGarages[0][g_MarkerY], gPublicGarages[0][g_MarkerZ], 0.0, 0, 0, "Los Santos Parking Lot (Downtown Los Santos)");
             }
-            case 10: { // Tambang Batu Hunter Quarry
+            case 8: { // Tambang Batu Hunter Quarry
                 AdminTeleportToPos(playerid, 595.6880, 868.5670, -42.8469, 0.0, 0, 0, "Tambang Batuan (Hunter Quarry LV)");
             }
-            case 11: { // Smelter Pabrik
+            case 9: { // Smelter Pabrik
                 AdminTeleportToPos(playerid, SMELTER_TABLE1_X, SMELTER_TABLE1_Y, SMELTER_TABLE1_Z, SMELTER_TABLE1_A, 0, 0, "Tungku Peleburan / Smelter (Ocean Docks LS)");
             }
-            case 12: { // Meja Rakit Senjata
+            case 10: { // Meja Rakit Senjata
                 AdminTeleportToPos(playerid, CRAFT_BENCH_X, CRAFT_BENCH_Y, CRAFT_BENCH_Z, CRAFT_BENCH_A, 0, 0, "Meja Perakitan Senjata / Gunsmith (Flint County Hideout)");
             }
         }
@@ -892,6 +891,18 @@ stock HandleAdminTeleportDialog(playerid, dialogid, response, listitem) {
         new locName[96];
         format(locName, sizeof(locName), "%s (%s)", gInsuranceBranches[listitem][ins_Name], gInsuranceBranches[listitem][ins_City]);
         AdminTeleportToPos(playerid, gInsuranceBranches[listitem][ins_X], gInsuranceBranches[listitem][ins_Y], gInsuranceBranches[listitem][ins_Z], 0.0, 0, 0, locName);
+        return 1;
+    }
+
+    if (dialogid == DLG_ADMIN_TP_GAS_STATION) {
+        if (!response) {
+            return ShowAdminTeleportMenu(playerid);
+        }
+        if (listitem < 0 || listitem >= MAX_GAS_STATIONS) return 1;
+
+        new locName[96];
+        format(locName, sizeof(locName), "%s", gGasStations[listitem][gs_Name]);
+        AdminTeleportToPos(playerid, gGasStations[listitem][gs_X], gGasStations[listitem][gs_Y], gGasStations[listitem][gs_Z], 0.0, 0, 0, locName);
         return 1;
     }
 
